@@ -1,0 +1,12 @@
+language: rust
+dist: trusty
+sudo: false
+cache: cargo
+os:
+  - linux
+  - osx
+rust:
+  - nightly
+script:
+  - cargo build --release --verbose
+  - cargo test --release --verbose

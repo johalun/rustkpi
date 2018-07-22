@@ -1,0 +1,69 @@
+language: rust
+sudo: required
+dist: trusty
+services:
+  - docker
+
+matrix:
+  include:
+    - os: linux
+      rust: stable
+      env: TARGET=x86_64-unknown-linux-gnu DOCKER=linux64 NO_ADD=1
+    - os: linux
+      rust: stable
+      env: TARGET=i686-unknown-linux-gnu DOCKER=linux32
+    - os: linux
+      rust: stable
+      env: TARGET=x86_64-unknown-linux-musl DOCKER=musl
+    - os: linux
+      rust: stable
+      env: TARGET=x86_64-pc-windows-gnu NO_RUN=1 DOCKER=mingw
+    - os: linux
+      rust: stable
+      env: TARGET=x86_64-unknown-linux-gnu DOCKER=linux64-curl NO_ADD=1
+    - os: osx
+      rust: stable
+      env: TARGET=x86_64-apple-darwin NO_ADD=1
+    - os: osx
+      rust: stable
+      env: TARGET=i686-apple-darwin
+    - os: linux
+      rust: beta
+      env: TARGET=x86_64-unknown-linux-gnu DOCKER=linux64 NO_ADD=1
+    - os: linux
+      rust: nightly
+      env: TARGET=x86_64-unknown-linux-gnu DOCKER=linux64 NO_ADD=1
+      before_script:
+        - pip install 'travis-cargo<0.2' --user && export PATH=$HOME/.local/bin:$PATH
+      after_success:
+        - travis-cargo doc-upload
+sudo: false
+install:
+  - if [ -z "$NO_ADD" ]; then rustup target add $TARGET; fi
+script:
+  - curl --version
+  - cargo generate-lockfile
+  - cargo generate-lockfile --manifest-path systest/Cargo.toml
+  - if [ -z "$DOCKER" ]; then
+      sh ci/run.sh;
+    else
+      mkdir .cargo target;
+      docker build -t rust -f ci/Dockerfile-$DOCKER ci;
+      docker run
+        -w /src
+        -v `pwd`:/src:ro
+        -v `pwd`/target:/src/target
+        -v `pwd`/ci/.cargo:/src/.cargo:ro
+        -v `rustc --print sysroot`:/usr/local:ro
+        -e TARGET=$TARGET
+        -e NO_RUN=$NO_RUN
+        -e CARGO_TARGET_DIR=/src/target
+        -it rust
+        sh ci/run.sh;
+    fi
+notifications:
+  email:
+    on_success: never
+env:
+  global:
+    secure: "j4son34/PmqogLMUHgcvOk+XtyUtcd0aAA8Sa/h4pyupw8AEM7+5DMMIrcrRh7ieKqmL2RSSGnYtYbd2b5yYroudypsqmQhK0StzrtPaftl/8zxw8liXzA9rat8MP0vuEAe5w9KLRdFKUCU7TzcYXcKttpbavqdNsJae+OFzHJc="

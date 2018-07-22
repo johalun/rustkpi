@@ -1,0 +1,12 @@
+Cargo.lock
+target
+
+# MacOS temp file
+.DS_Store
+
+book-test
+book-example/book
+
+.vscode
+tests/dummy_book/book/
+

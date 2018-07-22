@@ -1,0 +1,59 @@
+# Expected failures from running torture tests from emcc/binaryen with wasm backend
+# and native Wasm support in v8
+
+# Untriaged.
+20010122-1.c.js
+20031003-1.c.js
+20071018-1.c.js
+20071120-1.c.js
+20071220-1.c.js
+20071220-2.c.js
+20101011-1.c.js
+alloca-1.c.js
+bitfld-3.c.js
+bitfld-5.c.js
+builtin-bitops-1.c.js
+eeprof-1.c.js
+pr17377.c.js
+pr32244-1.c.js
+pr34971.c.js
+pr36765.c.js
+pr39228.c.js
+pr43008.c.js
+pr47237.c.js
+pr60960.c.js
+va-arg-pack-1.c.js
+
+complex-5.c.js # missing fmaxf, presumably needed by compiler-rt
+
+## The following work using wasm-clang without emcc
+	20001203-2.c.js # assert fail (works without emcc)
+	20040811-1.c.js # OOB trap
+	20070824-1.c.js # abort() (also works without emcc)
+	arith-rand-ll.c.js # abort() (works without emcc)
+	arith-rand.c.js # abort() (works without emcc)
+	pr23135.c.js # OOB trap (works without emcc)
+	pr43220.c.js # OOB trap (works without emcc)
+	vla-dealloc-1.c.js # OOB trap (works without emcc)
+	20051012-1.c.js # error reading binary
+	921208-2.c.js # error reading binary
+	920501-1.c.js # error reading binary
+	call-trap-1.c.js # error reading binary
+	pr44942.c.js # error reading binary
+
+## The following fail using wasm-clang without emcc
+	920625-1.c.js # abort() (also fails without emcc)
+	931004-10.c.js # abort() (also fails without emcc)
+	931004-12.c.js # abort() (also fails without emcc)
+	931004-14.c.js # abort() (also fails without emcc)
+	931004-6.c.js # abort() (also fails without emcc)
+	pr38151.c.js # abort() (fails without emcc)
+	pr44575.c.js # abort() (fails without emcc)
+	stdarg-1.c.js # abort() (missing __netf2)
+	stdarg-2.c.js # abort() (missing __floatsitf)
+	strct-stdarg-1.c.js # abort() (fails without emcc)
+	strct-varg-1.c.js # abort() (fails without emcc)
+	va-arg-22.c.js # abort() (fails without emcc)
+	va-arg-6.c.js # abort() (missing __eqtf2)
+	stdarg-3.c.js # abort() (fails without emcc)
+	pr56982.c.js # missing setjmp (wasm.js check did not catch)

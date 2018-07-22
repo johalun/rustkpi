@@ -1,0 +1,3 @@
+=> /html[0]/body[0]/div[0] => [Texts differ]: expected "foooo", found "foooo!?"
+=> /html[0]/body[0] => [Tags differ]: expected "foo", found "p"
+=> /html[0]/body[0] => [Unexpected element "foo"]: found "<foo></foo>"

@@ -1,0 +1,14 @@
+[package]
+name = "is-match"
+version = "0.1.0"
+authors = ["Matthias Beyer <mail@beyermatthias.de>"]
+
+description = "Library to check whether something matches something else"
+
+keywords    = ["util"]
+readme      = "./README.md"
+license     = "MPL-2.0"
+
+repository    = "https://github.com/matthiasbeyer/is-match"
+
+[dependencies]

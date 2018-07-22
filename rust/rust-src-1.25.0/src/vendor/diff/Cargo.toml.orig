@@ -1,0 +1,13 @@
+[package]
+name = "diff"
+version = "0.1.11"
+authors = ["Utkarsh Kukreti <utkarshkukreti@gmail.com>"]
+description = "An LCS based slice and string diffing implementation."
+license = "MIT OR Apache-2.0"
+documentation = "https://docs.rs/diff"
+homepage = "https://github.com/utkarshkukreti/diff.rs"
+repository = "https://github.com/utkarshkukreti/diff.rs"
+
+[dev-dependencies]
+speculate = "0.0.25"
+quickcheck = { version = "0.4.1", default-features = false }

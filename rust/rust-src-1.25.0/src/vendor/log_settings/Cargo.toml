@@ -1,0 +1,11 @@
+[package]
+name = "log_settings"
+version = "0.1.1"
+authors = ["Oliver Schneider <git-spam-no-reply9815368754983@oli-obk.de>"]
+license = "MIT"
+description = "a tiny crate allowing libraries to change logger settings"
+keywords = ["log", "settings"]
+repository = "https://github.com/oli-obk/log_settings"
+
+[dependencies]
+lazy_static = "0.2.1"

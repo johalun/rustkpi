@@ -1,0 +1,56 @@
+sudo: false
+language: rust
+rust:
+# - stable
+# - beta
+ - nightly
+os:
+ - linux
+ - osx
+cache:
+ directories:
+  - $HOME/.cargo
+
+addons:
+  apt:
+    packages:
+    - libcurl4-openssl-dev
+    - libelf-dev
+    - libdw-dev
+
+before_script:
+- |
+  if [ $TRAVIS_OS_NAME = 'osx' ]; then
+    brew install python3 &&
+    virtualenv env -p python3 &&
+    source env/bin/activate &&
+    pip install 'travis-cargo<0.2'
+  else
+    pip install 'travis-cargo<0.2' --user &&
+    export PATH="$(python -m site --user-base)/bin:$PATH"
+  fi
+
+script:
+- |
+  cargo build &&
+  cargo test
+
+after_success:
+- travis-cargo coveralls --no-sudo
+
+before_deploy:
+  # TODO: cross build
+ - cargo build --release --target=x86_64-unknown-linux-gnu
+ - tar czf rustfmt-x86_64-unknown-linux-gnu.tar.gz Contributing.md Design.md README.md -C target/x86_64-unknown-linux-gnu/release/rustfmt rustfmt
+
+deploy:
+  provider: releases
+  api_key:
+    secure: "your own encrypted key"
+  file:
+  - rustfmt-x86_64-unknown-linux-gnu.tar.gz
+  on:
+    repo: nrc/rustfmt
+    tags: true
+    condition: "$TRAVIS_OS_NAME = linux"
+  skip_cleanup: true

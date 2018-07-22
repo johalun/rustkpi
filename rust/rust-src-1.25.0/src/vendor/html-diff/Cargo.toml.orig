@@ -1,0 +1,17 @@
+[package]
+name = "html-diff"
+version = "0.0.6"
+authors = ["Guillaume Gomez <guillaume1.gomez@gmail.com>"]
+
+description = "Library detect HTML diffs"
+repository = "https://github.com/GuillaumeGomez/html-diff-rs"
+license = "MIT"
+
+categories = ["html", "diff"]
+
+[dependencies]
+kuchiki = "0.6"
+
+[[bin]]
+name = "html_diff"
+path = "src/main.rs"

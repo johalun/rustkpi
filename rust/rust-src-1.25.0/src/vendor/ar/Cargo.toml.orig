@@ -1,0 +1,9 @@
+[package]
+name = "ar"
+version = "0.3.1"
+authors = ["Matthew D. Steele <mdsteele@alum.mit.edu>"]
+description = "A library for encoding/decoding Unix archive files."
+repository = "https://github.com/mdsteele/rust-ar"
+documentation = "http://mdsteele.github.io/rust-ar/"
+keywords = ["ar", "archive", "deb"]
+license = "MIT"

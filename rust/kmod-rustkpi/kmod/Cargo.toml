@@ -1,0 +1,20 @@
+[package]
+name = "kmod"
+version = "0.1.0"
+authors = ["Johannes Lundberg <johalun0@gmail.com>"]
+
+[lib]
+crate-type = ["rlib", "staticlib"]
+name = "kmod"
+path = "lib.rs"
+
+[dependencies]
+core = { path = "../kernel" }
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+
+

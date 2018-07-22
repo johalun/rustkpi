@@ -1,0 +1,39 @@
+language: rust
+sudo: false
+matrix:
+  include:
+    - os: osx
+
+    - rust: stable
+      env: LZMA_API_STATIC=1
+    - rust: beta
+      env: LZMA_API_STATIC=1
+    - rust: nightly
+      env: LZMA_API_STATIC=1
+      before_script:
+        - pip install 'travis-cargo<0.2' --user && export PATH=$HOME/.local/bin:$PATH
+      after_success:
+        - travis-cargo --only nightly doc-upload
+
+    - addons:
+        apt:
+          packages:
+          - lzma-dev
+      script:
+        - cargo test
+        - cargo test --features tokio
+
+script:
+  - cargo test
+  - cargo test --features tokio
+  - cargo run --manifest-path systest/Cargo.toml
+  - cargo doc --no-deps
+  - cargo doc --no-deps --manifest-path=lzma-sys/Cargo.toml
+
+env:
+  global:
+    secure: "LgMtyKuSaQS4ovIeXJ5TxYaRGGgjjGGJIy8kgCc+8tcHnqpB4vP4cyBgO3wO+0E4EO4xD3j4isx+MgBRF0QN5uPdoZP66F7s2aHFlyr54mflp1CWpQE9mnb/1DxfAT3UqlR5Wv4vqyhsmnYWy2JqAZaHFLhGXkAEh9wbzvn7ssQL6yWJD2Siy2ReI5fAK26gNRqdtwd+Eli/CZAmx27FTkty4tXepTN94Y4ixOTmSpXRuSeAFLDCWrI7eydadKYBjFY7vpCXRWFpwVBem8hdItD82xJX0Bng0PPgmb3YNGVow4bciU6UsirlyueAONOIz5SC1VXwpkvbGl3b1XGZhnFIiN3h1Qc064P27KUtmyPO7Zs7enLmwbDXooRPqC64uxZUM/Y8X8vajo9pEM0uMPq33CEjN3u5uhJ/twoHixmXrpK+7XxQnfkm1klqM01GDABhIuZMKQcSgbnUx4G4FTTin/GUBsC09cEgsAp5Rgh7b1q6UfGryvF3MIehhnIAaoXr9MCjX6rV+KBrQu07uz+UY7NUJZcb4fvh6BxL0cAhOhWGz/QF1yAJWS1WNLyuJaB6Z5mhSuFkUoI73QDbJw4dBEWuLCOGBwXuV7++jdSq2kYOeQ8Momm48NKLWBK0KITAvoh2dHwihadV9P9AGGJFeuKP/utEX6CRkpV6y2Q="
+
+notifications:
+  email:
+    on_success: never

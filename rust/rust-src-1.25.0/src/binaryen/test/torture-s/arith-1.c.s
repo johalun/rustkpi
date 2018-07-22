@@ -1,0 +1,38 @@
+	.text
+	.file	"arith-1.c"
+	.section	.text.sat_add,"ax",@progbits
+	.hidden	sat_add                 # -- Begin function sat_add
+	.globl	sat_add
+	.type	sat_add,@function
+sat_add:                                # @sat_add
+	.param  	i32
+	.result 	i32
+# BB#0:                                 # %entry
+	i32.const	$push0=, -1
+	i32.const	$push2=, 1
+	i32.add 	$push3=, $0, $pop2
+	i32.const	$push5=, -1
+	i32.eq  	$push1=, $0, $pop5
+	i32.select	$push4=, $pop0, $pop3, $pop1
+                                        # fallthrough-return: $pop4
+	.endfunc
+.Lfunc_end0:
+	.size	sat_add, .Lfunc_end0-sat_add
+                                        # -- End function
+	.section	.text.main,"ax",@progbits
+	.hidden	main                    # -- Begin function main
+	.globl	main
+	.type	main,@function
+main:                                   # @main
+	.result 	i32
+# BB#0:                                 # %if.end
+	i32.const	$push0=, 0
+	call    	exit@FUNCTION, $pop0
+	unreachable
+	.endfunc
+.Lfunc_end1:
+	.size	main, .Lfunc_end1-main
+                                        # -- End function
+
+	.ident	"clang version 6.0.0 (https://llvm.googlesource.com/clang.git a1774cccdccfa673c057f93ccf23bc2d8cb04932) (https://llvm.googlesource.com/llvm.git fc50e1c6121255333bc42d6faf2b524c074eae25)"
+	.functype	exit, void, i32

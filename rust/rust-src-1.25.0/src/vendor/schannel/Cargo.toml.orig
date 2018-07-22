@@ -1,0 +1,14 @@
+[package]
+name = "schannel"
+license = "MIT"
+version = "0.1.10"
+description = "Schannel bindings for rust, allowing SSL/TLS (e.g. https) without openssl"
+authors = [ "Steven Fackler <sfackler@gmail.com>", "Steffen Butzer <steffen.butzer@outlook.com>" ]
+documentation = "https://docs.rs/schannel/0/x86_64-pc-windows-gnu/schannel/"
+repository = "https://github.com/steffengy/schannel-rs"
+readme = "README.md"
+keywords = ["windows", "schannel", "tls", "ssl", "https"]
+
+[dependencies]
+lazy_static = "1.0"
+winapi = { version = "0.3", features = ["lmcons", "minschannel", "securitybaseapi", "schannel", "sysinfoapi", "timezoneapi", "winbase", "wincrypt", "winerror"] }

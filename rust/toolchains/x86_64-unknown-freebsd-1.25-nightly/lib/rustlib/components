@@ -1,0 +1,7 @@
+rust-std-x86_64-unknown-freebsd
+cargo
+rls-preview
+rustfmt-preview
+rust-analysis-x86_64-unknown-freebsd
+rust-src
+rustc

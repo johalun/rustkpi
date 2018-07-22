@@ -1,0 +1,33 @@
+[package]
+name = "openssl"
+version = "0.9.23"
+authors = ["Steven Fackler <sfackler@gmail.com>"]
+license = "Apache-2.0"
+description = "OpenSSL bindings"
+repository = "https://github.com/sfackler/rust-openssl"
+readme = "README.md"
+keywords = ["crypto", "tls", "ssl", "dtls"]
+categories = ["cryptography", "api-bindings"]
+build = "build.rs"
+
+[package.metadata.docs.rs]
+all-features = true
+
+[features]
+v101 = []
+v102 = []
+v110 = []
+
+[dependencies]
+bitflags = "0.9"
+foreign-types = "0.3.1"
+lazy_static = "1"
+libc = "0.2"
+openssl-sys = { version = "0.9.23", path = "../openssl-sys" }
+
+[dev-dependencies]
+tempdir = "0.3"
+winapi = "0.2"
+ws2_32-sys = "0.2"
+hex = "0.2"
+data-encoding = "2.0"

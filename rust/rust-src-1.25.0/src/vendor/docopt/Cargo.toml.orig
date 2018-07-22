@@ -1,0 +1,28 @@
+[package]
+name = "docopt"
+version = "0.8.3"  #:version
+authors = ["Andrew Gallant <jamslam@gmail.com>"]
+description = "Command line argument parsing."
+documentation = "http://burntsushi.net/rustdoc/docopt/"
+homepage = "https://github.com/docopt/docopt.rs"
+repository = "https://github.com/docopt/docopt.rs"
+readme = "README.md"
+keywords = ["docopt", "argument", "command", "argv"]
+categories = ["command-line-interface"]
+license = "Unlicense/MIT"
+
+[lib]
+name = "docopt"
+
+[[bin]]
+name = "docopt-wordlist"
+path = "src/wordlist.rs"
+doc = false
+test = false
+
+[dependencies]
+lazy_static = "1"
+regex = "0.2"
+serde = "1.0"
+serde_derive = "1.0"
+strsim = "0.6"

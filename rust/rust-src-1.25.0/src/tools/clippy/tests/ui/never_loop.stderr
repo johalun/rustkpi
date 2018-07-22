@@ -1,0 +1,94 @@
+error: this loop never actually loops
+  --> $DIR/never_loop.rs:7:5
+   |
+7  | /     loop { // never_loop
+8  | |         x += 1;
+9  | |         if x == 1 {
+10 | |             return
+11 | |         }
+12 | |         break;
+13 | |     }
+   | |_____^
+   |
+   = note: `-D never-loop` implied by `-D warnings`
+
+error: this loop never actually loops
+  --> $DIR/never_loop.rs:28:5
+   |
+28 | /     loop { // never loops
+29 | |         x += 1;
+30 | |         break
+31 | |     }
+   | |_____^
+
+error: this loop never actually loops
+  --> $DIR/never_loop.rs:47:2
+   |
+47 |       loop { // never loops
+   |  _____^
+48 | |         while i == 0 { // never loops
+49 | |             break
+50 | |         }
+51 | |         return
+52 | |     }
+   | |_____^
+
+error: this loop never actually loops
+  --> $DIR/never_loop.rs:48:9
+   |
+48 | /         while i == 0 { // never loops
+49 | |             break
+50 | |         }
+   | |_________^
+
+error: this loop never actually loops
+  --> $DIR/never_loop.rs:59:3
+   |
+59 |           loop { // never loops
+   |  _________^
+60 | |             if x == 5 { break }
+61 | |             continue 'outer
+62 | |         }
+   | |_________^
+
+error: this loop never actually loops
+  --> $DIR/never_loop.rs:92:5
+   |
+92 | /     while let Some(y) = x { // never loops
+93 | |         return
+94 | |     }
+   | |_____^
+
+error: this loop never actually loops
+   --> $DIR/never_loop.rs:98:5
+    |
+98  | /     for x in 0..10 { // never loops
+99  | |         match x {
+100 | |             1 => break,
+101 | |             _ => return,
+102 | |         }
+103 | |     }
+    | |_____^
+
+error: this loop never actually loops
+   --> $DIR/never_loop.rs:144:5
+    |
+144 | /     'outer: while a { // never loops
+145 | |         while a {
+146 | |             if a {
+147 | |                 a = false;
+...   |
+151 | |         break 'outer;
+152 | |     }
+    | |_____^
+
+error: this loop never actually loops
+   --> $DIR/never_loop.rs:158:9
+    |
+158 | /         while false {
+159 | |             break 'label;
+160 | |         }
+    | |_________^
+
+error: aborting due to 9 previous errors
+

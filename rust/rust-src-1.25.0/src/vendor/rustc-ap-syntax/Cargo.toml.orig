@@ -1,0 +1,31 @@
+[dependencies]
+bitflags = "1.0"
+log = "0.4"
+term = "0.4"
+
+[dependencies.rustc-ap-rustc_cratesio_shim]
+version = "29.0.0"
+
+[dependencies.rustc-ap-rustc_data_structures]
+version = "29.0.0"
+
+[dependencies.rustc-ap-rustc_errors]
+version = "29.0.0"
+
+[dependencies.rustc-ap-serialize]
+version = "29.0.0"
+
+[dependencies.rustc-ap-syntax_pos]
+version = "29.0.0"
+
+[lib]
+name = "syntax"
+path = "lib.rs"
+
+[package]
+authors = ["The Rust Project Developers"]
+description = "Automatically published version of the package `syntax` in the rust-lang/rust repository from commit 8ccab7eed5f4fc93500fbf242e575073ca70d7cb "
+license = "MIT / Apache-2.0"
+name = "rustc-ap-syntax"
+repository = "https://github.com/rust-lang/rust"
+version = "29.0.0"

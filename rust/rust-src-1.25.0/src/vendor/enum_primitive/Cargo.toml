@@ -1,0 +1,14 @@
+[package]
+name = "enum_primitive"
+version = "0.1.1"
+license = "MIT"
+description = "Macro to generate num::FromPrimitive instances for enum that works in Rust 1.0"
+authors = ["Anders Kaseorg <andersk@mit.edu>"]
+documentation = "https://andersk.github.io/enum_primitive-rs/enum_primitive/"
+repository = "https://github.com/andersk/enum_primitive-rs.git"
+homepage = "https://github.com/andersk/enum_primitive-rs"
+readme = "README.md"
+
+[dependencies.num-traits]
+version = "0.1.32"
+default-features = false

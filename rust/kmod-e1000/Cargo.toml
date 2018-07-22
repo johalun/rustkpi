@@ -1,0 +1,16 @@
+[package]
+name = "kmod-e1000"
+version = "0.1.0"
+authors = ["Johannes Lundberg <johalun0@gmail.com>"]
+
+[dependencies]
+kernel = { path = "../kernel" }
+interpolate_idents = { path = "../../crates-ext/interpolate_idents" }
+lazy_static = { path = "../../crates-ext/lazy-static.rs" }
+
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"

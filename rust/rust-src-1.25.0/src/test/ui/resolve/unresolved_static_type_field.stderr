@@ -1,0 +1,11 @@
+error[E0425]: cannot find value `cx` in this scope
+  --> $DIR/unresolved_static_type_field.rs:19:11
+   |
+19 |         f(cx);
+   |           ^^
+   |           |
+   |           `self` value is only available in methods with `self` parameter
+   |           help: try: `self.cx`
+
+error: aborting due to previous error
+

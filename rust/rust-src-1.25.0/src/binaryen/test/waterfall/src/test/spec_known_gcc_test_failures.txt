@@ -1,0 +1,153 @@
+# Expected failures from running the assembled GCC torture tests with the spec
+# interpreter.
+#
+# To run this test:
+# waterfall/src/execute_files.py --runner waterfall/src/work/wasm-install/bin/wasm.opt --files torture-s2wasm/\*.wast --fails waterfall/src/test/spec_known_gcc_test_failures.txt
+#
+# .wast files are available from wasm-stat.us as wasm-torture-s2wasm-$BUILD.tbz2
+pr44942.c.s.wast # arity mismatch: toolchain problem.
+
+# The following expect to receive functions from the environment.
+#
+# abort / exit are supported by the spec interpreter, the other will come by
+# linking in a libc and runtime.
+20000815-1.c.s.wast # env.memset
+20000815-1.c.s.wast # env.memset
+20000910-2.c.s.wast # env.strchr
+20000914-1.c.s.wast # env.malloc
+20001011-1.c.s.wast # env.strcmp
+20010605-2.c.s.wast # env.__netf2
+20010915-1.c.s.wast # env.strcmp
+20010925-1.c.s.wast # env.memcpy
+20011024-1.c.s.wast # env.strcmp
+20020406-1.c.s.wast # env.malloc
+20020413-1.c.s.wast # env.__lttf2
+20021011-1.c.s.wast # env.strcmp
+20021120-3.c.s.wast # env.sprintf
+20030221-1.c.s.wast # env.strlen
+20030715-1.c.s.wast # env.strcmp
+20030914-1.c.s.wast # env.__floatsitf
+20030914-2.c.s.wast # env.memcpy
+20031012-1.c.s.wast # env.memset
+20031204-1.c.s.wast # env.strcpy
+20041126-1.c.s.wast # env.memcpy
+20041214-1.c.s.wast # env.strcpy
+20041218-1.c.s.wast # env.memset
+20050121-1.c.s.wast # env.__floatsitf
+20050218-1.c.s.wast # env.strlen
+20050502-1.c.s.wast # env.strcmp
+20050502-2.c.s.wast # env.memcmp
+20050826-1.c.s.wast # env.memset
+20051113-1.c.s.wast # env.malloc
+20060412-1.c.s.wast # env.memsets
+20070201-1.c.s.wast # env.sprintf
+20071018-1.c.s.wast # env.__builtin_malloc
+20071029-1.c.s.wast # env.memset
+20071030-1.c.s.wast # env.memset
+20071120-1.c.s.wast # env.__builtin_malloc
+20071120-1.c.s.wast # env.__builtin_malloc
+20071202-1.c.s.wast # env.memcpy
+20080502-1.c.s.wast # env.__eqtf2
+20081218-1.c.s.wast # env.memset
+20090113-1.c.s.wast # env.memset
+20100708-1.c.s.wast # env.memset
+20101011-1.c.s.wast # env.signal
+20111208-1.c.s.wast # env.strlen
+20121108-1.c.s.wast # env.printf
+20121108-1.c.s.wast # env.printf
+920501-8.c.s.wast # env.sprintf
+920501-9.c.s.wast # env.sprintf
+920726-1.c.s.wast # env.sprintf
+920810-1.c.s.wast # env.malloc
+921110-1.c.s.wast # abort() is declared with the wrong type (returning i32)
+921117-1.c.s.wast # env.strcmp
+930513-1.c.s.wast # env.sprintf
+930622-2.c.s.wast # env.__floatditf
+941014-2.c.s.wast # env.malloc
+960215-1.c.s.wast # env.__addtf3
+960405-1.c.s.wast # env.__eqtf2
+960513-1.c.s.wast # env.__subtf3
+960521-1.c.s.wast # env.memset
+980506-3.c.s.wast # env.memset
+980605-1.c.s.wast # env.sprintf
+990513-1.c.s.wast # env.memset
+990628-1.c.s.wast # env.memset
+991112-1.c.s.wast # env.isprint
+align-2.c.s.wast # env.__eqtf2
+builtin-bitops-1.c.s.wast # env.__builtin_clrsb
+complex-5.c.s.wast # env.__divsc3
+complex-6.c.s.wast # env.__subtf3
+complex-7.c.s.wast # env.__netf2
+complex-7.c.s.wast # env.__netf2
+conversion.c.s.wast # env.__floatunsitf
+ipa-sra-2.c.s.wast # env.calloc
+loop-2f.c.s.wast # env.memset
+loop-2g.c.s.wast # env.memset
+memcpy-1.c.s.wast # env.memcpy
+memcpy-2.c.s.wast # env.memset
+memcpy-bi.c.s.wast # env.memcmp
+memset-1.c.s.wast # env.memset
+memset-2.c.s.wast # env.memset
+memset-3.c.s.wast # env.memset
+multi-ix.c.s.wast # env.memset
+p18298.c.s.wast # env.strcmp
+pr27260.c.s.wast # env.memset
+pr28982b.c.s.wast # env.memset
+pr33870-1.c.s.wast # env.memset
+pr33870.c.s.wast # env.memset
+pr34456.c.s.wast # env.qsort
+pr35472.c.s.wast # env.memset
+pr36038.c.s.wast # env.memcmp
+pr36093.c.s.wast # env.memset
+pr36765.c.s.wast # env.__builtin_malloc
+pr37573.c.s.wast # env.memcmp
+pr39228.c.s.wast # env.__builtin_isinff
+pr41395-1.c.s.wast # env.malloc
+pr41395-2.c.s.wast # env.malloc
+pr41463.c.s.wast # env.malloc
+pr42614.c.s.wast # env.malloc
+pr43008.c.s.wast # env.__builtin_malloc
+pr43236.c.s.wast # env.memcmp
+pr43784.c.s.wast # env.memcpy
+pr44852.c.s.wast # env.strcmp
+pr47237.c.s.wast # env.__builtin_apply_args
+pr47337.c.s.wast # env.strcmp
+pr49218.c.s.wast # env.__fixsfti
+pr49419.c.s.wast # env.memset
+pr51877.c.s.wast # env.memset
+pr51933.c.s.wast # env.memcmp
+pr53688.c.s.wast # env.memset
+pr54471.c.s.wast # env.__multi3
+pr56205.c.s.wast # env.strcmp
+pr56866.c.s.wast # env.memset
+pr56982.c.s.wast # env._setjmp
+pr57130.c.s.wast # env.memcmp
+pr58419.c.s.wast # env.getpid
+pr59229.c.s.wast # env.memcmp
+printf-1.c.s.wast # env.printf
+regstack-1.c.s.wast # env.__addtf3
+stdarg-1.c.s.wast # env.__netf2
+stdarg-2.c.s.wast # env.__floatsitf
+strcmp-1.c.s.wast # env.strcmp
+strcpy-1.c.s.wast # env.memset
+string-opt-17.c.s.wast # env.strcpy
+string-opt-18.c.s.wast # env.mempcpy
+string-opt-5.c.s.wast # env.strlen
+strlen-1.c.s.wast # env.memset
+strncmp-1.c.s.wast # env.strncmp
+struct-cpy-1.c.s.wast # env.memset
+struct-ret-1.c.s.wast # env.sprintf
+va-arg-10.c.s.wast # env.strlen
+va-arg-2.c.s.wast # env.strlen
+va-arg-22.c.s.wast # env.memcpy
+va-arg-24.c.s.wast # env.printf
+va-arg-5.c.s.wast # env.__eqtf2
+va-arg-6.c.s.wast # env.__eqtf2
+va-arg-9.c.s.wast # env.strlen
+va-arg-pack-1.c.s.wast # env.memcmp
+980707-1.c.s.wast # env.strcmp
+980709-1.c.s.wast # env.pow
+printf-chk-1.c.s.wast # vprintf
+va-arg-21.c.s.wast # env.vprintf
+vprintf-1.c.s.wast # vprintf
+vprintf-chk-1.c.s.wast # vprintf

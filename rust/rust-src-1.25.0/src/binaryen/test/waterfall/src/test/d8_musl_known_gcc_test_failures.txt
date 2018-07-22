@@ -1,0 +1,104 @@
+# Expected failures from running the assembled GCC torture tests with d8.
+
+# Toolchain problem: need some libc support.
+# Not yet implemented.
+# See wasm.js for the list of libc functions which are missing.
+# The right place to put libc functionality would really be libc anyways.
+20020406-1.c.s.wast.wasm
+20020413-1.c.s.wast.wasm
+20101011-1.c.s.wast.wasm
+960215-1.c.s.wast.wasm
+960405-1.c.s.wast.wasm
+align-2.c.s.wast.wasm
+builtin-bitops-1.c.s.wast.wasm # __builtin_clrsb
+ipa-sra-2.c.s.wast.wasm
+loop-2f.c.s.wast.wasm
+loop-2g.c.s.wast.wasm
+pr34456.c.s.wast.wasm
+pr39228.c.s.wast.wasm
+pr47237.c.s.wast.wasm
+pr49218.c.s.wast.wasm
+pr54471.c.s.wast.wasm
+printf-1.c.s.wast.wasm
+printf-chk-1.c.s.wast.wasm
+regstack-1.c.s.wast.wasm
+va-arg-21.c.s.wast.wasm # vprintf
+vprintf-1.c.s.wast.wasm # vprintf
+vprintf-chk-1.c.s.wast.wasm # vprintf
+
+# Trying to import function 'bar'. The test is likely wrong.
+va-arg-pack-1.c.s.wast.wasm
+
+# Program terminated with: Terminating wasm: abort()
+# This could be a problem in any part of the toolchain (not just d8).
+# It should never happen (the torture tests are self-validating).
+20000910-2.c.s.wast.wasm
+920612-1.c.s.wast.wasm
+920625-1.c.s.wast.wasm
+920711-1.c.s.wast.wasm
+931004-10.c.s.wast.wasm
+931004-12.c.s.wast.wasm
+931004-14.c.s.wast.wasm
+931004-6.c.s.wast.wasm
+bitfld-3.c.s.wast.wasm
+builtin-constant.c.s.wast.wasm
+eeprof-1.c.s.wast.wasm
+pr22493-1.c.s.wast.wasm
+pr32244-1.c.s.wast.wasm
+pr34971.c.s.wast.wasm
+pr38151.c.s.wast.wasm
+pr44575.c.s.wast.wasm
+stdarg-3.c.s.wast.wasm
+strcmp-1.c.s.wast.wasm
+strct-stdarg-1.c.s.wast.wasm
+strct-varg-1.c.s.wast.wasm
+string-opt-5.c.s.wast.wasm # abort()
+strncmp-1.c.s.wast.wasm # abort()
+va-arg-22.c.s.wast.wasm
+
+# Untriaged (this one broke at rev e5b9c73, r269252)
+20030125-1.c.s.wast.wasm # abort()
+
+# abort() as well, but occurring for musl only.
+980602-2.c.s.wast.wasm
+
+# d8 segfault.
+930513-1.c.s.wast.wasm
+
+# Unknown exception: memory access out of bounds
+20021120-3.c.s.wast.wasm
+20040709-1.c.s.wast.wasm
+20070201-1.c.s.wast.wasm
+20080502-1.c.s.wast.wasm
+20121108-1.c.s.wast.wasm
+920501-8.c.s.wast.wasm
+920501-9.c.s.wast.wasm
+920726-1.c.s.wast.wasm
+980605-1.c.s.wast.wasm
+991201-1.c.s.wast.wasm
+bitfld-5.c.s.wast.wasm
+complex-5.c.s.wast.wasm
+complex-7.c.s.wast.wasm
+memcpy-2.c.s.wast.wasm
+mode-dependent-address.c.s.wast.wasm
+pr40022.c.s.wast.wasm
+pr47337.c.s.wast.wasm
+pr48571-1.c.s.wast.wasm
+pr51581-1.c.s.wast.wasm
+pr51581-2.c.s.wast.wasm
+pr56837.c.s.wast.wasm
+pr56982.c.s.wast.wasm
+pr60960.c.s.wast.wasm
+stdarg-1.c.s.wast.wasm
+stdarg-2.c.s.wast.wasm
+strcpy-1.c.s.wast.wasm
+struct-ret-1.c.s.wast.wasm
+va-arg-5.c.s.wast.wasm
+va-arg-6.c.s.wast.wasm
+
+# Fails with musl only.
+pr20621-1.c.s.wast.wasm # main() returned 272
+
+# Unknown exception: function signature mismatch
+# Which function?
+bcp-1.c.s.wast.wasm

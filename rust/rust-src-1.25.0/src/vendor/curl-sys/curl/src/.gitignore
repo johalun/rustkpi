@@ -1,0 +1,9 @@
+*.a
+*.nlm
+*.res
+config-win32.h
+curl
+curl_config.h
+curl_config.h.in
+stamp-h2
+tool_version.h.dist

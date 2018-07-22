@@ -1,0 +1,33 @@
+#
+#
+#
+
+BINDGEN_FLAGS= 	--impl-debug --with-derive-default --use-core \
+		--ctypes-prefix ::kernel::sys::raw
+CLANG_ARGS= 	-O2 -pipe -fno-strict-aliasing -D_KERNEL -DKLD_MODULE -nostdinc -I/usr/include \
+		-fno-common -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer -mcmodel=kernel \
+		-mno-red-zone -mno-mmx -mno-sse -mno-aes -mno-avx -msoft-float \
+		-fno-asynchronous-unwind-tables -ffreestanding -fwrapv -fstack-protector \
+		-D__printf__=__freebsd_kprintf__ -fdiagnostics-show-option -std=iso9899:1999 \
+		-I./bindgen-include -I./c-src -I/sys -I/sys/contrib/ck/include
+LIBCLANG_PATH=	/usr/local/llvm60/lib
+OUTDIR= 	src/sys
+HEADERS!= 	find bindgen-headers/ -name "*.h"
+BINDINGS= 	${HEADERS:R:T:S/^headers-/src\/sys\//g:S/$/_sys.rs/g}
+
+all:	bindgen ${BINDINGS} 
+
+bindgen:
+	@echo -e "\033[1m"
+	@bindgen -V
+	@echo -e "\033[0m"
+
+${BINDINGS}: bindgen-headers/headers-${.TARGET:R:T:S/_sys//g}.h
+	@echo -e "\033[1m===> Generating bindings for ${.TARGET:R:T:S/_sys//g}.h\033[0m"
+	@LIBCLANG_PATH=${LIBCLANG_PATH} bindgen ${BINDGEN_FLAGS} \
+		--output ${.TARGET} ${.ALLSRC} -- ${CLANG_ARGS}
+	@echo -e "\033[1m===> Fix std renaming for ${.TARGET:R:T:S/_sys//g}.h\033[0m"
+	@sed -i '' -e 's/::std::fmt/::kernel::fmt/g' ${.TARGET}
+
+clean:
+	@rm -f ${OUTDIR}/*_sys.rs

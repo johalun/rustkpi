@@ -1,0 +1,24 @@
+[package]
+name = "kernel"
+version = "0.1.0"
+authors = ["Johannes Lundberg <johalun0@gmail.com>"]
+
+[lib]
+crate-type = ["rlib", "staticlib"]
+path = "lib.rs"
+name = "kernel"
+
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+
+[dependencies]
+core = { path = "../../rust-src/src/libcore" }
+alloc = { path = "../../rust-src/src/liballoc" }
+std_unicode = { path = "../../rust-src/src/libstd_unicode" }
+alloc_kernel = { path = "../../crates-own/liballoc_kernel" }
+spin = { path = "../../crates-ext/spin-rs" }
+interpolate_idents = { path = "../../crates-ext/interpolate_idents" }
+

@@ -1,0 +1,46 @@
+error[E0597]: `c` does not live long enough
+  --> $DIR/dropck-eyepatch-reorder.rs:57:20
+   |
+57 |     dt = Dt("dt", &c);
+   |                    ^ borrowed value does not live long enough
+...
+77 | }
+   | - `c` dropped here while still borrowed
+   |
+   = note: values in a scope are dropped in the opposite order they are created
+
+error[E0597]: `c` does not live long enough
+  --> $DIR/dropck-eyepatch-reorder.rs:59:20
+   |
+59 |     dr = Dr("dr", &c);
+   |                    ^ borrowed value does not live long enough
+...
+77 | }
+   | - `c` dropped here while still borrowed
+   |
+   = note: values in a scope are dropped in the opposite order they are created
+
+error[E0597]: `c` does not live long enough
+  --> $DIR/dropck-eyepatch-reorder.rs:67:29
+   |
+67 |     pt = Pt("pt", &c_long, &c);
+   |                             ^ borrowed value does not live long enough
+...
+77 | }
+   | - `c` dropped here while still borrowed
+   |
+   = note: values in a scope are dropped in the opposite order they are created
+
+error[E0597]: `c` does not live long enough
+  --> $DIR/dropck-eyepatch-reorder.rs:69:29
+   |
+69 |     pr = Pr("pr", &c_long, &c);
+   |                             ^ borrowed value does not live long enough
+...
+77 | }
+   | - `c` dropped here while still borrowed
+   |
+   = note: values in a scope are dropped in the opposite order they are created
+
+error: aborting due to 4 previous errors
+

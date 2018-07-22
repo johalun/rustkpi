@@ -1,0 +1,134 @@
+warning: unreachable `pub` item
+  --> $DIR/unreachable_pub.rs:21:5
+   |
+21 |     pub use std::fmt;
+   |     ---^^^^^^^^^^^^^^
+   |     |
+   |     help: consider restricting its visibility: `crate`
+   |
+note: lint level defined here
+  --> $DIR/unreachable_pub.rs:17:9
+   |
+17 | #![warn(unreachable_pub)]
+   |         ^^^^^^^^^^^^^^^
+   = help: or consider exporting it for use by other crates
+
+warning: unreachable `pub` item
+  --> $DIR/unreachable_pub.rs:23:5
+   |
+23 |     pub struct Hydrogen {
+   |     ---^^^^^^^^^^^^^^^^
+   |     |
+   |     help: consider restricting its visibility: `crate`
+   |
+   = help: or consider exporting it for use by other crates
+
+warning: unreachable `pub` field
+  --> $DIR/unreachable_pub.rs:25:9
+   |
+25 |         pub neutrons: usize,
+   |         ---^^^^^^^^^^^^^^^^
+   |         |
+   |         help: consider restricting its visibility: `crate`
+
+warning: unreachable `pub` item
+  --> $DIR/unreachable_pub.rs:31:9
+   |
+31 |         pub fn count_neutrons(&self) -> usize { self.neutrons }
+   |         ---^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |         |
+   |         help: consider restricting its visibility: `crate`
+
+warning: unreachable `pub` item
+  --> $DIR/unreachable_pub.rs:35:5
+   |
+35 |     pub enum Helium {}
+   |     ---^^^^^^^^^^^^
+   |     |
+   |     help: consider restricting its visibility: `crate`
+   |
+   = help: or consider exporting it for use by other crates
+
+warning: unreachable `pub` item
+  --> $DIR/unreachable_pub.rs:36:5
+   |
+36 |     pub union Lithium { c1: usize, c2: u8 }
+   |     ---^^^^^^^^^^^^^^
+   |     |
+   |     help: consider restricting its visibility: `crate`
+   |
+   = help: or consider exporting it for use by other crates
+
+warning: unreachable `pub` item
+  --> $DIR/unreachable_pub.rs:37:5
+   |
+37 |     pub fn beryllium() {}
+   |     ---^^^^^^^^^^^^^^^
+   |     |
+   |     help: consider restricting its visibility: `crate`
+   |
+   = help: or consider exporting it for use by other crates
+
+warning: unreachable `pub` item
+  --> $DIR/unreachable_pub.rs:38:5
+   |
+38 |     pub trait Boron {}
+   |     ---^^^^^^^^^^^^
+   |     |
+   |     help: consider restricting its visibility: `crate`
+   |
+   = help: or consider exporting it for use by other crates
+
+warning: unreachable `pub` item
+  --> $DIR/unreachable_pub.rs:39:5
+   |
+39 |     pub const CARBON: usize = 1;
+   |     ---^^^^^^^^^^^^^^^^^^^^^^^^^
+   |     |
+   |     help: consider restricting its visibility: `crate`
+   |
+   = help: or consider exporting it for use by other crates
+
+warning: unreachable `pub` item
+  --> $DIR/unreachable_pub.rs:40:5
+   |
+40 |     pub static NITROGEN: usize = 2;
+   |     ---^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |     |
+   |     help: consider restricting its visibility: `crate`
+   |
+   = help: or consider exporting it for use by other crates
+
+warning: unreachable `pub` item
+  --> $DIR/unreachable_pub.rs:41:5
+   |
+41 |     pub type Oxygen = bool;
+   |     ---^^^^^^^^^^^^^^^^^^^^
+   |     |
+   |     help: consider restricting its visibility: `crate`
+   |
+   = help: or consider exporting it for use by other crates
+
+warning: unreachable `pub` item
+  --> $DIR/unreachable_pub.rs:44:47
+   |
+44 |         ($visibility: vis, $name: ident) => { $visibility struct $name {} }
+   |                                               -----------^^^^^^^^^^^^^
+   |                                               |
+   |                                               help: consider restricting its visibility: `crate`
+45 |     }
+46 |     define_empty_struct_with_visibility!(pub, Fluorine);
+   |     ---------------------------------------------------- in this macro invocation
+   |
+   = help: or consider exporting it for use by other crates
+
+warning: unreachable `pub` item
+  --> $DIR/unreachable_pub.rs:49:9
+   |
+49 |         pub fn catalyze() -> bool;
+   |         ---^^^^^^^^^^^^^^^^^^^^^^^
+   |         |
+   |         help: consider restricting its visibility: `crate`
+   |
+   = help: or consider exporting it for use by other crates
+

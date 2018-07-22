@@ -1,0 +1,6 @@
+language: rust
+os:
+  - linux
+script:
+  - cargo test --verbose --features serde
+  - cargo doc --no-deps --features serde

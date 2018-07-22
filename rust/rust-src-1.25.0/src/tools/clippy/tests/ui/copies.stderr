@@ -1,0 +1,37 @@
+error: This else block is redundant.
+
+   --> $DIR/copies.rs:120:20
+    |
+120 |               } else {
+    |  ____________________^
+121 | |                 continue;
+122 | |             }
+    | |_____________^
+    |
+    = note: `-D needless-continue` implied by `-D warnings`
+    = help: Consider dropping the else clause and merging the code that follows (in the loop) with the if block, like so:
+            if true {
+            break;
+            // Merged code follows...
+            }
+            
+
+error: This else block is redundant.
+
+   --> $DIR/copies.rs:130:20
+    |
+130 |               } else {
+    |  ____________________^
+131 | |                 continue;
+132 | |             }
+    | |_____________^
+    |
+    = help: Consider dropping the else clause and merging the code that follows (in the loop) with the if block, like so:
+            if true {
+            break;
+            // Merged code follows...
+            }
+            
+
+error: aborting due to 2 previous errors
+

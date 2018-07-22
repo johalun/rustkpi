@@ -1,0 +1,15 @@
+[package]
+name = "redox_termios"
+version = "0.1.1"
+description = "A Rust library to access Redox termios functions"
+license = "MIT"
+authors = ["Jeremy Soller <jackpot51@gmail.com>"]
+repository = "https://github.com/redox-os/termios"
+documentation = "https://docs.rs/redox_termios"
+
+[lib]
+name = "redox_termios"
+path = "src/lib.rs"
+
+[dependencies]
+redox_syscall = "0.1"

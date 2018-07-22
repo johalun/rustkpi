@@ -1,0 +1,14 @@
+[package]
+authors = ["The Rust Project Developers, Johannes Lundberg"]
+name = "alloc_kernel"
+version = "0.0.0"
+
+[lib]
+name = "alloc_kernel"
+path = "lib.rs"
+test = false
+doc = false
+
+#[dependencies]
+#alloc = { path = "../../rust-src/src/liballoc" }
+#core = { path = "../../rust-src/src/libcore" }

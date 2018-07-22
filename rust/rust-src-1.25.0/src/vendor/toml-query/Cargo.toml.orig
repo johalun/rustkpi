@@ -1,0 +1,31 @@
+[package]
+name = "toml-query"
+version = "0.6.0"
+authors = ["Matthias Beyer <mail@beyermatthias.de>"]
+
+description = "Library to work with toml::Value objects more conveniently"
+
+keywords    = ["toml", "extension"]
+readme      = "./README.md"
+license     = "MPL-2.0"
+
+repository    = "https://github.com/matthiasbeyer/toml-query"
+
+[features]
+default = []
+logging = [ "log" ]
+
+[dependencies]
+toml = "0.4"
+is-match = "0.1"
+error-chain = "0.11"
+regex = "0.2"
+lazy_static = "1.0"
+
+[dev-dependencies]
+quickcheck = "0.6"
+
+[dependencies.log]
+version = "0.4"
+optional = true
+

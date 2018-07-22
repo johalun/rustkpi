@@ -1,0 +1,121 @@
+# Expected failures from running the assembled GCC torture tests with d8.
+
+# Toolchain problem: need some libc support.
+# Not yet implemented.
+# See wasm.js for the list of libc functions which are missing.
+# The right place to put libc functionality would really be libc anyways.
+20020406-1.c.s.wast.wasm # printf
+20021120-3.c.s.wast.wasm # sprintf
+20070201-1.c.s.wast.wasm # sprintf
+20101011-1.c.s.wast.wasm # signal
+20121108-1.c.s.wast.wasm # printf
+920501-8.c.s.wast.wasm # sprintf
+920501-9.c.s.wast.wasm # sprintf
+930513-1.c.s.wast.wasm # sprintf
+920726-1.c.s.wast.wasm # sprintf
+980605-1.c.s.wast.wasm # sprintf
+builtin-bitops-1.c.s.wast.wasm # __builtin_clrsb
+complex-5.c.s.wast.wasm # __divsc3
+ipa-sra-2.c.s.wast.wasm # free
+loop-2f.c.s.wast.wasm # mmap addr 2147450880
+loop-2g.c.s.wast.wasm # mmap addr 2147450880
+pr34456.c.s.wast.wasm # qsort
+pr47237.c.s.wast.wasm # __builtin_apply_args
+pr56982.c.s.wast.wasm # _setjmp
+printf-1.c.s.wast.wasm # printf
+printf-chk-1.c.s.wast.wasm # vprintf
+pr39228.c.s.wast.wasm # isinfl
+struct-ret-1.c.s.wast.wasm # sprintf
+va-arg-21.c.s.wast.wasm # vprintf
+vprintf-1.c.s.wast.wasm # vprintf
+vprintf-chk-1.c.s.wast.wasm # vprintf
+
+# These compiler-rt functions are for long doubles. Also NYI.
+20020413-1.c.s.wast.wasm # __lttf2
+20080502-1.c.s.wast.wasm # __eqtf2
+960215-1.c.s.wast.wasm # __addtf3
+960405-1.c.s.wast.wasm # __eqtf2
+align-2.c.s.wast.wasm # __eqtf2
+complex-7.c.s.wast.wasm # __netf2
+pr49218.c.s.wast.wasm # __fixsfti
+pr54471.c.s.wast.wasm # __multi3
+regstack-1.c.s.wast.wasm # __addtf3
+stdarg-1.c.s.wast.wasm # __netf2
+stdarg-2.c.s.wast.wasm # __floatsitf
+va-arg-5.c.s.wast.wasm # __eqtf2
+va-arg-6.c.s.wast.wasm # __eqtf2
+
+# Trying to import function 'bar'. The test is likely wrong.
+va-arg-pack-1.c.s.wast.wasm
+
+# Program terminated with: Terminating wasm: abort()
+# This could be a problem in any part of the toolchain (not just d8).
+# It should never happen (the torture tests are self-validating).
+strcmp-1.c.s.wast.wasm # abort()
+string-opt-5.c.s.wast.wasm # abort()
+strncmp-1.c.s.wast.wasm # abort()
+
+# The following failures go away when disabling LLVM IR optimizations only:
+20000910-2.c.s.wast.wasm # abort()
+
+# The following failures go away when disabling IR optimizations, regardless of backend
+
+# The following failures go away when disabling both IR and backend optimizations:
+
+# The following failures go away when disabling backend optimizations only:
+20040709-1.c.s.wast.wasm # memory access out of bounds
+
+# The following failures go away when disabling backend optimizations, regardless of IR
+pr47337.c.s.wast.wasm # memory access out of bounds
+
+# The following only fail when all optimizations are enabled
+991201-1.c.s.wast.wasm # memory access out of bounds
+memcpy-2.c.s.wast.wasm # memory access out of bounds
+mode-dependent-address.c.s.wast.wasm # memory access out of bounds
+pr48571-1.c.s.wast.wasm # memory access out of bounds
+pr51581-1.c.s.wast.wasm # memory access out of bounds
+pr51581-2.c.s.wast.wasm # memory access out of bounds
+pr56837.c.s.wast.wasm # memory access out of bounds
+strcpy-1.c.s.wast.wasm # memory access out of bounds
+
+# Additionally there are a bunch of unexpected failures when disabling IR
+# optimization, which this margin is too small to contain.
+# (a lot of them are unsupported features and missing libcalls which are
+# eliminated by IR optzns)
+
+# Untriaged (this one broke at rev e5b9c73, r269252)
+20030125-1.c.s.wast.wasm # abort()
+
+
+# Don't care/won't fix:
+920612-1.c.s.wast.wasm # abort() # UB
+920711-1.c.s.wast.wasm # abort() # UB for 32-bit longs
+bcp-1.c.s.wast.wasm # abort() # builtin_constant_p depends on opt setting
+builtin-constant.c.s.wast.wasm # abort() # builtin_constant_p depends on opt setting
+pr22493-1.c.s.wast.wasm # abort() # UB
+eeprof-1.c.s.wast.wasm # tests -finstrument-functions
+
+# Low priority
+# Bitfield tests
+bitfld-3.c.s.wast.wasm # abort()
+bitfld-5.c.s.wast.wasm # memory access out of bounds
+pr32244-1.c.s.wast.wasm # abort()
+pr34971.c.s.wast.wasm # abort()
+
+# struct-vararg tests (recently started compiling, not yet triaged vs. opt level).
+# A few of them pass, but most still fail.
+920625-1.c.s.wast.wasm # abort()
+931004-10.c.s.wast.wasm # abort()
+931004-12.c.s.wast.wasm # abort()
+931004-14.c.s.wast.wasm # abort()
+931004-6.c.s.wast.wasm # abort()
+pr38151.c.s.wast.wasm # abort()
+pr44575.c.s.wast.wasm # abort()
+stdarg-3.c.s.wast.wasm # abort()
+strct-stdarg-1.c.s.wast.wasm # abort()
+strct-varg-1.c.s.wast.wasm # abort()
+va-arg-22.c.s.wast.wasm # abort()
+
+# LLVM emits a divide by zero:
+#   https://llvm.org/bugs/show_bug.cgi?id=26452
+pr60960.c.s.wast.wasm # divide by zero

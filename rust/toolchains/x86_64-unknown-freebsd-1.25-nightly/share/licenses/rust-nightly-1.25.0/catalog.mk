@@ -1,0 +1,13 @@
+_LICENSE=APACHE20 MIT
+_LICENSE_COMB=dual
+_LICENSE_NAME=Dual (any of): APACHE20 MIT
+_LICENSE_PERMS=dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
+_LICENSE_GROUPS=
+_LICENSE_NAME_APACHE20 =Apache License 2.0
+_LICENSE_PERMS_APACHE20 =dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
+_LICENSE_GROUPS_APACHE20 =FSF OSI
+_LICENSE_DISTFILES_APACHE20 =2018-02-06/rustc-nightly-src.tar.gz 2018-01-02/rustc-beta-x86_64-unknown-freebsd.tar.gz 2018-01-02/rust-std-beta-x86_64-unknown-freebsd.tar.gz 2018-01-02/cargo-beta-x86_64-unknown-freebsd.tar.gz
+_LICENSE_NAME_MIT =MIT license / X11 license
+_LICENSE_PERMS_MIT =dist-mirror dist-sell pkg-mirror pkg-sell auto-accept
+_LICENSE_GROUPS_MIT =COPYFREE FSF GPL OSI
+_LICENSE_DISTFILES_MIT =2018-02-06/rustc-nightly-src.tar.gz 2018-01-02/rustc-beta-x86_64-unknown-freebsd.tar.gz 2018-01-02/rust-std-beta-x86_64-unknown-freebsd.tar.gz 2018-01-02/cargo-beta-x86_64-unknown-freebsd.tar.gz

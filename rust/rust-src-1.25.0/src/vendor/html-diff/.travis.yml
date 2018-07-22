@@ -1,0 +1,19 @@
+language: rust
+matrix:
+  include:
+    - os: linux
+      rust: stable
+      dist: trusty
+    - os: linux
+      rust: nightly
+      dist: trusty
+    - os: osx
+      rust: stable
+    - os: osx
+      rust: nightly
+script:
+  - rustc --version
+  - cargo install clippy || touch clippy_failed
+  - RUST_BACKTRACE=1 cargo build
+  - if [ ! -f clippy_failed ]; then cargo clippy; fi
+  - RUST_BACKTRACE=1 cargo test

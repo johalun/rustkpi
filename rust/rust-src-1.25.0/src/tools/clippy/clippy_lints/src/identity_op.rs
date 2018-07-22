@@ -1,0 +1,97 @@
+use consts::{constant_simple, Constant};
+use rustc::hir::*;
+use rustc::lint::*;
+use rustc_const_math::ConstInt;
+use syntax::codemap::Span;
+use utils::{in_macro, snippet, span_lint};
+
+/// **What it does:** Checks for identity operations, e.g. `x + 0`.
+///
+/// **Why is this bad?** This code can be removed without changing the
+/// meaning. So it just obscures what's going on. Delete it mercilessly.
+///
+/// **Known problems:** None.
+///
+/// **Example:**
+/// ```rust
+/// x / 1 + 0 * 1 - 0 | 0
+/// ```
+declare_lint! {
+    pub IDENTITY_OP,
+    Warn,
+    "using identity operations, e.g. `x + 0` or `y / 1`"
+}
+
+#[derive(Copy, Clone)]
+pub struct IdentityOp;
+
+impl LintPass for IdentityOp {
+    fn get_lints(&self) -> LintArray {
+        lint_array!(IDENTITY_OP)
+    }
+}
+
+impl<'a, 'tcx> LateLintPass<'a, 'tcx> for IdentityOp {
+    fn check_expr(&mut self, cx: &LateContext<'a, 'tcx>, e: &'tcx Expr) {
+        if in_macro(e.span) {
+            return;
+        }
+        if let ExprBinary(ref cmp, ref left, ref right) = e.node {
+            match cmp.node {
+                BiAdd | BiBitOr | BiBitXor => {
+                    check(cx, left, 0, e.span, right.span);
+                    check(cx, right, 0, e.span, left.span);
+                },
+                BiShl | BiShr | BiSub => check(cx, right, 0, e.span, left.span),
+                BiMul => {
+                    check(cx, left, 1, e.span, right.span);
+                    check(cx, right, 1, e.span, left.span);
+                },
+                BiDiv => check(cx, right, 1, e.span, left.span),
+                BiBitAnd => {
+                    check(cx, left, -1, e.span, right.span);
+                    check(cx, right, -1, e.span, left.span);
+                },
+                _ => (),
+            }
+        }
+    }
+}
+
+fn all_ones(v: &ConstInt) -> bool {
+    match *v {
+        ConstInt::I8(i) => i == !0,
+        ConstInt::I16(i) => i == !0,
+        ConstInt::I32(i) => i == !0,
+        ConstInt::I64(i) => i == !0,
+        ConstInt::I128(i) => i == !0,
+        ConstInt::U8(i) => i == !0,
+        ConstInt::U16(i) => i == !0,
+        ConstInt::U32(i) => i == !0,
+        ConstInt::U64(i) => i == !0,
+        ConstInt::U128(i) => i == !0,
+        _ => false,
+    }
+}
+
+#[allow(cast_possible_wrap)]
+fn check(cx: &LateContext, e: &Expr, m: i8, span: Span, arg: Span) {
+    if let Some(Constant::Int(v)) = constant_simple(cx, e) {
+        if match m {
+            0 => v.to_u128_unchecked() == 0,
+            -1 => all_ones(&v),
+            1 => v.to_u128_unchecked() == 1,
+            _ => unreachable!(),
+        } {
+            span_lint(
+                cx,
+                IDENTITY_OP,
+                span,
+                &format!(
+                    "the operation is ineffective. Consider reducing it to `{}`",
+                    snippet(cx, arg, "..")
+                ),
+            );
+        }
+    }
+}

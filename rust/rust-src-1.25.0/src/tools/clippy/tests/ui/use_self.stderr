@@ -1,0 +1,40 @@
+error: unnecessary structure name repetition
+  --> $DIR/use_self.rs:14:21
+   |
+14 |         fn new() -> Foo {
+   |                     ^^^ help: use the applicable keyword: `Self`
+   |
+   = note: `-D use-self` implied by `-D warnings`
+
+error: unnecessary structure name repetition
+  --> $DIR/use_self.rs:15:13
+   |
+15 |             Foo {}
+   |             ^^^ help: use the applicable keyword: `Self`
+
+error: unnecessary structure name repetition
+  --> $DIR/use_self.rs:17:22
+   |
+17 |         fn test() -> Foo {
+   |                      ^^^ help: use the applicable keyword: `Self`
+
+error: unnecessary structure name repetition
+  --> $DIR/use_self.rs:18:13
+   |
+18 |             Foo::new()
+   |             ^^^^^^^^ help: use the applicable keyword: `Self`
+
+error: unnecessary structure name repetition
+  --> $DIR/use_self.rs:23:25
+   |
+23 |         fn default() -> Foo {
+   |                         ^^^ help: use the applicable keyword: `Self`
+
+error: unnecessary structure name repetition
+  --> $DIR/use_self.rs:24:13
+   |
+24 |             Foo::new()
+   |             ^^^^^^^^ help: use the applicable keyword: `Self`
+
+error: aborting due to 6 previous errors
+

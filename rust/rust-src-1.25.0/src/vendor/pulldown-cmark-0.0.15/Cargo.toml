@@ -1,0 +1,23 @@
+[package]
+name = "pulldown-cmark"
+version = "0.0.15"
+authors = [ "Raph Levien <raph@google.com>" ]
+license = "MIT"
+description = "A pull parser for CommonMark"
+repository = "https://github.com/google/pulldown-cmark"
+keywords = ["markdown", "commonmark"]
+
+build = "build.rs"
+
+[[bin]]
+name = "pulldown-cmark"
+required-features = ["getopts"]
+doc = false
+
+[dependencies]
+bitflags = "0.9"
+getopts = { version = "0.2", optional = true }
+
+[features]
+default = ["getopts"]
+gen-tests = []

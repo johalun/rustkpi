@@ -1,0 +1,27 @@
+[package]
+name = "walkdir"
+# remember to update html_root_url
+version = "2.0.1"  #:version
+authors = ["Andrew Gallant <jamslam@gmail.com>"]
+description = "Recursively walk a directory."
+documentation = "https://docs.rs/walkdir/"
+homepage = "https://github.com/BurntSushi/walkdir"
+repository = "https://github.com/BurntSushi/walkdir"
+readme = "README.md"
+keywords = ["directory", "recursive", "walk", "iterator"]
+categories = ["filesystem"]
+license = "Unlicense/MIT"
+
+[badges]
+travis-ci = { repository = "BurntSushi/walkdir" }
+appveyor = { repository = "BurntSushi/walkdir" }
+
+[dependencies]
+same-file = "1"
+
+[dev-dependencies]
+docopt = "0.8"
+quickcheck = { version = "0.4", default-features = false }
+rand = "0.3"
+serde = "1"
+serde_derive = "1"

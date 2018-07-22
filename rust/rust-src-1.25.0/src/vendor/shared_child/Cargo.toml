@@ -1,0 +1,13 @@
+[package]
+name = "shared_child"
+version = "0.2.1"
+authors = ["jacko"]
+license = "MIT"
+repository = "https://github.com/oconnor663/shared_child.rs"
+documentation = "https://docs.rs/shared_child"
+description = "a library for using child processes from multiple threads"
+
+[dependencies]
+libc = "^0.2.20"
+winapi = "^0.2.8"
+kernel32-sys = "^0.2.2"

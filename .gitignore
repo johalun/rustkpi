@@ -1,0 +1,7 @@
+**/*.o
+**/*.core
+**/target
+**/cscope*
+**/.DS_Store
+**/.#*
+

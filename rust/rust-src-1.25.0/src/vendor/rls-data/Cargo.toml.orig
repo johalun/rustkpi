@@ -1,0 +1,18 @@
+[package]
+name = "rls-data"
+version = "0.14.0"
+authors = ["Nick Cameron <ncameron@mozilla.com>"]
+description = "Data structures used by the RLS and Rust compiler"
+license = "Apache-2.0/MIT"
+repository = "https://github.com/nrc/rls-data"
+categories = ["development-tools"]
+
+[dependencies]
+rls-span = { version = "0.4", features = ["serialize-rustc"] }
+rustc-serialize = "0.3"
+serde = { version = "1.0", optional = true }
+serde_derive = { version = "1.0", optional = true }
+
+[features]
+borrows=[]
+serialize-serde = ["serde", "serde_derive"]

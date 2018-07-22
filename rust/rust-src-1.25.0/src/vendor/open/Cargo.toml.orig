@@ -1,0 +1,15 @@
+[package]
+
+name = "open"
+version = "1.2.1"
+authors = ["Sebastian Thiel <byronimo@gmail.com>"]
+license = "MIT"
+description = "Open a path or URL using the program configured on the system"
+repository = "https://github.com/Byron/open-rs"
+keywords = ["open", "xdg-open", "start", "launch"]
+documentation = "http://byron.github.io/open-rs"
+
+[[bin]]
+test = false
+doc = false
+name = "open"

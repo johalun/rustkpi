@@ -1,0 +1,3 @@
+[submodule "xz2-sys/xz"]
+	path = xz2-sys/xz
+	url = http://git.tukaani.org/xz.git

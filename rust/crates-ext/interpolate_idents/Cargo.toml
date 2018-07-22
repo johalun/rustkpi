@@ -1,0 +1,13 @@
+[package]
+name = "interpolate_idents"
+version = "0.2.2"
+authors = ["Skyler Lipthay <skyler.lipthay@gmail.com>"]
+description = "Useable macro identifier concatenation plugin"
+readme = "README.md"
+keywords = ["macro", "identifier", "concatenation"]
+license = "MIT"
+repository = "https://github.com/SkylerLipthay/interpolate_idents"
+
+[lib]
+name = "interpolate_idents"
+plugin = true
