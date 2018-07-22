@@ -33,10 +33,10 @@ TODO: Clean up files and write introduction.
    1. `sudo kldload kmod-helloworld/rustkpi-hello.ko`
    1. dmesg
 
-For the e1000 driver in kmod-e1000 the following are supported
+For the e1000 driver in kmod-e1000 the following devices are supported
 * bhyve with e1000 nic emulation
-* I218
-* I219-LM
+* I218 (found in Intel Broadwell laptops)
+* I219-LM (found in Intel Skylake laptops)
  
 kmod-e1000 is built the same way as described above. 
 
