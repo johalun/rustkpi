@@ -15,13 +15,9 @@ use bridge::*;
 use e1000_regs;
 use e1000_osdep::*;
 
-
-
-
-// We only need this if mac_type < 82543
-// Ignore for now.
 pub fn translate_register(reg: u32) -> u32 {
     e1000_println!();
+    // Only does something for 82543.
     incomplete!();
     reg
 }

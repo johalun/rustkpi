@@ -29,15 +29,12 @@ pub use self::kernel_sys::sysinit;
 pub use self::kernel_sys::sysinit_sub_id;
 pub use self::kernel_sys::sysinit_elem_order;
 
-// pub use self::kobj_sys::kobj;
-
 pub use self::module_sys::mod_metadata;
 pub use self::module_sys::mod_depend;
 pub use self::module_sys::mod_version;
 pub use self::module_sys::module_register_init;
 pub use self::module_sys::moduledata_t;
 pub use self::module_sys::module_t;
-// pub use self::module_sys::modeventtype_t;
 pub use self::module_sys::MDT_STRUCT_VERSION;
 pub use self::module_sys::MDT_DEPEND;
 pub use self::module_sys::MDT_VERSION;

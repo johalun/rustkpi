@@ -35,7 +35,7 @@ void rust_bus_space_write_4(bus_space_tag_t tag, bus_space_handle_t handle, bus_
 void rust_usec_delay(int usecs);
 
 /*
- * Wrap troublesome C pre-processor macros in functions that are easy to 
+ * Wrap difficult to convert C pre-processor macros in functions that are easy to 
  * call from Rust.
  */
 int

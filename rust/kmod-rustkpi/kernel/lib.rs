@@ -1,124 +1,11 @@
-//
-//
-
 #![no_std]
-
-// #![deny(missing_docs)]
-// #![deny(missing_debug_implementations)]
-
-//
-// Tell the compiler to link to either panic_abort or panic_unwind
-// #![needs_panic_runtime]
-
-// Turn warnings into errors, but only after stage0, where it can be useful for
-// code to emit warnings during language transitions
-// #![deny(warnings)]
-
-// std may use features in a platform-specific way
-// #![allow(unused_features,unused_variables, unused_mut, dead_code)]
-
-
-// Unknown features
-//
-// #![feature(global_asm)]
-// #![feature(used)]
-// #![feature(allow_internal_unsafe)]
-// #![feature(allow_internal_unstable)]
-// #![feature(align_offset)]
-// #![feature(asm)]
-// #![feature(box_syntax)]
-// #![feature(cfg_target_has_atomic)]
-// #![feature(cfg_target_thread_local)]
-// #![feature(cfg_target_vendor)]
-// #![feature(char_error_internals)]
-// #![feature(char_internals)]
-// #![feature(collections_range)]
-// #![feature(compiler_builtins_lib)]
 #![feature(const_fn)]
-// #![feature(core_float)]
-// #![feature(dropck_eyepatch)]
-// #![feature(exact_size_is_empty)]
-// #![feature(float_from_str_radix)]
-// #![feature(fn_traits)]
-// #![feature(fnbox)]
-// #![feature(fused)]
-// #![feature(generic_param_attrs)]
-// #![feature(hashmap_hasher)]
-// #![feature(heap_api)]
-// #![feature(i128)]
-// #![feature(i128_type)]
-// #![feature(inclusive_range)]
-// #![feature(int_error_internals)]
-// #![feature(integer_atomics)]
-// #![feature(into_cow)]
-// #![feature(libc)]
-// #![feature(link_args)]
-// #![feature(linkage)]
-// #![feature(macro_vis_matcher)]
-// #![feature(needs_panic_runtime)]
-// #![feature(never_type)]
-// #![feature(num_bits_bytes)]
-// #![feature(old_wrapping)]
-// #![feature(on_unimplemented)]
-// #![feature(oom)]
-// #![feature(optin_builtin_traits)]
-// #![feature(panic_unwind)]
-// #![feature(peek)]
-// #![feature(placement_in_syntax)]
-// #![feature(placement_new_protocol)]
-// #![feature(rand)]
-// #![feature(repr_simd)]
-// #![feature(rustc_attrs)]
-// #![cfg_attr(not(stage0), feature(rustc_const_unstable))]
-// #![feature(shared)]
-// #![feature(sip_hash_13)]
-// #![feature(slice_bytes)]
-// #![feature(slice_patterns)]
-// #![feature(staged_api)]
-// #![feature(stmt_expr_attributes)]
-// #![feature(str_char)]
-// #![feature(str_internals)]
-// #![feature(str_utf16)]
-// #![feature(test, rustc_private)]
-// #![feature(thread_local)]
-// #![feature(toowned_clone_into)]
-// #![feature(try_from)]
-// #![feature(unboxed_closures)]
-// #![feature(unique)]
-// #![feature(untagged_unions)]
-// #![feature(unwind_attributes)]
-// #![feature(vec_push_all)]
-// #![feature(doc_cfg)]
-// #![feature(doc_masked)]
-// #![cfg_attr(test, feature(update_panic_count))]
-// #![cfg_attr(not(stage0), feature(const_max_value))]
-// #![cfg_attr(not(stage0), feature(const_atomic_bool_new))]
-// #![cfg_attr(not(stage0), feature(const_atomic_isize_new))]
-// #![cfg_attr(not(stage0), feature(const_atomic_usize_new))]
-// #![cfg_attr(all(not(stage0), windows), feature(const_atomic_ptr_new))]
-// #![cfg_attr(not(stage0), feature(const_unsafe_cell_new))]
-// #![cfg_attr(not(stage0), feature(const_cell_new))]
-// #![cfg_attr(not(stage0), feature(const_once_new))]
-// #![cfg_attr(not(stage0), feature(const_ptr_null))]
-// #![cfg_attr(not(stage0), feature(const_ptr_null_mut))]
-
-
-
 #![feature(lang_items)]
 #![feature(macro_reexport)]
-
-// To use core::intrinsics (atomic_* functions etc)
 #![feature(core_intrinsics)]
-
 #![feature(prelude_import)]
-
-// To use core::raw
 #![feature(raw)]
-
-// Imported in prelude
 #![feature(slice_concat_ext)]
-
-// To use std_unicode, required by alloc
 #![feature(unicode)]
 
 // To use custom allocator
@@ -138,15 +25,11 @@ static ALLOC: alloc_kernel::System = alloc_kernel::System;
                  unreachable, unimplemented, write, writeln, try)]
 extern crate core as __core;
 
-// extern crate compiler_builtins;
-// extern crate kernel_sys;
-
 #[macro_use]
 #[macro_reexport(vec, format)]
 extern crate alloc;
 
 extern crate alloc_kernel;
-
 extern crate std_unicode;
 extern crate spin;
 
@@ -161,7 +44,6 @@ use prelude::v1::*;
 
 // The Rust prelude
 pub mod prelude;
-
 
 #[allow(dead_code, improper_ctypes, non_camel_case_types, non_snake_case, non_upper_case_globals)]
 pub mod sys;
@@ -228,7 +110,6 @@ mod kernel {
     pub use sys;
 }
 
-
 // Soft float functions that are missing.
 // We don't use floats in the kernel anyway so just keep
 // empty impl for now.
@@ -263,7 +144,6 @@ pub extern "C" fn __udivti3() {}
 pub extern "C" fn puts() {}
 
 
-
 #[lang = "eh_personality"]
 #[no_mangle]
 pub extern "C" fn rust_eh_personality() {}
@@ -291,7 +171,3 @@ pub extern "C" fn rust_begin_panic(
     }
     loop {}
 }
-
-
-// module_version!(rustkpi, 1);
-// module_depend!(rustkpi, pci, 1, 1, 1);

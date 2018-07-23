@@ -14,47 +14,7 @@ use kernel::sys::sysctl_sys::*;
 use kernel::sys;
 use core::ptr;
 
-
-// trace_macros!(true);
-
-// static SYSCTL_NODE(_dev, OID_AUTO, em, CTLFLAG_RD, 0, "EM driver parameters");
-// sysctl_node!(
-//     _dev,
-//     OID_AUTO,
-//     rustkpi,
-//     CTLFLAG_RD,
-//     None,
-//     "RustKPI parameters"
-// );
-
-// static int em_disable_crc_stripping = 0;
-// SYSCTL_INT(_hw_em, OID_AUTO, disable_crc_stripping, CTLFLAG_RDTUN,
-//     &em_disable_crc_stripping, 0, "Disable CRC Stripping");
-
-// static mut test: i32 = 0;
-// sysctl_int!(
-//     _dev_rustkpi,
-//     OID_AUTO,
-//     test_parameter,
-//     CTLFLAG_RWTUN,
-//     test,
-//     0,
-//     "Test parameter"
-// );
-
-// macro_rules! concat_idents {
-//     ($parent:tt, $name:tt) => {
-//         interpolate_idents!(
-//             [__ $parent __  $name]
-//         )
-//     }
-// }
-
 pub extern "C" fn module_event(_module: sys::module_t, event: c_int, _arg: *mut c_void) -> c_int {
-
-    // trace_macros!(true);
-    // let concat_idents!(hello, world) = 2i32;
-    // trace_macros!(false);
 
     match ModEventType::from(event) {
         ModEventType::Load => {

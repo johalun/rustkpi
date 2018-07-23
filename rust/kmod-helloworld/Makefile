@@ -2,7 +2,7 @@
 # Hello World kernel module for rustkpi.
 #
 
-######## GENERAL VARIABLES ########
+######## GENERAL VARIABLES
 
 CWD!=pwd
 ROOT=../../
@@ -12,22 +12,23 @@ RUST_SRC?=${ROOT}/rust-src-1.25.0/src
 SYSROOTFLAG?=
 OBJDIR?=/tmp/rkpi/objs
 LIBDIR?=/tmp/rkpi/rlibs
-
 MODULE_SRCS!=find ${CWD}/src -name "*.rs"
-
 COMPILERFLAGS?=-C opt-level=3 -C debuginfo=2 -C panic=abort \
 		-C link-dead-code -C llvm-args=-ffunction-sections
 
-######## KMOD VARIABLES ########
+
+######## KMOD VARIABLES
 
 KMOD=	rustkpi-hello
+# We need a dummy source file because kmod.mk can't handle empty SRCS
 SRCS=	dummy.c
 OBJS=	${OBJDIR}/hello.o
 
 CLEANFILES+=${OBJDIR}/libhello.a
 DEBUG_FLAGS += -g3
 
-#####################################################
+
+######## TARGETS
 
 ${OBJDIR}:
 	@echo -e "\033[1m===> Create folder ${.TARGET}\033[0m"

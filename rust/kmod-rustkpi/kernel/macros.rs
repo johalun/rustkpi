@@ -50,7 +50,6 @@ macro_rules! debugln {
 // Kernel C macros converted to Rust
 
 
-// #define	roundup(x, y)	((((x)+((y)-1))/(y))*(y))  /* to any y */
 #[macro_export]
 macro_rules! roundup {
     ($x:expr, $y:expr) => (
@@ -58,7 +57,6 @@ macro_rules! roundup {
     )
 }
 
-// #define	roundup2(x, y)	(((x)+((y)-1))&(~((y)-1))) /* if y is powers of two */
 #[macro_export]
 macro_rules! roundup2 {
     ($x:expr, $y:expr) => (
@@ -196,18 +194,6 @@ macro_rules! malloc_define {
     )
 }
 
-// #[macro_export]
-// macro_rules! malloc_declare {
-//     ($type:tt) => (
-//         extern "C" {
-//             pub static $type: kernel::kernel_sys::malloc_type;
-//         }
-//     )
-// }
-
-// #define	SYSCTL_NODE(parent, nbr, name, access, handler, descr) \
-// 	 SYSCTL_NODE_WITH_LABEL(parent, nbr, name, access, handler, descr, NULL)
-
 #[macro_export]
 macro_rules! sysctl_node {
     ($parent:ident, $nbr:path, $name:ident, $access:path, $handler:path, $descr:pat) => {
@@ -215,11 +201,6 @@ macro_rules! sysctl_node {
                                 $descr, 0usize);
     }
 }
-
-// SYSCTL_OID_GLOBAL(parent, nbr, name, CTLTYPE_NODE|(access),	\
-// 	          NULL, 0, handler, "N", descr, label);			\
-//     CTASSERT(((access) & CTLTYPE) == 0 ||				\
-// 	     ((access) & SYSCTL_CT_ASSERT_MASK) == CTLTYPE_NODE)
 
 #[macro_export]
 macro_rules! sysctl_node_with_label {
@@ -230,21 +211,12 @@ macro_rules! sysctl_node_with_label {
 }
 
 
-// #define	SYSCTL_CHILDREN(oid_ptr)		(&(oid_ptr)->oid_children)
-
 #[macro_export]
 macro_rules! sysctl_children {
     ($parent:ident) => {
         &$parent
     }
 }
-
-
-// /* This constructs a global "raw" MIB oid. */
-// #define	SYSCTL_OID_GLOBAL(parent, nbr, name, kind, a1, a2, handler, fmt, descr, label) \
-//     SYSCTL_OID_RAW(sysctl__##parent##_##name, \
-// 	SYSCTL_CHILDREN(&sysctl__##parent),	\
-// 	nbr, #name, kind, a1, a2, handler, fmt, descr, label)
 
 #[macro_export]
 macro_rules! sysctl_oid_global {
@@ -257,24 +229,6 @@ macro_rules! sysctl_oid_global {
         }
     }
 }
-
-// /* This macro is only for internal use */
-// #define	SYSCTL_OID_RAW(id, parent_child_head, nbr, name, kind, a1, a2, handler, fmt, descr, label) \
-// 	struct sysctl_oid id = {					\
-// 		.oid_parent = (parent_child_head),			\
-// 		.oid_children = SLIST_HEAD_INITIALIZER(&id.oid_children), \
-// 		.oid_number = (nbr),					\
-// 		.oid_kind = (kind),					\
-// 		.oid_arg1 = (a1),					\
-// 		.oid_arg2 = (a2),					\
-// 		.oid_name = (name),					\
-// 		.oid_handler = (handler),				\
-// 		.oid_fmt = (fmt),					\
-// 		.oid_descr = __DESCR(descr),				\
-// 		.oid_label = (label),					\
-// 	};								\
-// 	DATA_SET(sysctl_set, id)
-
 
 #[macro_export]
 macro_rules! sysctl_oid_raw {
@@ -305,35 +259,12 @@ macro_rules! sysctl_oid_raw {
     }
 }
 
-// #define	SYSCTL_NODE_CHILDREN(parent, name) \
-// 	sysctl__##parent##_##name.oid_children
-
-// #[macro_export]
-// macro_rules! sysctl_node_children {
-//     ($parent:ident, $name:ident) => {
-//         interpolate_idents!(
-//             [sysctl__ $parent _ $name .oid_children]
-//         )
-//     }
-// }
-
-// #define SYSCTL_INT(parent, nbr, name, access, ptr, val, descr) \
-// SYSCTL_INT_WITH_LABEL(parent, nbr, name, access, ptr, val, descr, NULL)
-
 #[macro_export]
 macro_rules! sysctl_int {
     ($parent:ident, $nbr:path, $name:ident, $access:path, $ptr:expr, $val:expr, $descr:pat) => {
         sysctl_int_with_label!($parent, $nbr, $name, $access, $ptr, $val, $descr, 0);
     }
 }
-
-// #define SYSCTL_INT_WITH_LABEL(parent, nbr, name, access, ptr, val, descr, label) \
-// 	SYSCTL_OID_WITH_LABEL(parent, nbr, name,			\
-// 	    CTLTYPE_INT | CTLFLAG_MPSAFE | (access),			\
-// 	    ptr, val, sysctl_handle_int, "I", descr, label);		\
-// 	CTASSERT((((access) & CTLTYPE) == 0 ||				\
-// 	    ((access) & SYSCTL_CT_ASSERT_MASK) == CTLTYPE_INT) && \
-// 	    sizeof(int) == sizeof(*(ptr)))
 
 #[macro_export]
 macro_rules! sysctl_int_with_label {
@@ -346,11 +277,6 @@ macro_rules! sysctl_int_with_label {
     }
 }
 
-// #define	SYSCTL_OID_WITH_LABEL(parent, nbr, name, kind, a1, a2, handler, fmt, descr, label) \
-//     static SYSCTL_OID_RAW(sysctl__##parent##_##name,			\
-// 	SYSCTL_CHILDREN(&sysctl__##parent),				\
-// 	nbr, #name, kind, a1, a2, handler, fmt, descr, label)
-
 #[macro_export]
 macro_rules! sysctl_oid_with_label {
     ($parent:ident, $nbr:path, $name:ident, $kind:expr, $a1:expr, $a2:expr, $handler:expr, $fmt:tt, $descr:pat, $label:pat) => {
@@ -361,10 +287,3 @@ macro_rules! sysctl_oid_with_label {
         }
     }
 }
-
-// #[macro_export]
-// macro_rules! roundup {
-//     ($x:expr, $y:expr) => (
-//         (((($x) + (($y) - 1)) / ($y)) * ($y))
-//     )
-// }

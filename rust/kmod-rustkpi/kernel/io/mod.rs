@@ -2,9 +2,6 @@ use core::fmt;
 use vec::Vec;
 use string::String;
 use core::result;
-// use core::ptr;
-// use sys::raw;
-// use sys::malloc_sys as malloc;
 use sys::systm_sys as systm;
 use str;
 

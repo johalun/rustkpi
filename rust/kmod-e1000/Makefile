@@ -2,7 +2,7 @@
 # Rust port of the e1000 NIC driver
 #
 
-######## GENERAL VARIABLES ########
+######## GENERAL VARIABLES
 
 CWD!=pwd
 ROOT=../../
@@ -13,10 +13,10 @@ SYSROOTFLAG?=
 OBJDIR?=/tmp/rkpi/objs
 LIBDIR?=/tmp/rkpi/rlibs
 MODULE_SRCS!=find ${CWD}/src -name "*.rs"
-
 COMPILERFLAGS?=-C opt-level=3 -C debuginfo=2 -C panic=abort
 
-######## KMOD VARIABLES ########
+
+######## KMOD VARIABLES
 
 KMOD=	if_rem
 
@@ -29,7 +29,8 @@ CLEANFILES+=${OBJDIR}/librust_em.a
 DEBUG_FLAGS += -g3
 #WITH_CTF=1
 
-######## TARGETS ########
+
+######## TARGETS
 
 ${OBJDIR}:
 	@echo -e "\033[1m===> Create folder ${.TARGET:T:R}\033[0m"

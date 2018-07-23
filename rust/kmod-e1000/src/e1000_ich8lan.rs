@@ -18,94 +18,43 @@ use e1000_regs::*;
 use e1000_phy;
 use e1000_nvm;
 
-// #define PHY_REG(page, reg)	(((page) << PHY_PAGE_SHIFT) | \
-// 				 ((reg) & MAX_PHY_REG_ADDRESS))
 pub const fn fn_phy_reg(page: u32, reg: u32) -> u32 {
     (page << PHY_PAGE_SHIFT) | (reg & MAX_PHY_REG_ADDRESS)
 }
 
 /* SMBus Control Phy Register */
-// define CV_SMB_CTRL		PHY_REG(769, 23)
 const CV_SMB_CTRL: u32 = fn_phy_reg(769, 23);
-
 /* SMBus Address Phy Register */
-// #define HV_SMB_ADDR		PHY_REG(768, 26)
 const HV_SMB_ADDR: u32 = fn_phy_reg(768, 26);
-
 /* PHY Power Management Control */
-// #define HV_PM_CTRL		PHY_REG(770, 17)
 const HV_PM_CTRL: u32 = fn_phy_reg(770, 17);
-
 /* LED Configuration */
-// #define HV_LED_CONFIG	PHY_REG(768, 30)
 const HV_LED_CONFIG: u32 = fn_phy_reg(768, 30);
-
 /* OEM Bits Phy Register */
-// #define HV_OEM_BITS		PHY_REG(768, 25)
 const HV_OEM_BITS: u32 = fn_phy_reg(768, 25);
-
 /* I218 Ultra Low Power Configuration 1 Register */
-// #define I218_ULP_CONFIG1	PHY_REG(779, 16)
 const I218_ULP_CONFIG1: u32 = fn_phy_reg(779, 16);
-
-// #define BM_PORT_GEN_CFG	PHY_REG(BM_PORT_CTRL_PAGE, 17)
 const BM_PORT_GEN_CFG: u32 = fn_phy_reg(BM_PORT_CTRL_PAGE, 17);
-
-// #define HV_SCC_UPPER	PHY_REG(HV_STATS_PAGE, 16) /* Single Collision */
 const HV_SCC_UPPER: u32 = fn_phy_reg(HV_STATS_PAGE, 16); /* Single Collision */
-
-// #define HV_SCC_LOWER	PHY_REG(HV_STATS_PAGE, 17)
 const HV_SCC_LOWER: u32 = fn_phy_reg(HV_STATS_PAGE, 17);
-
-// #define HV_ECOL_UPPER	PHY_REG(HV_STATS_PAGE, 18) /* Excessive Coll. */
 const HV_ECOL_UPPER: u32 = fn_phy_reg(HV_STATS_PAGE, 18); /* Excessive Coll. */
-
-// #define HV_ECOL_LOWER	PHY_REG(HV_STATS_PAGE, 19)
 const HV_ECOL_LOWER: u32 = fn_phy_reg(HV_STATS_PAGE, 19);
-
-// #define HV_MCC_UPPER	PHY_REG(HV_STATS_PAGE, 20) /* Multiple Collision */
 const HV_MCC_UPPER: u32 = fn_phy_reg(HV_STATS_PAGE, 20); /* Multiple Collision */
-
-// #define HV_MCC_LOWER	PHY_REG(HV_STATS_PAGE, 21)
 const HV_MCC_LOWER: u32 = fn_phy_reg(HV_STATS_PAGE, 21);
-
-// #define HV_LATECOL_UPPER PHY_REG(HV_STATS_PAGE, 23) /* Late Collision */
 const HV_LATECOL_UPPER: u32 = fn_phy_reg(HV_STATS_PAGE, 23); /* Late Collision */
-
-// #define HV_LATECOL_LOWER PHY_REG(HV_STATS_PAGE, 24)
 const HV_LATECOL_LOWER: u32 = fn_phy_reg(HV_STATS_PAGE, 24);
-
-// #define HV_COLC_UPPER	PHY_REG(HV_STATS_PAGE, 25) /* Collision */
 const HV_COLC_UPPER: u32 = fn_phy_reg(HV_STATS_PAGE, 25);
-
-// #define HV_COLC_LOWER	PHY_REG(HV_STATS_PAGE, 26)
 const HV_COLC_LOWER: u32 = fn_phy_reg(HV_STATS_PAGE, 26);
-
-// #define HV_DC_UPPER	PHY_REG(HV_STATS_PAGE, 27) /* Defer Count */
 const HV_DC_UPPER: u32 = fn_phy_reg(HV_STATS_PAGE, 27);
-
-// #define HV_DC_LOWER	PHY_REG(HV_STATS_PAGE, 28)
 const HV_DC_LOWER: u32 = fn_phy_reg(HV_STATS_PAGE, 28);
-
-// #define HV_TNCRS_UPPER	PHY_REG(HV_STATS_PAGE, 29) /* Tx with no CRS */
 const HV_TNCRS_UPPER: u32 = fn_phy_reg(HV_STATS_PAGE, 29);
-
-// #define HV_TNCRS_LOWER	PHY_REG(HV_STATS_PAGE, 30)
 const HV_TNCRS_LOWER: u32 = fn_phy_reg(HV_STATS_PAGE, 30);
-
-// #define I217_PLL_CLOCK_GATE_REG	PHY_REG(772, 28)
 const I217_PLL_CLOCK_GATE_REG: u32 = fn_phy_reg(772, 28);
-
 /* KMRN FIFO Control and Status */
-// #define HV_KMRN_FIFO_CTRLSTA		PHY_REG(770, 16)
 const HV_KMRN_FIFO_CTRLSTA: u32 = fn_phy_reg(770, 16);
-
 /* PHY Low Power Idle Control */
-// #define I82579_LPI_CTRL		PHY_REG(772, 20)
 const I82579_LPI_CTRL: u32 = fn_phy_reg(772, 20);
-
 /* Inband Control */
-// #define I217_INBAND_CTRL		PHY_REG(770, 18)
 const I217_INBAND_CTRL: u32 = fn_phy_reg(770, 18);
 
 ///  e1000_init_function_pointers_ich8lan - Initialize ICH8 function pointers
@@ -114,25 +63,6 @@ const I217_INBAND_CTRL: u32 = fn_phy_reg(770, 18);
 ///  Initialize family-specific function pointers for PHY, MAC, and NVM.
 pub fn init_function_pointers(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
-
-    // hw->mac.ops.init_params = e1000_init_mac_params_ich8lan;
-    // hw->nvm.ops.init_params = e1000_init_nvm_params_ich8lan;
-    // switch (hw->mac.type) {
-    // case e1000_ich8lan:
-    // case e1000_ich9lan:
-    // case e1000_ich10lan:
-    // 	hw->phy.ops.init_params = e1000_init_phy_params_ich8lan;
-    // 	break;
-    // case e1000_pchlan:
-    // case e1000_pch2lan:
-    // case e1000_pch_lpt:
-    // case e1000_pch_spt:
-    // case e1000_pch_cnp:
-    // 	hw->phy.ops.init_params = e1000_init_phy_params_pchlan;
-    // 	break;
-    // default:
-    // 	break;
-    // }
 
     adapter.hw.mac.ops.init_params = Some(init_mac_params_ich8lan);
     adapter.hw.nvm.ops.init_params = Some(init_nvm_params_ich8lan);
@@ -165,32 +95,12 @@ pub fn init_function_pointers(adapter: &mut Adapter) -> AdResult {
 pub fn phy_is_accessible_pchlan(adapter: &mut Adapter) -> Result<bool, String> {
     e1000_println!();
 
-    // 	u16 phy_reg = 0;
-    // 	u32 phy_id = 0;
-    // 	s32 ret_val = 0;
-    // 	u16 retry_count;
-    // 	u32 mac_reg = 0;
     let mut phy_reg: u16 = 0;
     let mut phy_id: u32 = 0;
     let mut retry_count: u16 = 0;
     let mut mac_reg: u32 = 0;
 
-    // 	for (retry_count = 0; retry_count < 2; retry_count++) {
-    // 		ret_val = hw->phy.ops.read_reg_locked(hw, PHY_ID1, &phy_reg);
-    // 		if (ret_val || (phy_reg == 0xFFFF))
-    // 			continue;
-    // 		phy_id = (u32)(phy_reg << 16);
-
-    // 		ret_val = hw->phy.ops.read_reg_locked(hw, PHY_ID2, &phy_reg);
-    // 		if (ret_val || (phy_reg == 0xFFFF)) {
-    // 			phy_id = 0;
-    // 			continue;
-    // 		}
-    // 		phy_id |= (u32)(phy_reg & PHY_REVISION_MASK);
-    // 		break;
-    // 	}
     for i in 0..2 {
-        // retry_count += 1;
         let res = adapter.phy_read_reg_locked(PHY_ID1, &mut phy_reg);
         if res.is_err() || phy_reg == 0xFFFF {
             eprintln!("(IGNORE) {:?}", res.unwrap_err());
@@ -208,27 +118,6 @@ pub fn phy_is_accessible_pchlan(adapter: &mut Adapter) -> Result<bool, String> {
         break;
     }
 
-    // 	if (hw->phy.id) {
-    // 		if  (hw->phy.id == phy_id)
-    // 			goto out;
-    // 	} else if (phy_id) {
-    // 		hw->phy.id = phy_id;
-    // 		hw->phy.revision = (u32)(phy_reg & ~PHY_REVISION_MASK);
-    // 		goto out;
-    // 	}
-    /* In case the PHY needs to be in mdio slow mode,
-     *  set slow mode and try to get the PHY id again.
-     */
-    // 	if (hw->mac.type < e1000_pch_lpt) {
-    // 		hw->phy.ops.release(hw);
-    // 		ret_val = e1000_set_mdio_slow_mode_hv(hw);
-    // 		if (!ret_val)
-    // 			ret_val = e1000_get_phy_id(hw);
-    // 		hw->phy.ops.acquire(hw);
-    // 	}
-
-    // 	if (ret_val)
-    // 		return FALSE;
     'out: loop {
         let mut res = Ok(());
         if adapter.hw.phy.id != 0 {
@@ -254,22 +143,6 @@ pub fn phy_is_accessible_pchlan(adapter: &mut Adapter) -> Result<bool, String> {
         }
         break 'out;
     }
-    // out:
-    // 	if (hw->mac.type >= e1000_pch_lpt) {
-    // 		/* Only unforce SMBus if ME is not active */
-    // 		if (!(E1000_READ_REG(hw, E1000_FWSM) &
-    // 		    E1000_ICH_FWSM_FW_VALID)) {
-    // 			/* Unforce SMBus mode in PHY */
-    // 			hw->phy.ops.read_reg_locked(hw, CV_SMB_CTRL, &phy_reg);
-    // 			phy_reg &= ~CV_SMB_CTRL_FORCE_SMBUS;
-    // 			hw->phy.ops.write_reg_locked(hw, CV_SMB_CTRL, phy_reg);
-
-    // 			/* Unforce SMBus mode in MAC */
-    // 			mac_reg = E1000_READ_REG(hw, E1000_CTRL_EXT);
-    // 			mac_reg &= ~E1000_CTRL_EXT_FORCE_SMBUS;
-    // 			E1000_WRITE_REG(hw, E1000_CTRL_EXT, mac_reg);
-    // 		}
-    // 	}
     if adapter.hw.mac.mac_type >= MacType::Mac_pch_lpt {
         if !btst!(adapter.read_register(E1000_FWSM), E1000_ICH_FWSM_FW_VALID) {
             try!(
@@ -292,7 +165,6 @@ pub fn phy_is_accessible_pchlan(adapter: &mut Adapter) -> Result<bool, String> {
             adapter.clear_register_bit(E1000_CTRL_EXT, E1000_CTRL_EXT_FORCE_SMBUS);
         }
     }
-    // return TRUE;
     Ok(true)
 }
 
@@ -304,52 +176,26 @@ pub fn phy_is_accessible_pchlan(adapter: &mut Adapter) -> Result<bool, String> {
 pub fn toggle_lanphypc_pch_lpt(adapter: &mut Adapter) {
     e1000_println!();
 
-    // u32 mac_reg;
     let mut mac_reg: u32;
 
-    // DEBUGFUNC("e1000_toggle_lanphypc_pch_lpt");
-
     /* Set Phy Config Counter to 50msec */
-    // mac_reg = E1000_READ_REG(hw, E1000_FEXTNVM3);
-    // mac_reg &= ~E1000_FEXTNVM3_PHY_CFG_COUNTER_MASK;
-    // mac_reg |= E1000_FEXTNVM3_PHY_CFG_COUNTER_50MSEC;
-    // E1000_WRITE_REG(hw, E1000_FEXTNVM3, mac_reg);
     mac_reg = adapter.read_register(E1000_FEXTNVM3);
     mac_reg &= !E1000_FEXTNVM3_PHY_CFG_COUNTER_MASK;
     mac_reg |= E1000_FEXTNVM3_PHY_CFG_COUNTER_50MSEC;
     adapter.write_register(E1000_FEXTNVM3, mac_reg);
 
     /* Toggle LANPHYPC Value bit */
-    // mac_reg = E1000_READ_REG(hw, E1000_CTRL);
-    // mac_reg |= E1000_CTRL_LANPHYPC_OVERRIDE;
-    // mac_reg &= ~E1000_CTRL_LANPHYPC_VALUE;
-    // E1000_WRITE_REG(hw, E1000_CTRL, mac_reg);
-    // E1000_WRITE_FLUSH(hw);
     mac_reg = adapter.read_register(E1000_CTRL);
     mac_reg |= E1000_CTRL_LANPHYPC_OVERRIDE;
     mac_reg &= !E1000_CTRL_LANPHYPC_VALUE;
     adapter.write_register(E1000_CTRL, mac_reg);
     adapter.write_flush();
 
-    // msec_delay(1);
-    // mac_reg &= ~E1000_CTRL_LANPHYPC_OVERRIDE;
-    // E1000_WRITE_REG(hw, E1000_CTRL, mac_reg);
-    // E1000_WRITE_FLUSH(hw);
     do_msec_delay(1);
     mac_reg &= !E1000_CTRL_LANPHYPC_OVERRIDE;
     adapter.write_register(E1000_CTRL, mac_reg);
     adapter.write_flush();
 
-    // if (hw->mac.type < e1000_pch_lpt) {
-    // 	msec_delay(50);
-    // } else {
-    // 	u16 count = 20;
-    // 	do {
-    // 		msec_delay(5);
-    // 	} while (!(E1000_READ_REG(hw, E1000_CTRL_EXT) &
-    // 		   E1000_CTRL_EXT_LPCD) && count--);
-    // 	msec_delay(30);
-    // }
     if adapter.hw.mac.mac_type < MacType::Mac_pch_lpt {
         do_msec_delay(50);
     } else {
@@ -372,12 +218,8 @@ pub fn toggle_lanphypc_pch_lpt(adapter: &mut Adapter) {
 /// and resume paths.
 pub fn init_phy_workarounds_pchlan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
-    // 	u32 mac_reg, fwsm = E1000_READ_REG(hw, E1000_FWSM);
-    // 	s32 ret_val;
 
     let mut ret_val = 0;
-
-    // 	DEBUGFUNC("e1000_init_phy_workarounds_pchlan");
 
     fn out(adapter: &mut Adapter, fwsm: u32) {
         if adapter.is_mac(MacType::Mac_pch2lan) && !btst!(fwsm, E1000_ICH_FWSM_FW_VALID) {
@@ -389,56 +231,28 @@ pub fn init_phy_workarounds_pchlan(adapter: &mut Adapter) -> AdResult {
     let mut mac_reg: u32;
     let mut fwsm: u32 = adapter.read_register(E1000_FWSM);
 
-    // 	/* Gate automatic PHY configuration by hardware on managed and
-    //   * non-managed 82579 and newer adapters.
-    // 	 */
-    // 	e1000_gate_hw_phy_config_ich8lan(hw, TRUE);
+    /* Gate automatic PHY configuration by hardware on managed and
+     * non-managed 82579 and newer adapters.
+     */
     gate_hw_phy_config_ich8lan(adapter, true);
 
-    // 	/* It is not possible to be certain of the current state of ULP
-    //   * so forcibly disable it.
-    // 	 */
-    // 	hw->dev_spec.ich8lan.ulp_state = e1000_ulp_state_unknown;
+    /* It is not possible to be certain of the current state of ULP
+     * so forcibly disable it.
+     */
     unsafe {
         adapter.hw.dev_spec.ich8lan.ulp_state = UlpState::Unknown;
     }
 
-    // 	e1000_disable_ulp_lpt_lp(hw, TRUE);
     if let Err(e) = disable_ulp_lpt_lp(adapter, true) {
         eprintln!("(IGNORE) {:?}", e);
     }
 
-    // 	ret_val = hw->phy.ops.acquire(hw);
-    // 	if (ret_val) {
-    // 		DEBUGOUT("Failed to initialize PHY flow\n");
-    // 		goto out;
-    // 	}
     try!(adapter.phy_acquire());
 
     /* The MAC-PHY interconnect may be in SMBus mode.  If the PHY is
      * inaccessible and resetting the PHY is not blocked, toggle the
      * LANPHYPC Value bit to force the interconnect to PCIe mode.
      */
-    // 	switch (hw->mac.type) {
-    // 	case e1000_pch_lpt:
-    // 	case e1000_pch_spt:
-    // 	case e1000_pch_cnp:
-    // 		if (e1000_phy_is_accessible_pchlan(hw))
-    // 			break;
-
-    // 		/* Before toggling LANPHYPC, see if PHY is accessible by
-    //  	 * forcing MAC to SMBus mode first.
-    // 		 */
-    // 		mac_reg = E1000_READ_REG(hw, E1000_CTRL_EXT);
-    // 		mac_reg |= E1000_CTRL_EXT_FORCE_SMBUS;
-    // 		E1000_WRITE_REG(hw, E1000_CTRL_EXT, mac_reg);
-
-    // 		/* Wait 50 milliseconds for MAC to finish any retries
-    //		 * that it might be trying to perform from previous
-    // 		 * attempts to acknowledge any phy read requests.
-    // 		 */
-    // 		 msec_delay(50);
-    // 		/* fall-through */
 
     'switch: loop {
         let macs1 = [
@@ -458,11 +272,6 @@ pub fn init_phy_workarounds_pchlan(adapter: &mut Adapter) -> AdResult {
             adapter.set_register_bit(E1000_CTRL_EXT, E1000_CTRL_EXT_FORCE_SMBUS);
             do_msec_delay(50);
         }
-        // 	case e1000_pch2lan:
-        // 		if (e1000_phy_is_accessible_pchlan(hw))
-        // 			break;
-
-        // 		/* fall-through */
         if adapter.is_macs(&macs1) || adapter.is_macs(&macs2) {
             match phy_is_accessible_pchlan(adapter) {
                 Ok(true) => break 'switch,
@@ -470,35 +279,6 @@ pub fn init_phy_workarounds_pchlan(adapter: &mut Adapter) -> AdResult {
                 Err(e) => eprintln!("(NON FATAL) {:?}", e),
             }
         }
-        // 	case e1000_pchlan:
-        // 		if ((hw->mac.type == e1000_pchlan) &&
-        // 		    (fwsm & E1000_ICH_FWSM_FW_VALID))
-        // 			break;
-
-        // 		if (hw->phy.ops.check_reset_block(hw)) {
-        // 			DEBUGOUT("Required LANPHYPC toggle blocked by ME\n");
-        // 			ret_val = -E1000_ERR_PHY;
-        // 			break;
-        // 		}
-
-        // 		/* Toggle LANPHYPC Value bit */
-        // 		e1000_toggle_lanphypc_pch_lpt(hw);
-        // 		if (hw->mac.type >= e1000_pch_lpt) {
-        // 			if (e1000_phy_is_accessible_pchlan(hw))
-        // 				break;
-
-        // 			/* Toggling LANPHYPC brings the PHY out of SMBus mode
-        // 			 * so ensure that the MAC is also out of SMBus mode
-        // 			 */
-        // 			mac_reg = E1000_READ_REG(hw, E1000_CTRL_EXT);
-        // 			mac_reg &= ~E1000_CTRL_EXT_FORCE_SMBUS;
-        // 			E1000_WRITE_REG(hw, E1000_CTRL_EXT, mac_reg);
-
-        // 			if (e1000_phy_is_accessible_pchlan(hw))
-        // 				break;
-
-        // 			ret_val = -E1000_ERR_PHY;
-        // 		}
         if adapter.is_macs(&macs1) || adapter.is_macs(&macs2) || adapter.is_macs(&macs3) {
             if adapter.is_mac(MacType::Mac_pchlan) && btst!(fwsm, E1000_ICH_FWSM_FW_VALID) {
                 break 'switch;
@@ -527,21 +307,10 @@ pub fn init_phy_workarounds_pchlan(adapter: &mut Adapter) -> AdResult {
                 ret_val = E1000_ERR_PHY;
             }
         }
-        // 		break;
-        // 	default:
-        // 		break;
-        // 	}
         break 'switch;
     }
-    // 	hw->phy.ops.release(hw);
     try!(adapter.phy_release());
 
-    // 	if (!ret_val) {
-    // 		/* Check to see if able to reset PHY.  Print error if not */
-    // 		if (hw->phy.ops.check_reset_block(hw)) {
-    // 			ERROR_REPORT("Reset blocked by ME\n");
-    // 			goto out;
-    // 		}
     if ret_val == 0 {
         try!(match adapter.check_reset_block() {
             Ok(true) => {
@@ -553,30 +322,23 @@ pub fn init_phy_workarounds_pchlan(adapter: &mut Adapter) -> AdResult {
             Err(e) => Err(e),
         });
 
-        // 		/* Reset the PHY before any access to it.  Doing so, ensures
-        // 		 * that the PHY is in a known good state before we read/write
-        // 		 * PHY registers.  The generic reset is sufficient here,
-        // 		 * because we haven't determined the PHY type yet.
-        // 		 */
-        // 		ret_val = e1000_phy_hw_reset_generic(hw);
-        // 		if (ret_val)
-        // 			goto out;
+        /* Reset the PHY before any access to it.  Doing so, ensures
+         * that the PHY is in a known good state before we read/write
+         * PHY registers.  The generic reset is sufficient here,
+         * because we haven't determined the PHY type yet.
+         */
         let res = e1000_phy::phy_hw_reset_generic(adapter);
         if res.is_err() {
             out(adapter, fwsm);
             return res;
         }
 
-        // 		/* On a successful reset, possibly need to wait for the PHY
-        // 		 * to quiesce to an accessible state before returning control
-        // 		 * to the calling function.  If the PHY does not quiesce, then
-        // 		 * return E1000E_BLK_PHY_RESET, as this is the condition that
-        // 		 * the PHY is in.
-        // 		 */
-        // 		ret_val = hw->phy.ops.check_reset_block(hw);
-        // 		if (ret_val)
-        // 			ERROR_REPORT("ME blocked access to PHY after reset\n");
-        // 	}
+        /* On a successful reset, possibly need to wait for the PHY
+         * to quiesce to an accessible state before returning control
+         * to the calling function.  If the PHY does not quiesce, then
+         * return E1000E_BLK_PHY_RESET, as this is the condition that
+         * the PHY is in.
+         */
         try!(match adapter.check_reset_block() {
             Ok(true) => {
                 eprintln!("ME blocked access to PHY after reset");
@@ -588,12 +350,6 @@ pub fn init_phy_workarounds_pchlan(adapter: &mut Adapter) -> AdResult {
         });
     }
 
-    // out:
-    // 	if ((hw->mac.type == e1000_pch2lan) &&
-    // 	    !(fwsm & E1000_ICH_FWSM_FW_VALID)) {
-    // 		msec_delay(10);
-    // 		e1000_gate_hw_phy_config_ich8lan(hw, FALSE);
-    // 	}
     /* Ungate automatic PHY configuration on non-managed 82579 */
     out(adapter, fwsm);
     if ret_val == 0 {
@@ -609,34 +365,11 @@ pub fn init_phy_workarounds_pchlan(adapter: &mut Adapter) -> AdResult {
 /// Initialize family-specific PHY parameters and function pointers.
 pub fn init_phy_params_pchlan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
-    // struct e1000_phy_info *phy = &hw->phy;
     {
         let phy: &mut PhyInfo = &mut adapter.hw.phy;
 
-        // s32 ret_val;
-        // DEBUGFUNC("e1000_init_phy_params_pchlan");
-
-        // phy->addr		= 1;
-        // phy->reset_delay_us	= 100;
         phy.addr = 1;
         phy.reset_delay_us = 100;
-
-        // phy->ops.acquire	= e1000_acquire_swflag_ich8lan;
-        // phy->ops.check_reset_block = e1000_check_reset_block_ich8lan;
-        // phy->ops.get_cfg_done	= e1000_get_cfg_done_ich8lan;
-        // phy->ops.set_page	= e1000_set_page_igp;
-        // phy->ops.read_reg	= e1000_read_phy_reg_hv;
-        // phy->ops.read_reg_locked = e1000_read_phy_reg_hv_locked;
-        // phy->ops.read_reg_page	= e1000_read_phy_reg_page_hv;
-        // phy->ops.release	= e1000_release_swflag_ich8lan;
-        // phy->ops.reset		= e1000_phy_hw_reset_ich8lan;
-        // phy->ops.set_d0_lplu_state = e1000_set_lplu_state_pchlan;
-        // phy->ops.set_d3_lplu_state = e1000_set_lplu_state_pchlan;
-        // phy->ops.write_reg	= e1000_write_phy_reg_hv;
-        // phy->ops.write_reg_locked = e1000_write_phy_reg_hv_locked;
-        // phy->ops.write_reg_page	= e1000_write_phy_reg_page_hv;
-        // phy->ops.power_up	= e1000_power_up_phy_copper;
-        // phy->ops.power_down	= e1000_power_down_phy_copper_ich8lan;
 
         phy.ops.acquire = Some(acquire_swflag_ich8lan);
         phy.ops.check_reset_block = Some(check_reset_block_ich8lan);
@@ -655,42 +388,12 @@ pub fn init_phy_params_pchlan(adapter: &mut Adapter) -> AdResult {
         phy.ops.power_up = Some(e1000_phy::power_up_phy_copper);
         phy.ops.power_down = Some(power_down_phy_copper_ich8lan);
 
-        // phy->autoneg_mask	= AUTONEG_ADVERTISE_SPEED_DEFAULT;
-        // phy->id = e1000_phy_unknown;
         phy.autoneg_mask = AUTONEG_ADVERTISE_SPEED_DEFAULT as u16;
         phy.id = PhyType::Type_unknown as u32;
     }
-    // ret_val = e1000_init_phy_workarounds_pchlan(hw);
-    // if (ret_val)
-    // 	return ret_val;
+
     try!(init_phy_workarounds_pchlan(adapter));
     e1000_println!("init_phy_workarounds_pchlan() done");
-
-    // if (phy->id == e1000_phy_unknown)
-    // 	switch (hw->mac.type) {
-    // 	default:
-    // 		ret_val = e1000_get_phy_id(hw);
-    // 		if (ret_val)
-    // 			return ret_val;
-    // 		if ((phy->id != 0) && (phy->id != PHY_REVISION_MASK))
-    // 			break;
-    // 		/* fall-through */
-    // 	case e1000_pch2lan:
-    // 	case e1000_pch_lpt:
-    // 	case e1000_pch_spt:
-    // 	case e1000_pch_cnp:
-    // 		/* In case the PHY needs to be in mdio slow mode,
-    // 		 * set slow mode and try to get the PHY id again.
-    // 		 */
-    // 		ret_val = e1000_set_mdio_slow_mode_hv(hw);
-    // 		if (ret_val)
-    // 			return ret_val;
-    // 		ret_val = e1000_get_phy_id(hw);
-    // 		if (ret_val)
-    // 			return ret_val;
-    // 		break;
-    // 	}
-    // phy->type = e1000_get_phy_type_from_id(phy->id);
 
     'switch: loop {
         if adapter.hw.phy.id == PhyType::Type_unknown as u32 {
@@ -717,27 +420,6 @@ pub fn init_phy_params_pchlan(adapter: &mut Adapter) -> AdResult {
     adapter.hw.phy.phy_type = e1000_phy::get_phy_type_from_id(adapter.hw.phy.id);
     e1000_println!("get_phy_type_from_id() done. {:?}", adapter.hw.phy.phy_type);
 
-    // switch (phy->type) {
-    // case e1000_phy_82577:
-    // case e1000_phy_82579:
-    // case e1000_phy_i217:
-    // 	phy->ops.check_polarity = e1000_check_polarity_82577;
-    // 	phy->ops.force_speed_duplex =
-    // 		e1000_phy_force_speed_duplex_82577;
-    // 	phy->ops.get_cable_length = e1000_get_cable_length_82577;
-    // 	phy->ops.get_info = e1000_get_phy_info_82577;
-    // 	phy->ops.commit = e1000_phy_sw_reset_generic;
-    // 	break;
-    // case e1000_phy_82578:
-    // 	phy->ops.check_polarity = e1000_check_polarity_m88;
-    // 	phy->ops.force_speed_duplex = e1000_phy_force_speed_duplex_m88;
-    // 	phy->ops.get_cable_length = e1000_get_cable_length_m88;
-    // 	phy->ops.get_info = e1000_get_phy_info_m88;
-    // 	break;
-    // default:
-    // 	ret_val = -E1000_ERR_PHY;
-    // 	break;
-    // }
     match adapter.hw.phy.phy_type {
         PhyType::Type_82577 | PhyType::Type_82579 | PhyType::Type_i217 => {
             adapter.hw.phy.ops.check_polarity = Some(e1000_phy::check_polarity_82577);
@@ -763,92 +445,8 @@ pub fn init_phy_params_pchlan(adapter: &mut Adapter) -> AdResult {
 /// Initialize family-specific PHY parameters and function pointers.
 pub fn init_phy_params_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
-    incomplete!();
-    Err("not yet".to_string())
-
-    // DONT NEED THIS FUNCTION!
-
-    // struct e1000_phy_info *phy = &hw->phy;
-    // s32 ret_val;
-    // u16 i = 0;
-
-    // DEBUGFUNC("e1000_init_phy_params_ich8lan");
-
-    // phy->addr		= 1;
-    // phy->reset_delay_us	= 100;
-
-    // phy->ops.acquire	= e1000_acquire_swflag_ich8lan;
-    // phy->ops.check_reset_block = e1000_check_reset_block_ich8lan;
-    // phy->ops.get_cable_length = e1000_get_cable_length_igp_2;
-    // phy->ops.get_cfg_done	= e1000_get_cfg_done_ich8lan;
-    // phy->ops.read_reg	= e1000_read_phy_reg_igp;
-    // phy->ops.release	= e1000_release_swflag_ich8lan;
-    // phy->ops.reset		= e1000_phy_hw_reset_ich8lan;
-    // phy->ops.set_d0_lplu_state = e1000_set_d0_lplu_state_ich8lan;
-    // phy->ops.set_d3_lplu_state = e1000_set_d3_lplu_state_ich8lan;
-    // phy->ops.write_reg	= e1000_write_phy_reg_igp;
-    // phy->ops.power_up	= e1000_power_up_phy_copper;
-    // phy->ops.power_down	= e1000_power_down_phy_copper_ich8lan;
-
-    // /* We may need to do this twice - once for IGP and if that fails,
-    //  * we'll set BM func pointers and try again
-    //  */
-    // ret_val = e1000_determine_phy_address(hw);
-    // if (ret_val) {
-    // 	phy->ops.write_reg = e1000_write_phy_reg_bm;
-    // 	phy->ops.read_reg  = e1000_read_phy_reg_bm;
-    // 	ret_val = e1000_determine_phy_address(hw);
-    // 	if (ret_val) {
-    // 		DEBUGOUT("Cannot determine PHY addr. Erroring out\n");
-    // 		return ret_val;
-    // 	}
-    // }
-
-    // phy->id = 0;
-    // while ((e1000_phy_unknown == e1000_get_phy_type_from_id(phy->id)) &&
-    //        (i++ < 100)) {
-    // 	msec_delay(1);
-    // 	ret_val = e1000_get_phy_id(hw);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // }
-
-    // /* Verify phy id */
-    // switch (phy->id) {
-    // case IGP03E1000_E_PHY_ID:
-    // 	phy->type = e1000_phy_igp_3;
-    // 	phy->autoneg_mask = AUTONEG_ADVERTISE_SPEED_DEFAULT;
-    // 	phy->ops.read_reg_locked = e1000_read_phy_reg_igp_locked;
-    // 	phy->ops.write_reg_locked = e1000_write_phy_reg_igp_locked;
-    // 	phy->ops.get_info = e1000_get_phy_info_igp;
-    // 	phy->ops.check_polarity = e1000_check_polarity_igp;
-    // 	phy->ops.force_speed_duplex = e1000_phy_force_speed_duplex_igp;
-    // 	break;
-    // case IFE_E_PHY_ID:
-    // case IFE_PLUS_E_PHY_ID:
-    // case IFE_C_E_PHY_ID:
-    // 	phy->type = e1000_phy_ife;
-    // 	phy->autoneg_mask = E1000_ALL_NOT_GIG;
-    // 	phy->ops.get_info = e1000_get_phy_info_ife;
-    // 	phy->ops.check_polarity = e1000_check_polarity_ife;
-    // 	phy->ops.force_speed_duplex = e1000_phy_force_speed_duplex_ife;
-    // 	break;
-    // case BME1000_E_PHY_ID:
-    // 	phy->type = e1000_phy_bm;
-    // 	phy->autoneg_mask = AUTONEG_ADVERTISE_SPEED_DEFAULT;
-    // 	phy->ops.read_reg = e1000_read_phy_reg_bm;
-    // 	phy->ops.write_reg = e1000_write_phy_reg_bm;
-    // 	phy->ops.commit = e1000_phy_sw_reset_generic;
-    // 	phy->ops.get_info = e1000_get_phy_info_m88;
-    // 	phy->ops.check_polarity = e1000_check_polarity_m88;
-    // 	phy->ops.force_speed_duplex = e1000_phy_force_speed_duplex_m88;
-    // 	break;
-    // default:
-    // 	return -E1000_ERR_PHY;
-    // 	break;
-    // }
-
-    // return E1000_SUCCESS;
+    unsupported!();
+    Err("This hardware is not supported".to_string())
 }
 
 /// e1000_init_nvm_params_ich8lan - Initialize NVM function pointers
@@ -858,35 +456,10 @@ pub fn init_phy_params_ich8lan(adapter: &mut Adapter) -> AdResult {
 /// pointers.
 pub fn init_nvm_params_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
-    // struct e1000_nvm_info *nvm = &hw->nvm;
-    // struct e1000_dev_spec_ich8lan *dev_spec = &hw->dev_spec.ich8lan;
-    // u32 gfpreg, sector_base_addr, sector_end_addr;
-    // u16 i;
-    // u32 nvm_size;
+
     let mac_type = adapter.hw.mac.mac_type;
-    // let nvm: &mut NvmInfo = &mut adapter.hw.nvm;
-
-    // DEBUGFUNC("e1000_init_nvm_params_ich8lan");
-
-    // nvm->type = e1000_nvm_flash_sw;
     adapter.hw.nvm.nvm_type = NvmType::FlashSw;
 
-    // if (hw->mac.type >= e1000_pch_spt) {
-    // 	/* in SPT, gfpreg doesn't exist. NVM size is taken from the
-    //	 *  STRAP register. This is because in SPT the GbE Flash region
-    //	 *  is no longer accessed through the flash registers. Instead,
-    //	 *  the mechanism has changed, and the Flash region access
-    //	 *  registers are now implemented in GbE memory space.
-    // 	 */
-    // 	nvm->flash_base_addr = 0;
-    // 	nvm_size =
-    // 	    (((E1000_READ_REG(hw, E1000_STRAP) >> 1) & 0x1F) + 1) *  NVM_SIZE_MULTIPLIER;
-    // 	nvm->flash_bank_size = nvm_size / 2;
-    // 	/* Adjust to word count */
-    // 	nvm->flash_bank_size /= sizeof(u16);
-    // 	/* Set the base address for flash register access */
-    // 	hw->flash_address = hw->hw_addr + E1000_FLASH_BASE_ADDR;
-    // } else {
     if mac_type >= MacType::Mac_pch_spt {
         adapter.hw.nvm.flash_base_addr = 0;
         let nvm_size =
@@ -898,55 +471,34 @@ pub fn init_nvm_params_ich8lan(adapter: &mut Adapter) -> AdResult {
         e1000_println!("Setting adapter.hw.flash_address from hw_addr");
     } else {
         e1000_println!("Using mapped adapter.hw.flash_address");
-        // 	/* Can't read flash registers if register set isn't mapped. */
-        // 	if (!hw->flash_address) {
-        // 		DEBUGOUT("ERROR: Flash registers not mapped\n");
-        // 		return -E1000_ERR_CONFIG;
-        // 	}
         if adapter.hw.flash_address == kernel::ptr::null_mut() {
             return Err("Flash registers not mapped".to_string());
         }
 
-        // gfpreg = E1000_READ_FLASH_REG(hw, ICH_FLASH_GFPREG);
         let gfpreg = adapter.read_flash_register(ICH_FLASH_GFPREG);
 
         /* sector_X_addr is a "sector"-aligned address (4096 bytes)
          *  Add 1 to sector_end_addr since this sector is included in
          *  the overall size.
          */
-        // 	sector_base_addr = gfpreg & FLASH_GFPREG_BASE_MASK;
-        // 	sector_end_addr = ((gfpreg >> 16) & FLASH_GFPREG_BASE_MASK) + 1;
         let sector_base_addr = gfpreg & FLASH_GFPREG_BASE_MASK;
         let sector_end_addr = ((gfpreg >> 16) & FLASH_GFPREG_BASE_MASK) + 1;
 
         /* flash_base_addr is byte-aligned */
-        // 	nvm->flash_base_addr = sector_base_addr
-        // 			       << FLASH_SECTOR_ADDR_SHIFT;
         adapter.hw.nvm.flash_base_addr = sector_base_addr << FLASH_SECTOR_ADDR_SHIFT;
 
         /* find total size of the NVM, then cut in half since the total
          *  size represents two separate NVM banks.
          */
-        // 	nvm->flash_bank_size = ((sector_end_addr - sector_base_addr)
-        // 				<< FLASH_SECTOR_ADDR_SHIFT);
-        // 	nvm->flash_bank_size /= 2;
-        // 	/* Adjust to word count */
-        // 	nvm->flash_bank_size /= sizeof(u16);
-        // }
         let mut s = (sector_end_addr - sector_base_addr) << FLASH_SECTOR_ADDR_SHIFT;
         s /= 2;
         s /= kernel::mem::size_of::<u16>() as u32;
         adapter.hw.nvm.flash_bank_size = s;
         e1000_println!("Got bank size: {} (words)", s);
     }
-    // nvm->word_size = E1000_SHADOW_RAM_WORDS;
     adapter.hw.nvm.word_size = E1000_SHADOW_RAM_WORDS as u16;
 
     /* Clear shadow ram */
-    // for (i = 0; i < nvm->word_size; i++) {
-    // 	dev_spec->shadow_ram[i].modified = FALSE;
-    // 	dev_spec->shadow_ram[i].value    = 0xFFFF;
-    // }
     unsafe {
         let srs: &mut [ShadowRam; 2048] = &mut adapter.hw.dev_spec.ich8lan.shadow_ram;
         for sr in &mut srs.iter_mut() {
@@ -954,24 +506,6 @@ pub fn init_nvm_params_ich8lan(adapter: &mut Adapter) -> AdResult {
             sr.value = 0xFFFF;
         }
     }
-    // E1000_MUTEX_INIT(&dev_spec->nvm_mutex);
-    // E1000_MUTEX_INIT(&dev_spec->swflag_mutex);
-    // e1000_mutex_init!((adapter.hw.dev_spec.ich8lan.nvm_mutex));
-    // e1000_mutex_init!((adapter.hw.dev_spec.ich8lan.swflag_mutex));
-
-    /* Function Pointers */
-    // nvm->ops.acquire	= e1000_acquire_nvm_ich8lan;
-    // nvm->ops.release	= e1000_release_nvm_ich8lan;
-    // if (hw->mac.type >= e1000_pch_spt) {
-    // 	nvm->ops.read	= e1000_read_nvm_spt;
-    // 	nvm->ops.update	= e1000_update_nvm_checksum_spt;
-    // } else {
-    // 	nvm->ops.read	= e1000_read_nvm_ich8lan;
-    // 	nvm->ops.update	= e1000_update_nvm_checksum_ich8lan;
-    // }
-    // nvm->ops.valid_led_default = e1000_valid_led_default_ich8lan;
-    // nvm->ops.validate	= e1000_validate_nvm_checksum_ich8lan;
-    // nvm->ops.write		= e1000_write_nvm_ich8lan;
 
     /* Function Pointers */
     adapter.hw.nvm.ops.acquire = Some(acquire_nvm_ich8lan);
@@ -997,89 +531,67 @@ pub fn init_nvm_params_ich8lan(adapter: &mut Adapter) -> AdResult {
 /// pointers.
 pub fn init_mac_params_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
-    // struct e1000_mac_info *mac = &hw->mac;
-    // DEBUGFUNC("e1000_init_mac_params_ich8lan");
 
-    // /* Set media type function pointer */
-    // hw->phy.media_type = e1000_media_type_copper;
+    /* Set media type function pointer */
     adapter.hw.phy.media_type = MediaType::Copper;
     {
         let mac: &mut MacInfo = &mut adapter.hw.mac;
 
         /* Set mta register count */
-        // mac->mta_reg_count = 32;
         mac.mta_reg_count = 32;
 
         /* Set rar entry count */
-        // mac->rar_entry_count = E1000_ICH_RAR_ENTRIES;
         mac.rar_entry_count = E1000_ICH_RAR_ENTRIES as u16;
 
-        // if (mac->type == e1000_ich8lan)
-        // 	mac->rar_entry_count--;
         if mac.mac_type == MacType::Mac_ich8lan {
             mac.rar_entry_count -= 1;
         }
 
         /* Set if part includes ASF firmware */
-        // mac->asf_firmware_present = TRUE;
         mac.asf_firmware_present = true;
 
         /* FWSM register */
-        // mac->has_fwsm = TRUE;
         mac.has_fwsm = true;
 
         /* ARC subsystem not supported */
-        // mac->arc_subsystem_valid = FALSE;
         mac.arc_subsystem_valid = false;
 
         /* Adaptive IFS supported */
-        // mac->adaptive_ifs = TRUE;
         mac.adaptive_ifs = true;
 
         /* Function pointers */
 
         /* bus type/speed/width */
-        // mac->ops.get_bus_info = e1000_get_bus_info_ich8lan;
         mac.ops.get_bus_info = Some(get_bus_info_ich8lan);
 
         /* function id */
-        // mac->ops.set_lan_id = e1000_set_lan_id_single_port;
         mac.ops.set_lan_id = Some(e1000_mac::set_lan_id_single_port);
 
         /* reset */
-        // mac->ops.reset_hw = e1000_reset_hw_ich8lan;
         mac.ops.reset_hw = Some(reset_hw_ich8lan);
 
         /* hw initialization */
-        // mac->ops.init_hw = e1000_init_hw_ich8lan;
         mac.ops.init_hw = Some(init_hw_ich8lan);
 
         /* link setup */
-        // mac->ops.setup_link = e1000_setup_link_ich8lan;
         mac.ops.setup_link = Some(setup_link_ich8lan);
 
         /* physical interface setup */
-        // mac->ops.setup_physical_interface = e1000_setup_copper_link_ich8lan;
         mac.ops.setup_physical_interface = Some(setup_copper_link_ich8lan);
 
         /* check for link */
-        // mac->ops.check_for_link = e1000_check_for_copper_link_ich8lan;
         mac.ops.check_for_link = Some(check_for_copper_link_ich8lan);
 
         /* link info */
-        // mac->ops.get_link_up_info = e1000_get_link_up_info_ich8lan;
         mac.ops.get_link_up_info = Some(get_link_up_info_ich8lan);
 
         /* multicast address update */
-        // mac->ops.update_mc_addr_list = e1000_update_mc_addr_list_generic;
         mac.ops.update_mc_addr_list = Some(e1000_mac::update_mc_addr_list_generic);
 
         /* clear hardware counters */
-        // mac->ops.clear_hw_cntrs = e1000_clear_hw_cntrs_ich8lan;
         mac.ops.clear_hw_cntrs = Some(clear_hw_cntrs_ich8lan);
 
         /* LED and other operations */
-        // switch (mac->type) {
         let ich_macs = [
             MacType::Mac_ich8lan,
             MacType::Mac_ich9lan,
@@ -1133,12 +645,6 @@ pub fn init_mac_params_ich8lan(adapter: &mut Adapter) -> AdResult {
             break 'switch;
         }
 
-        // if (mac->type >= e1000_pch_lpt) {
-        // 	mac->rar_entry_count = E1000_PCH_LPT_RAR_ENTRIES;
-        // 	mac->ops.rar_set = e1000_rar_set_pch_lpt;
-        // 	mac->ops.setup_physical_interface = e1000_setup_copper_link_pch_lpt;
-        // 	mac->ops.set_obff_timer = e1000_set_obff_timer_pch_lpt;
-        // }
         if mac.mac_type >= MacType::Mac_pch_lpt {
             mac.rar_entry_count = E1000_PCH_LPT_RAR_ENTRIES as u16;
             mac.ops.rar_set = Some(rar_set_pch_lpt);
@@ -1148,12 +654,9 @@ pub fn init_mac_params_ich8lan(adapter: &mut Adapter) -> AdResult {
     } // end adapter.hw.mac mutable borrow
 
     /* Enable PCS Lock-loss workaround for ICH8 */
-    // if (mac->type == e1000_ich8lan)
-    // 	e1000_set_kmrn_lock_loss_workaround_ich8lan(hw, TRUE);
     if adapter.hw.mac.mac_type == MacType::Mac_ich8lan {
         set_kmrn_lock_loss_workaround_ich8lan(adapter, true);
     }
-    // return E1000_SUCCESS;
     Ok(())
 }
 
@@ -1172,21 +675,8 @@ pub fn access_emi_reg_locked(
 ) -> AdResult {
     e1000_println!();
 
-    // s32 ret_val;
-
-    // DEBUGFUNC("__e1000_access_emi_reg_locked");
-
-    // ret_val = hw->phy.ops.write_reg_locked(hw, I82579_EMI_ADDR, address);
-    // if (ret_val)
-    // 	return ret_val;
     try!(adapter.phy_write_reg_locked(I82579_EMI_ADDR, address));
 
-    // if (read)
-    // 	ret_val = hw->phy.ops.read_reg_locked(hw, I82579_EMI_DATA,
-    // 					      data);
-    // else
-    // 	ret_val = hw->phy.ops.write_reg_locked(hw, I82579_EMI_DATA,
-    // 					       *data);
     if read {
         adapter.phy_read_reg_locked(I82579_EMI_DATA, data)
     } else {
@@ -1201,8 +691,6 @@ pub fn access_emi_reg_locked(
 ///
 /// Assumes the SW/FW/HW Semaphore is already acquired.
 pub fn read_emi_reg_locked(adapter: &mut Adapter, addr: u16, data: &mut u16) -> AdResult {
-    // DEBUGFUNC("e1000_read_emi_reg_locked");
-    // return __e1000_access_emi_reg_locked(hw, addr, data, TRUE);
     e1000_println!();
     access_emi_reg_locked(adapter, addr, data, true)
 }
@@ -1214,8 +702,6 @@ pub fn read_emi_reg_locked(adapter: &mut Adapter, addr: u16, data: &mut u16) -> 
 ///
 /// Assumes the SW/FW/HW Semaphore is already acquired.
 pub fn write_emi_reg_locked(adapter: &mut Adapter, addr: u16, mut data: u16) -> AdResult {
-    // DEBUGFUNC("e1000_read_emi_reg_locked");
-    // return __e1000_access_emi_reg_locked(hw, addr, &data, FALSE);
     e1000_println!();
     access_emi_reg_locked(adapter, addr, &mut data, false)
 }
@@ -1234,9 +720,7 @@ pub fn write_emi_reg_locked(adapter: &mut Adapter, addr: u16, mut data: u16) -> 
 /// prevents LPI from being asserted too early.
 pub fn set_eee_pchlan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
-    // 	struct e1000_dev_spec_ich8lan *dev_spec = &hw->dev_spec.ich8lan;
-    // 	s32 ret_val;
-    // 	u16 lpa, pcs_status, adv, adv_addr, lpi_ctrl, data;
+
     let mut lpa: u16 = 0;
     let mut pcs_status: u16 = 0;
     let mut adv: u16 = 0;
@@ -1244,22 +728,6 @@ pub fn set_eee_pchlan(adapter: &mut Adapter) -> AdResult {
     let mut lpi_ctrl: u16 = 0;
     let mut data: u16 = 0;
 
-    // 	DEBUGFUNC("e1000_set_eee_pchlan");
-
-    // 	switch (hw->phy.type) {
-    // 	case e1000_phy_82579:
-    // 		lpa = I82579_EEE_LP_ABILITY;
-    // 		pcs_status = I82579_EEE_PCS_STATUS;
-    // 		adv_addr = I82579_EEE_ADVERTISEMENT;
-    // 		break;
-    // 	case e1000_phy_i217:
-    // 		lpa = I217_EEE_LP_ABILITY;
-    // 		pcs_status = I217_EEE_PCS_STATUS;
-    // 		adv_addr = I217_EEE_ADVERTISEMENT;
-    // 		break;
-    // 	default:
-    // 		return E1000_SUCCESS;
-    // 	}
     match adapter.hw.phy.phy_type {
         PhyType::Type_82579 => {
             unsupported!();
@@ -1273,29 +741,16 @@ pub fn set_eee_pchlan(adapter: &mut Adapter) -> AdResult {
         _ => return Ok(()),
     }
 
-    // 	ret_val = hw->phy.ops.acquire(hw);
-    // 	if (ret_val)
-    // 		return ret_val;
     try!(adapter.phy_acquire());
-
-    // 	ret_val = hw->phy.ops.read_reg_locked(hw, I82579_LPI_CTRL, &lpi_ctrl);
-    // 	if (ret_val)
-    // 		goto release;
     try!(adapter.phy_read_reg_locked(I82579_LPI_CTRL, &mut lpi_ctrl));
 
     /* Clear bits that enable EEE in various speeds */
-    // 	lpi_ctrl &= ~I82579_LPI_CTRL_ENABLE_MASK;
     lpi_ctrl &= !(I82579_LPI_CTRL_ENABLE_MASK as u16);
 
     /* Enable EEE if not disabled by user */
-    // 	if (!dev_spec->eee_disable) {
     let eee_disable: bool = unsafe { adapter.hw.dev_spec.ich8lan.eee_disable };
     if !eee_disable {
-        // 		/* Save off link partner's EEE ability */
-        // 		ret_val = e1000_read_emi_reg_locked(hw, lpa,
-        // 						    &dev_spec->eee_lp_ability);
-        // 		if (ret_val)
-        // 			goto release;
+        /* Save off link partner's EEE ability */
         try!(
             read_emi_reg_locked(adapter, lpa, &mut unsafe {
                 adapter.hw.dev_spec.ich8lan.eee_lp_ability
@@ -1305,10 +760,7 @@ pub fn set_eee_pchlan(adapter: &mut Adapter) -> AdResult {
             })
         );
 
-        // 		/* Read EEE advertisement */
-        // 		ret_val = e1000_read_emi_reg_locked(hw, adv_addr, &adv);
-        // 		if (ret_val)
-        // 			goto release;
+        /* Read EEE advertisement */
         try!(
             read_emi_reg_locked(adapter, adv_addr, &mut adv).or_else(|e| {
                 try!(adapter.phy_release());
@@ -1316,30 +768,15 @@ pub fn set_eee_pchlan(adapter: &mut Adapter) -> AdResult {
             },)
         );
 
-        // 		/* Enable EEE only for speeds in which the link partner is
-        // 		 * EEE capable and for which we advertise EEE.
-        // 		 */
-        // 		if (adv & dev_spec->eee_lp_ability & I82579_EEE_1000_SUPPORTED)
-        // 			lpi_ctrl |= I82579_LPI_CTRL_1000_ENABLE;
+        /* Enable EEE only for speeds in which the link partner is
+         * EEE capable and for which we advertise EEE.
+         */
         if (adv & unsafe { adapter.hw.dev_spec.ich8lan.eee_lp_ability }
             & I82579_EEE_1000_SUPPORTED as u16) != 0
         {
             lpi_ctrl |= I82579_LPI_CTRL_1000_ENABLE as u16;
         }
 
-        // 		if (adv & dev_spec->eee_lp_ability & I82579_EEE_100_SUPPORTED) {
-        // 			hw->phy.ops.read_reg_locked(hw, PHY_LP_ABILITY, &data);
-        // 			if (data & NWAY_LPAR_100TX_FD_CAPS)
-        // 				lpi_ctrl |= I82579_LPI_CTRL_100_ENABLE;
-        // 			else
-        // 				/* EEE is not supported in 100Half, so ignore
-        //				 * partner's EEE in 100 ability if full-duplex
-        //  				 * is not advertised.
-        // 				 */
-        // 				dev_spec->eee_lp_ability &=
-        // 				    ~I82579_EEE_100_SUPPORTED;
-        // 		}
-        // 	}
         if (adv & unsafe { adapter.hw.dev_spec.ich8lan.eee_lp_ability }
             & I82579_EEE_100_SUPPORTED as u16) != 0
         {
@@ -1354,25 +791,13 @@ pub fn set_eee_pchlan(adapter: &mut Adapter) -> AdResult {
             }
         }
     }
-    // 	if (hw->phy.type == e1000_phy_82579) {
-    // 		ret_val = e1000_read_emi_reg_locked(hw, I82579_LPI_PLL_SHUT,
-    // 						    &data);
-    // 		if (ret_val)
-    // 			goto release;
 
-    // 		data &= ~I82579_LPI_100_PLL_SHUT;
-    // 		ret_val = e1000_write_emi_reg_locked(hw, I82579_LPI_PLL_SHUT,
-    // 						     data);
-    // 	}
     if adapter.hw.phy.phy_type == PhyType::Type_82579 {
         unsupported!();
         incomplete_return!();
     }
 
     /* R/Clr IEEE MMD 3.1 bits 11:10 - Tx/Rx LPI Received */
-    // 	ret_val = e1000_read_emi_reg_locked(hw, pcs_status, &data);
-    // 	if (ret_val)
-    // 		goto release;
     try!(
         read_emi_reg_locked(adapter, pcs_status, &mut data).or_else(|e| {
             try!(adapter.phy_release());
@@ -1380,12 +805,8 @@ pub fn set_eee_pchlan(adapter: &mut Adapter) -> AdResult {
         })
     );
 
-    // 	ret_val = hw->phy.ops.write_reg_locked(hw, I82579_LPI_CTRL, lpi_ctrl);
-    // release:
     let res = adapter.phy_write_reg_locked(I82579_LPI_CTRL, lpi_ctrl);
 
-    // 	hw->phy.ops.release(hw);
-    // return ret_val;
     adapter.phy_release().and(res)
 }
 
@@ -1400,26 +821,14 @@ pub fn set_eee_pchlan(adapter: &mut Adapter) -> AdResult {
 /// speeds in order to avoid Tx hangs.
 pub fn k1_workaround_lpt_lp(adapter: &mut Adapter, link: bool) -> AdResult {
     e1000_println!();
-    // 	u32 fextnvm6 = E1000_READ_REG(hw, E1000_FEXTNVM6);
-    // 	u32 status = E1000_READ_REG(hw, E1000_STATUS);
-    // 	s32 ret_val = E1000_SUCCESS;
-    // 	u16 reg;
+
     let mut fextnvm6: u32 = adapter.read_register(E1000_FEXTNVM6);
     let status: u32 = adapter.read_register(E1000_STATUS);
     let mut reg: u16 = 0;
 
-    // 	if (link && (status & E1000_STATUS_SPEED_1000)) {
     if link && btst!(status, E1000_STATUS_SPEED_1000) {
-        // 		ret_val = hw->phy.ops.acquire(hw);
-        // 		if (ret_val)
-        // 			return ret_val;
         try!(adapter.phy_acquire());
 
-        // 		ret_val =
-        // 		    e1000_read_kmrn_reg_locked(hw, E1000_KMRNCTRLSTA_K1_CONFIG,
-        // 					       &reg);
-        // 		if (ret_val)
-        // 			goto release;
         try!(
             e1000_phy::read_kmrn_reg_locked(adapter, E1000_KMRNCTRLSTA_K1_CONFIG, &mut reg)
                 .or_else(|e| {
@@ -1428,13 +837,6 @@ pub fn k1_workaround_lpt_lp(adapter: &mut Adapter, link: bool) -> AdResult {
                 })
         );
 
-        // 		ret_val =
-        // 		    e1000_write_kmrn_reg_locked(hw,
-        // 						E1000_KMRNCTRLSTA_K1_CONFIG,
-        // 						reg &
-        // 						~E1000_KMRNCTRLSTA_K1_ENABLE);
-        // 		if (ret_val)
-        // 			goto release;
         try!(
             e1000_phy::write_kmrn_reg_locked(
                 adapter,
@@ -1446,92 +848,53 @@ pub fn k1_workaround_lpt_lp(adapter: &mut Adapter, link: bool) -> AdResult {
             })
         );
 
-        // 		usec_delay(10);
         do_usec_delay(10);
 
-        // 		E1000_WRITE_REG(hw, E1000_FEXTNVM6,
-        // 				fextnvm6 | E1000_FEXTNVM6_REQ_PLL_CLK);
         adapter.write_register(E1000_FEXTNVM6, fextnvm6 | E1000_FEXTNVM6_REQ_PLL_CLK);
 
-        // 		ret_val =
-        // 		    e1000_write_kmrn_reg_locked(hw,
-        // 						E1000_KMRNCTRLSTA_K1_CONFIG,
-        // 						reg);
         let res = e1000_phy::write_kmrn_reg_locked(adapter, E1000_KMRNCTRLSTA_K1_CONFIG, reg);
 
-        // release:
-        // 		hw->phy.ops.release(hw);
         try!(adapter.phy_release().and(res));
     } else {
-        // 	} else {
-        // 		/* clear FEXTNVM6 bit 8 on link down or 10/100 */
-        // 		fextnvm6 &= ~E1000_FEXTNVM6_REQ_PLL_CLK;
+        /* clear FEXTNVM6 bit 8 on link down or 10/100 */
         fextnvm6 &= !E1000_FEXTNVM6_REQ_PLL_CLK;
 
-        // 		if ((hw->phy.revision > 5) || !link ||
-        // 		    ((status & E1000_STATUS_SPEED_100) &&
-        // 		     (status & E1000_STATUS_FD)))
-        // 			goto update_fextnvm6;
         if adapter.hw.phy.revision > 5 || !link
             || (btst!(status, E1000_STATUS_SPEED_100) && btst!(status, E1000_STATUS_FD))
         {
             adapter.write_register(E1000_FEXTNVM6, fextnvm6);
             return Ok(());
         }
-        // 		ret_val = hw->phy.ops.read_reg(hw, I217_INBAND_CTRL, &reg);
-        // 		if (ret_val)
-        // 			return ret_val;
         try!(adapter.phy_read_reg(I217_INBAND_CTRL, &mut reg));
 
-        // 		/* Clear link status transmit timeout */
-        // 		reg &= ~I217_INBAND_CTRL_LINK_STAT_TX_TIMEOUT_MASK;
+        /* Clear link status transmit timeout */
         reg &= !I217_INBAND_CTRL_LINK_STAT_TX_TIMEOUT_MASK as u16;
 
-        // 		if (status & E1000_STATUS_SPEED_100) {
         if btst!(status, E1000_STATUS_SPEED_100) {
-            // 			/* Set inband Tx timeout to 5x10us for 100Half */
-            // 			reg |= 5 << I217_INBAND_CTRL_LINK_STAT_TX_TIMEOUT_SHIFT;
+            /* Set inband Tx timeout to 5x10us for 100Half */
             reg |= 5 << I217_INBAND_CTRL_LINK_STAT_TX_TIMEOUT_SHIFT;
-            // 			/* Do not extend the K1 entry latency for 100Half */
-            // 			fextnvm6 &= ~E1000_FEXTNVM6_ENABLE_K1_ENTRY_CONDITION;
+            /* Do not extend the K1 entry latency for 100Half */
             fextnvm6 &= !E1000_FEXTNVM6_ENABLE_K1_ENTRY_CONDITION;
-        // 		} else {
         } else {
-            // 			/* Set inband Tx timeout to 50x10us for 10Full/Half */
-            // 			reg |= 50 <<
-            // 			       I217_INBAND_CTRL_LINK_STAT_TX_TIMEOUT_SHIFT;
+            /* Set inband Tx timeout to 50x10us for 10Full/Half */
             reg |= 50 << I217_INBAND_CTRL_LINK_STAT_TX_TIMEOUT_SHIFT;
-            // 			/* Extend the K1 entry latency for 10 Mbps */
-            // 			fextnvm6 |= E1000_FEXTNVM6_ENABLE_K1_ENTRY_CONDITION;
+            /* Extend the K1 entry latency for 10 Mbps */
             fextnvm6 |= E1000_FEXTNVM6_ENABLE_K1_ENTRY_CONDITION;
-            // 		}
         }
 
-        // 		ret_val = hw->phy.ops.write_reg(hw, I217_INBAND_CTRL, reg);
-        // 		if (ret_val)
-        // 			return ret_val;
         adapter.phy_write_reg(I217_INBAND_CTRL, reg);
-        // update_fextnvm6:
-        // 		E1000_WRITE_REG(hw, E1000_FEXTNVM6, fextnvm6);
         adapter.write_register(E1000_FEXTNVM6, fextnvm6);
-        // 	}
     }
-    // 	return ret_val;
     Ok(())
 }
 
 pub fn ltr2ns(ltr: u16) -> u64 {
     e1000_println!();
-    // u32 value, scale;
 
-    // /* Determine the latency in nsec based on the LTR value & scale */
-    // value = ltr & E1000_LTRV_VALUE_MASK;
-    // scale = (ltr & E1000_LTRV_SCALE_MASK) >> E1000_LTRV_SCALE_SHIFT;
-
+    /* Determine the latency in nsec based on the LTR value & scale */
     let value: u32 = ltr as u32 & E1000_LTRV_VALUE_MASK;
     let scale: u32 = (ltr as u32 & E1000_LTRV_SCALE_MASK) >> E1000_LTRV_SCALE_SHIFT;
 
-    // return value * (1 << (scale * E1000_LTRV_SCALE_FACTOR));
     (value * (1 << (scale * E1000_LTRV_SCALE_FACTOR))) as u64
 }
 
@@ -1554,26 +917,13 @@ pub fn ltr2ns(ltr: u16) -> u64 {
 /// high-water mark.
 pub fn platform_pm_pch_lpt(adapter: &mut Adapter, link: bool) -> AdResult {
     e1000_println!();
-    // u32 reg = link << (E1000_LTRV_REQ_SHIFT + E1000_LTRV_NOSNOOP_SHIFT) |
-    // 	  link << E1000_LTRV_REQ_SHIFT | E1000_LTRV_SEND;
-    // u16 lat_enc = 0;	/* latency encoded */
-    // s32 obff_hwm = 0;
     let l: u32 = link as u32;
     let mut reg: u32 = l << (E1000_LTRV_REQ_SHIFT + E1000_LTRV_NOSNOOP_SHIFT)
         | (l << E1000_LTRV_REQ_SHIFT) | E1000_LTRV_SEND;
     let mut lat_enc: u16 = 0;
     let mut obff_hwm: i32 = 0;
 
-    // DEBUGFUNC("e1000_platform_pm_pch_lpt");
-
-    // if (link) {
     if link {
-        // 	u16 speed, duplex, scale = 0;
-        // 	u16 max_snoop, max_nosnoop;
-        // 	u16 max_ltr_enc;	/* max LTR latency encoded */
-        // 	s64 lat_ns;
-        // 	s64 value;
-        // 	u32 rxa;
         let mut speed: u16 = 0;
         let mut duplex: u16 = 0;
         let mut scale: u16 = 0;
@@ -1584,19 +934,10 @@ pub fn platform_pm_pch_lpt(adapter: &mut Adapter, link: bool) -> AdResult {
         let mut value: i64;
         let mut rxa: u32;
 
-        // 	if (!hw->mac.max_frame_size) {
-        // 		DEBUGOUT("max_frame_size not set.\n");
-        // 		return -E1000_ERR_CONFIG;
-        // 	}
         if adapter.hw.mac.max_frame_size == 0 {
             return Err("Max frame size is not set".to_string());
         }
 
-        // 	hw->mac.ops.get_link_up_info(hw, &speed, &duplex);
-        // 	if (!speed) {
-        // 		DEBUGOUT("Speed not set.\n");
-        // 		return -E1000_ERR_CONFIG;
-        // 	}
         try!(
             adapter
                 .hw
@@ -1614,7 +955,6 @@ pub fn platform_pm_pch_lpt(adapter: &mut Adapter, link: bool) -> AdResult {
         );
 
         /* Rx Packet Buffer Allocation size (KB) */
-        // 	rxa = E1000_READ_REG(hw, E1000_PBA) & E1000_PBA_RXA_MASK;
         rxa = adapter.read_register(E1000_PBA) & E1000_PBA_RXA_MASK;
 
         /* Determine the maximum latency tolerated by the device.
@@ -1625,13 +965,6 @@ pub fn platform_pm_pch_lpt(adapter: &mut Adapter, link: bool) -> AdResult {
          * 2^25*(2^10-1) ns.  The scale is encoded as 0=2^0ns,
          * 1=2^5ns, 2=2^10ns,...5=2^25ns.
          */
-        // 	lat_ns = ((s64)rxa *  1024 -
-        // 		  (2 *  (s64)hw->mac.max_frame_size)) *  8 *  1000;
-        // 	if (lat_ns < 0)
-        // 		lat_ns = 0;
-        // 	else
-        // 		lat_ns /= speed;
-        // 	value = lat_ns;
         lat_ns = (rxa as i64) * 1024 - (2 * (adapter.hw.mac.max_frame_size as i64)) * 8 * 1000;
         if lat_ns < 0 {
             lat_ns = 0;
@@ -1639,16 +972,6 @@ pub fn platform_pm_pch_lpt(adapter: &mut Adapter, link: bool) -> AdResult {
             lat_ns /= speed as i64;
         }
         value = lat_ns;
-
-        // 	while (value > E1000_LTRV_VALUE_MASK) {
-        // 		scale++;
-        // 		value = E1000_DIVIDE_ROUND_UP(value, (1 << 5));
-        // 	}
-        // 	if (scale > E1000_LTRV_SCALE_MAX) {
-        // 		DEBUGOUT1("Invalid LTR latency scale %d\n", scale);
-        // 		return -E1000_ERR_CONFIG;
-        // 	}
-        // 	lat_enc = (u16)((scale << E1000_LTRV_SCALE_SHIFT) | value);
 
         while value > E1000_LTRV_VALUE_MASK as i64 {
             scale += 1;
@@ -1660,28 +983,15 @@ pub fn platform_pm_pch_lpt(adapter: &mut Adapter, link: bool) -> AdResult {
         lat_enc = ((scale << E1000_LTRV_SCALE_SHIFT) | value as u16);
 
         /* Determine the maximum latency tolerated by the platform */
-        // 	e1000_read_pci_cfg(hw, E1000_PCI_LTR_CAP_LPT, &max_snoop);
-        // 	e1000_read_pci_cfg(hw, E1000_PCI_LTR_CAP_LPT + 2, &max_nosnoop);
-        // 	max_ltr_enc = E1000_MAX(max_snoop, max_nosnoop);
         max_snoop = adapter.dev.pci_read_config(E1000_PCI_LTR_CAP_LPT, 2) as u16;
         max_nosnoop = adapter.dev.pci_read_config(E1000_PCI_LTR_CAP_LPT + 2, 2) as u16;
         use core::cmp;
         max_ltr_enc = cmp::max(max_snoop, max_nosnoop);
 
-        // 	if (lat_enc > max_ltr_enc) {
-        // 		lat_enc = max_ltr_enc;
-        // 		lat_ns = e1000_ltr2ns(max_ltr_enc);
-        // 	}
         if lat_enc > max_ltr_enc {
             lat_enc = max_ltr_enc;
             lat_ns = ltr2ns(max_ltr_enc) as i64;
         }
-        // 	if (lat_ns) {
-        // 		lat_ns *= speed *  1000;
-        // 		lat_ns /= 8;
-        // 		lat_ns /= 1000000000;
-        // 		obff_hwm = (s32)(rxa - lat_ns);
-        // 	}
         if lat_ns != 0 {
             lat_ns *= speed as i64 * 1000;
             lat_ns /= 8;
@@ -1689,33 +999,21 @@ pub fn platform_pm_pch_lpt(adapter: &mut Adapter, link: bool) -> AdResult {
             obff_hwm = (rxa as i64 - lat_ns) as i32;
         }
 
-        // 	if ((obff_hwm < 0) || (obff_hwm > E1000_SVT_OFF_HWM_MASK)) {
-        // 		DEBUGOUT1("Invalid high water mark %d\n", obff_hwm);
-        // 		return -E1000_ERR_CONFIG;
-        // 	}
         if obff_hwm < 0 || obff_hwm > E1000_SVT_OFF_HWM_MASK as i32 {
             return Err(format!("Invalid high water mark {}", obff_hwm));
         }
-        // }
     }
 
     /* Set Snoop and No-Snoop latencies the same */
-    // reg |= lat_enc | (lat_enc << E1000_LTRV_NOSNOOP_SHIFT);
-    // E1000_WRITE_REG(hw, E1000_LTRV, reg);
     reg |= lat_enc as u32 | ((lat_enc as u32) << E1000_LTRV_NOSNOOP_SHIFT);
     adapter.write_register(E1000_LTRV, reg);
 
     /* Set OBFF high water mark */
-    // reg = E1000_READ_REG(hw, E1000_SVT) & ~E1000_SVT_OFF_HWM_MASK;
-    // reg |= obff_hwm;
-    // E1000_WRITE_REG(hw, E1000_SVT, reg);
     reg = adapter.read_register(E1000_SVT) & !E1000_SVT_OFF_HWM_MASK;
     reg |= obff_hwm as u32;
     adapter.write_register(E1000_SVT, reg);
 
     /* Enable OBFF */
-    // reg = E1000_READ_REG(hw, E1000_SVCR);
-    // reg |= E1000_SVCR_OFF_EN;
     reg = adapter.read_register(E1000_SVCR);
     reg |= E1000_SVCR_OFF_EN;
 
@@ -1723,11 +1021,8 @@ pub fn platform_pm_pch_lpt(adapter: &mut Adapter, link: bool) -> AdResult {
      * in OBFF mode. This ensures that small round-robin traffic
      * (like ping) does not get dropped or experience long latency.
      */
-    // reg |= E1000_SVCR_OFF_MASKINT;
-    // E1000_WRITE_REG(hw, E1000_SVCR, reg);
     reg |= E1000_SVCR_OFF_MASKINT;
     adapter.write_register(E1000_SVCR, reg);
-    // return E1000_SUCCESS;
     Ok(())
 }
 
@@ -1739,26 +1034,6 @@ pub fn platform_pm_pch_lpt(adapter: &mut Adapter, link: bool) -> AdResult {
 pub fn set_obff_timer_pch_lpt(adapter: &mut Adapter, itr: u32) -> AdResult {
     e1000_println!();
     incomplete_return!();
-    // u32 svcr;
-    // s32 timer;
-
-    // DEBUGFUNC("e1000_set_obff_timer_pch_lpt");
-
-    /* Convert ITR value into microseconds for OBFF timer */
-    // timer = itr & E1000_ITR_MASK;
-    // timer = (timer/// E1000_ITR_MULT) / 1000;
-
-    // if ((timer < 0) || (timer > E1000_ITR_MASK)) {
-    // 	DEBUGOUT1("Invalid OBFF timer %d\n", timer);
-    // 	return -E1000_ERR_CONFIG;
-    // }
-
-    // svcr = E1000_READ_REG(hw, E1000_SVCR);
-    // svcr &= ~E1000_SVCR_OFF_TIMER_MASK;
-    // svcr |= timer << E1000_SVCR_OFF_TIMER_SHIFT;
-    // E1000_WRITE_REG(hw, E1000_SVCR, svcr);
-
-    // return E1000_SUCCESS;
 }
 
 /// e1000_enable_ulp_lpt_lp - configure Ultra Low Power mode for LynxPoint-LP
@@ -1772,133 +1047,6 @@ pub fn set_obff_timer_pch_lpt(adapter: &mut Adapter, itr: u32) -> AdResult {
 pub fn enable_ulp_lpt_lp(adapter: &mut Adapter, to_sx: bool) -> AdResult {
     e1000_println!();
     incomplete_return!();
-    // 	u32 mac_reg;
-    // 	s32 ret_val = E1000_SUCCESS;
-    // 	u16 phy_reg;
-    // 	u16 oem_reg = 0;
-
-    // 	if ((hw->mac.type < e1000_pch_lpt) ||
-    // 	    (hw->device_id == E1000_DEV_ID_PCH_LPT_I217_LM) ||
-    // 	    (hw->device_id == E1000_DEV_ID_PCH_LPT_I217_V) ||
-    // 	    (hw->device_id == E1000_DEV_ID_PCH_I218_LM2) ||
-    // 	    (hw->device_id == E1000_DEV_ID_PCH_I218_V2) ||
-    // 	    (hw->dev_spec.ich8lan.ulp_state == e1000_ulp_state_on))
-    // 		return 0;
-
-    // 	if (E1000_READ_REG(hw, E1000_FWSM) & E1000_ICH_FWSM_FW_VALID) {
-    // 		/* Request ME configure ULP mode in the PHY */
-    // 		mac_reg = E1000_READ_REG(hw, E1000_H2ME);
-    // 		mac_reg |= E1000_H2ME_ULP | E1000_H2ME_ENFORCE_SETTINGS;
-    // 		E1000_WRITE_REG(hw, E1000_H2ME, mac_reg);
-
-    // 		goto out;
-    // 	}
-
-    // 	if (!to_sx) {
-    // 		int i = 0;
-
-    // 		/* Poll up to 5 seconds for Cable Disconnected indication */
-    // 		while (!(E1000_READ_REG(hw, E1000_FEXT) &
-    // 			 E1000_FEXT_PHY_CABLE_DISCONNECTED)) {
-    // 			/* Bail if link is re-acquired */
-    // 			if (E1000_READ_REG(hw, E1000_STATUS) & E1000_STATUS_LU)
-    // 				return -E1000_ERR_PHY;
-
-    // 			if (i++ == 100)
-    // 				break;
-
-    // 			msec_delay(50);
-    // 		}
-    // 		DEBUGOUT2("CABLE_DISCONNECTED %s set after %dmsec\n",
-    // 			 (E1000_READ_REG(hw, E1000_FEXT) &
-    // 			  E1000_FEXT_PHY_CABLE_DISCONNECTED) ? "" : "not",
-    // 			 i/// 50);
-    // 	}
-
-    // 	ret_val = hw->phy.ops.acquire(hw);
-    // 	if (ret_val)
-    // 		goto out;
-
-    // 	/* Force SMBus mode in PHY */
-    // 	ret_val = e1000_read_phy_reg_hv_locked(hw, CV_SMB_CTRL, &phy_reg);
-    // 	if (ret_val)
-    // 		goto release;
-    // 	phy_reg |= CV_SMB_CTRL_FORCE_SMBUS;
-    // 	e1000_write_phy_reg_hv_locked(hw, CV_SMB_CTRL, phy_reg);
-
-    // 	/* Force SMBus mode in MAC */
-    // 	mac_reg = E1000_READ_REG(hw, E1000_CTRL_EXT);
-    // 	mac_reg |= E1000_CTRL_EXT_FORCE_SMBUS;
-    // 	E1000_WRITE_REG(hw, E1000_CTRL_EXT, mac_reg);
-
-    // 	/* Si workaround for ULP entry flow on i127/rev6 h/w.  Enable
-    //  * LPLU and disable Gig speed when entering ULP
-    // 	 */
-    // 	if ((hw->phy.type == e1000_phy_i217) && (hw->phy.revision == 6)) {
-    // 		ret_val = e1000_read_phy_reg_hv_locked(hw, HV_OEM_BITS,
-    // 						       &oem_reg);
-    // 		if (ret_val)
-    // 			goto release;
-
-    // 		phy_reg = oem_reg;
-    // 		phy_reg |= HV_OEM_BITS_LPLU | HV_OEM_BITS_GBE_DIS;
-
-    // 		ret_val = e1000_write_phy_reg_hv_locked(hw, HV_OEM_BITS,
-    // 							phy_reg);
-
-    // 		if (ret_val)
-    // 			goto release;
-    // 	}
-
-    // 	/* Set Inband ULP Exit, Reset to SMBus mode and
-    //  * Disable SMBus Release on PERST# in PHY
-    // 	 */
-    // 	ret_val = e1000_read_phy_reg_hv_locked(hw, I218_ULP_CONFIG1, &phy_reg);
-    // 	if (ret_val)
-    // 		goto release;
-    // 	phy_reg |= (I218_ULP_CONFIG1_RESET_TO_SMBUS |
-    // 		    I218_ULP_CONFIG1_DISABLE_SMB_PERST);
-    // 	if (to_sx) {
-    // 		if (E1000_READ_REG(hw, E1000_WUFC) & E1000_WUFC_LNKC)
-    // 			phy_reg |= I218_ULP_CONFIG1_WOL_HOST;
-    // 		else
-    // 			phy_reg &= ~I218_ULP_CONFIG1_WOL_HOST;
-
-    // 		phy_reg |= I218_ULP_CONFIG1_STICKY_ULP;
-    // 		phy_reg &= ~I218_ULP_CONFIG1_INBAND_EXIT;
-    // 	} else {
-    // 		phy_reg |= I218_ULP_CONFIG1_INBAND_EXIT;
-    // 		phy_reg &= ~I218_ULP_CONFIG1_STICKY_ULP;
-    // 		phy_reg &= ~I218_ULP_CONFIG1_WOL_HOST;
-    // 	}
-    // 	e1000_write_phy_reg_hv_locked(hw, I218_ULP_CONFIG1, phy_reg);
-
-    // 	/* Set Disable SMBus Release on PERST# in MAC */
-    // 	mac_reg = E1000_READ_REG(hw, E1000_FEXTNVM7);
-    // 	mac_reg |= E1000_FEXTNVM7_DISABLE_SMB_PERST;
-    // 	E1000_WRITE_REG(hw, E1000_FEXTNVM7, mac_reg);
-
-    // 	/* Commit ULP changes in PHY by starting auto ULP configuration */
-    // 	phy_reg |= I218_ULP_CONFIG1_START;
-    // 	e1000_write_phy_reg_hv_locked(hw, I218_ULP_CONFIG1, phy_reg);
-
-    // 	if ((hw->phy.type == e1000_phy_i217) && (hw->phy.revision == 6) &&
-    // 	    to_sx && (E1000_READ_REG(hw, E1000_STATUS) & E1000_STATUS_LU)) {
-    // 		ret_val = e1000_write_phy_reg_hv_locked(hw, HV_OEM_BITS,
-    // 							oem_reg);
-    // 		if (ret_val)
-    // 			goto release;
-    // 	}
-
-    // release:
-    // 	hw->phy.ops.release(hw);
-    // out:
-    // 	if (ret_val)
-    // 		DEBUGOUT1("Error in ULP enable flow: %d\n", ret_val);
-    // 	else
-    // 		hw->dev_spec.ich8lan.ulp_state = e1000_ulp_state_on;
-
-    // return ret_val;
 }
 
 /// e1000_disable_ulp_lpt_lp - unconfigure Ultra Low Power mode for LynxPoint-LP
@@ -1916,20 +1064,7 @@ pub fn enable_ulp_lpt_lp(adapter: &mut Adapter, to_sx: bool) -> AdResult {
 /// to forcibly disable ULP.
 pub fn disable_ulp_lpt_lp(adapter: &mut Adapter, force: bool) -> AdResult {
     e1000_println!();
-    e1000_println!("function start");
 
-    // release:
-    // 	hw->phy.ops.release(hw);
-    // 	if (force) {
-    // 		hw->phy.ops.reset(hw);
-    // 		msec_delay(50);
-    // 	}
-    // out:
-    // 	if (ret_val)
-    // 		DEBUGOUT1("Error in ULP disable flow: %d\n", ret_val);
-    // 	else
-    // 		hw->dev_spec.ich8lan.ulp_state = e1000_ulp_state_off;
-    // 	return ret_val;
     fn _release(adapter: &mut Adapter, force: bool) -> AdResult {
         try!(adapter.phy_release());
         if force {
@@ -1938,6 +1073,7 @@ pub fn disable_ulp_lpt_lp(adapter: &mut Adapter, force: bool) -> AdResult {
         }
         Ok(())
     };
+
     fn set_state(adapter: &mut Adapter) {
         unsafe {
             adapter.hw.dev_spec.ich8lan.ulp_state = UlpState::Off;
@@ -1951,13 +1087,6 @@ pub fn disable_ulp_lpt_lp(adapter: &mut Adapter, force: bool) -> AdResult {
         E1000_DEV_ID_PCH_I218_V2,
     ];
 
-    // 	if ((hw->mac.type < e1000_pch_lpt) ||
-    // 	    (hw->device_id == E1000_DEV_ID_PCH_LPT_I217_LM) ||
-    // 	    (hw->device_id == E1000_DEV_ID_PCH_LPT_I217_V) ||
-    // 	    (hw->device_id == E1000_DEV_ID_PCH_I218_LM2) ||
-    // 	    (hw->device_id == E1000_DEV_ID_PCH_I218_V2) ||
-    // 	    (hw->dev_spec.ich8lan.ulp_state == e1000_ulp_state_off))
-    // 		return 0;
     let state = unsafe { adapter.hw.dev_spec.ich8lan.ulp_state };
     if adapter.hw.mac.mac_type < MacType::Mac_pch_lpt || state == UlpState::Off
         || skip_devids.contains(&(adapter.hw.device_id as u32))
@@ -1966,26 +1095,15 @@ pub fn disable_ulp_lpt_lp(adapter: &mut Adapter, force: bool) -> AdResult {
         return Ok(());
     }
 
-    // 	s32 ret_val = E1000_SUCCESS;
-    // 	u32 mac_reg;
-    // 	u16 phy_reg;
-    // 	int i = 0;
     let mut mac_reg: u32;
     let mut phy_reg: u16 = 0;
     let mut i: usize;
 
-    // 	if (E1000_READ_REG(hw, E1000_FWSM) & E1000_ICH_FWSM_FW_VALID) {
     if btst!(adapter.read_register(E1000_FWSM), E1000_ICH_FWSM_FW_VALID) {
         e1000_println!("Got E1000_ICH_FWSM_FW_VALID");
 
-        // if (force) {
-        //     /* Request ME un-configure ULP mode in the PHY */
-        //     mac_reg = E1000_READ_REG(hw, E1000_H2ME);
-        //     mac_reg &= ~E1000_H2ME_ULP;
-        //     mac_reg |= E1000_H2ME_ENFORCE_SETTINGS;
-        //     E1000_WRITE_REG(hw, E1000_H2ME, mac_reg);
-        // }
         if force {
+            /* Request ME un-configure ULP mode in the PHY */
             mac_reg = adapter.read_register(E1000_H2ME);
             mac_reg &= !E1000_H2ME_ULP;
             mac_reg |= E1000_H2ME_ENFORCE_SETTINGS;
@@ -1993,14 +1111,6 @@ pub fn disable_ulp_lpt_lp(adapter: &mut Adapter, force: bool) -> AdResult {
         }
 
         /* Poll up to 300msec for ME to clear ULP_CFG_DONE. */
-        // while (E1000_READ_REG(hw, E1000_FWSM) & E1000_FWSM_ULP_CFG_DONE) {
-        //     if (i++ == 30) {
-        // 	ret_val = -E1000_ERR_PHY;
-        // 	goto out;
-        //     }
-        //     msec_delay(10);
-        // }
-        // DEBUGOUT1("ULP_CONFIG_DONE cleared after %dmsec\n", i * 10);
         i = 0;
         while btst!(adapter.read_register(E1000_FWSM), E1000_FWSM_ULP_CFG_DONE) {
             if i == 30 {
@@ -2011,60 +1121,27 @@ pub fn disable_ulp_lpt_lp(adapter: &mut Adapter, force: bool) -> AdResult {
         }
         e1000_println!("ULP_CONFIG_DONE cleared after {} ms", i * 10);
 
-        // if (force) {
-        //     mac_reg = E1000_READ_REG(hw, E1000_H2ME);
-        //     mac_reg &= ~E1000_H2ME_ENFORCE_SETTINGS;
-        //     E1000_WRITE_REG(hw, E1000_H2ME, mac_reg);
-        // } else {
-        //     /* Clear H2ME.ULP after ME ULP configuration */
-        //     mac_reg = E1000_READ_REG(hw, E1000_H2ME);
-        //     mac_reg &= ~E1000_H2ME_ULP;
-        //     E1000_WRITE_REG(hw, E1000_H2ME, mac_reg);
-        // }
         if force {
             adapter.clear_register_bit(E1000_H2ME, E1000_H2ME_ENFORCE_SETTINGS);
         } else {
+            /* Clear H2ME.ULP after ME ULP configuration */
             adapter.clear_register_bit(E1000_H2ME, E1000_H2ME_ULP);
         }
-        // goto out;
-        // }
         set_state(adapter);
         return Ok(());
     } else {
         e1000_println!("E1000_ICH_FWSM_FW_VALID false - skip");
     }
 
-    // 	ret_val = hw->phy.ops.acquire(hw);
-    // 	if (ret_val)
-    // 		goto out;
-
     try!(adapter.phy_acquire());
 
-    // 	if (force)
-    // 		/* Toggle LANPHYPC Value bit */
-    // 		e1000_toggle_lanphypc_pch_lpt(hw);
     if force {
+    	/* Toggle LANPHYPC Value bit */
         toggle_lanphypc_pch_lpt(adapter);
         e1000_println!("toggle_lanphypc_pch_lpt() done");
     }
 
     /* Unforce SMBus mode in PHY */
-    // 	ret_val = e1000_read_phy_reg_hv_locked(hw, CV_SMB_CTRL, &phy_reg);
-    // 	if (ret_val) {
-    // 		/* The MAC might be in PCIe mode, so temporarily force to
-    // 		 * SMBus mode in order to access the PHY.
-    // 		 */
-    // 		mac_reg = E1000_READ_REG(hw, E1000_CTRL_EXT);
-    // 		mac_reg |= E1000_CTRL_EXT_FORCE_SMBUS;
-    // 		E1000_WRITE_REG(hw, E1000_CTRL_EXT, mac_reg);
-
-    // 		msec_delay(50);
-
-    // 		ret_val = e1000_read_phy_reg_hv_locked(hw, CV_SMB_CTRL,
-    // 						       &phy_reg);
-    // 		if (ret_val)
-    // 			goto release;
-    // 	}
     if let Err(e) = e1000_phy::read_phy_reg_hv_locked(adapter, CV_SMB_CTRL, &mut phy_reg) {
         eprintln!(e);
         e1000_println!("Force to smbus mode so we can access the PHY");
@@ -2077,8 +1154,6 @@ pub fn disable_ulp_lpt_lp(adapter: &mut Adapter, force: bool) -> AdResult {
     }
 
     e1000_println!("Un-force to smbus mode");
-    // 	phy_reg &= ~CV_SMB_CTRL_FORCE_SMBUS;
-    // 	e1000_write_phy_reg_hv_locked(hw, CV_SMB_CTRL, phy_reg);
     phy_reg &= !CV_SMB_CTRL_FORCE_SMBUS as u16;
     let res = e1000_phy::write_phy_reg_hv_locked(adapter, CV_SMB_CTRL, phy_reg);
     if let Err(e) = res {
@@ -2086,60 +1161,38 @@ pub fn disable_ulp_lpt_lp(adapter: &mut Adapter, force: bool) -> AdResult {
     }
 
     /* Unforce SMBus mode in MAC */
-    // 	mac_reg = E1000_READ_REG(hw, E1000_CTRL_EXT);
-    // 	mac_reg &= ~E1000_CTRL_EXT_FORCE_SMBUS;
-    // 	E1000_WRITE_REG(hw, E1000_CTRL_EXT, mac_reg);
     adapter.clear_register_bit(E1000_CTRL_EXT, E1000_CTRL_EXT_FORCE_SMBUS);
 
     /* When ULP mode was previously entered, K1 was disabled by the
      * hardware.  Re-Enable K1 in the PHY when exiting ULP.
      */
-    // 	ret_val = e1000_read_phy_reg_hv_locked(hw, HV_PM_CTRL, &phy_reg);
-    // 	if (ret_val)
-    // 		goto release;
     if let Err(e) = e1000_phy::read_phy_reg_hv_locked(adapter, HV_PM_CTRL, &mut phy_reg) {
         eprintln!(e);
         return _release(adapter, force);
     }
 
-    // 	phy_reg |= HV_PM_CTRL_K1_ENABLE;
-    // 	e1000_write_phy_reg_hv_locked(hw, HV_PM_CTRL, phy_reg);
     phy_reg |= HV_PM_CTRL_K1_ENABLE;
     if let Err(e) = e1000_phy::write_phy_reg_hv_locked(adapter, HV_PM_CTRL, phy_reg) {
         eprintln!(e);
     }
 
     /* Clear ULP enabled configuration */
-    // 	ret_val = e1000_read_phy_reg_hv_locked(hw, I218_ULP_CONFIG1, &phy_reg);
-    // 	if (ret_val)
-    // 		goto release;
     if let Err(e) = e1000_phy::read_phy_reg_hv_locked(adapter, I218_ULP_CONFIG1, &mut phy_reg) {
         eprintln!(e);
         return _release(adapter, force);
     }
 
-    // 	phy_reg &= ~(I218_ULP_CONFIG1_IND |
-    // 		     I218_ULP_CONFIG1_STICKY_ULP |
-    // 		     I218_ULP_CONFIG1_RESET_TO_SMBUS |
-    // 		     I218_ULP_CONFIG1_WOL_HOST |
-    // 		     I218_ULP_CONFIG1_INBAND_EXIT |
-    // 		     I218_ULP_CONFIG1_EN_ULP_LANPHYPC |
-    // 		     I218_ULP_CONFIG1_DIS_CLR_STICKY_ON_PERST |
-    // 		     I218_ULP_CONFIG1_DISABLE_SMB_PERST);
     phy_reg &= !(I218_ULP_CONFIG1_IND | I218_ULP_CONFIG1_STICKY_ULP
         | I218_ULP_CONFIG1_RESET_TO_SMBUS | I218_ULP_CONFIG1_WOL_HOST
         | I218_ULP_CONFIG1_INBAND_EXIT | I218_ULP_CONFIG1_EN_ULP_LANPHYPC
         | I218_ULP_CONFIG1_DIS_CLR_STICKY_ON_PERST
         | I218_ULP_CONFIG1_DISABLE_SMB_PERST);
 
-    // 	e1000_write_phy_reg_hv_locked(hw, I218_ULP_CONFIG1, phy_reg);
     if let Err(e) = e1000_phy::write_phy_reg_hv_locked(adapter, I218_ULP_CONFIG1, phy_reg) {
         eprintln!(e);
     }
 
     /* Commit ULP changes by starting auto ULP configuration */
-    // 	phy_reg |= I218_ULP_CONFIG1_START;
-    // 	e1000_write_phy_reg_hv_locked(hw, I218_ULP_CONFIG1, phy_reg);
     phy_reg |= I218_ULP_CONFIG1_START;
     let res = e1000_phy::write_phy_reg_hv_locked(adapter, I218_ULP_CONFIG1, phy_reg);
     if let Err(e) = res {
@@ -2147,26 +1200,10 @@ pub fn disable_ulp_lpt_lp(adapter: &mut Adapter, force: bool) -> AdResult {
     }
 
     /* Clear Disable SMBus Release on PERST# in MAC */
-    // 	mac_reg = E1000_READ_REG(hw, E1000_FEXTNVM7);
-    // 	mac_reg &= ~E1000_FEXTNVM7_DISABLE_SMB_PERST;
-    // 	E1000_WRITE_REG(hw, E1000_FEXTNVM7, mac_reg);
     adapter.clear_register_bit(E1000_FEXTNVM7, E1000_FEXTNVM7_DISABLE_SMB_PERST);
 
-    // release:
-    // 	hw->phy.ops.release(hw);
-    // 	if (force) {
-    // 		hw->phy.ops.reset(hw);
-    // 		msec_delay(50);
-    // 	}
-    // out:
-    // 	if (ret_val)
-    // 		DEBUGOUT1("Error in ULP disable flow: %d\n", ret_val);
-    // 	else
-    // 		hw->dev_spec.ich8lan.ulp_state = e1000_ulp_state_off;
-    // 	return ret_val;
     try!(_release(adapter, force));
     set_state(adapter);
-    e1000_println!("function end");
     Ok(())
 }
 
@@ -2179,17 +1216,13 @@ pub fn disable_ulp_lpt_lp(adapter: &mut Adapter, force: bool) -> AdResult {
 pub fn check_for_copper_link_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
 
-    // struct e1000_mac_info *mac = &hw->mac;
-    // s32 ret_val, tipg_reg = 0;
-    // u16 emi_addr, emi_val = 0;
-    // bool link;
-    // u16 phy_reg;
     let mut tipg_reg: u32 = 0;
     let mut emi_addr: u16;
     let mut emi_val: u16 = 0;
     let mut link: bool = false;
     let mut phy_reg: u16 = 0;
 
+    // TODO: use adapter. functions
     let read_reg = try!(adapter.hw.phy.ops.read_reg.ok_or("No function".to_string()));
     let read_reg_locked = try!(
         adapter
@@ -2216,15 +1249,11 @@ pub fn check_for_copper_link_ich8lan(adapter: &mut Adapter) -> AdResult {
             .ok_or("No function".to_string(),)
     );
 
-    // DEBUGFUNC("e1000_check_for_copper_link_ich8lan");
-
     /* We only want to go out to the PHY registers to see if Auto-Neg
      * has completed and/or if our link status has changed.  The
      * get_link_status flag is set upon receiving a Link Status
      * Change or Rx Sequence Error interrupt.
      */
-    // if (!mac->get_link_status)
-    // 	return E1000_SUCCESS;
     if !adapter.hw.mac.get_link_status {
         return Ok(());
     }
@@ -2233,16 +1262,8 @@ pub fn check_for_copper_link_ich8lan(adapter: &mut Adapter) -> AdResult {
      * link.  If so, then we want to get the current speed/duplex
      * of the PHY.
      */
-    // ret_val = e1000_phy_has_link_generic(hw, 1, 0, &link);
-    // if (ret_val)
-    // 	return ret_val;
     try!(e1000_phy::has_link_generic(adapter, 1, 0, &mut link));
 
-    // if (hw->mac.type == e1000_pchlan) {
-    // 	ret_val = e1000_k1_gig_workaround_hv(hw, link);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // }
     if adapter.hw.mac.mac_type == MacType::Mac_pchlan {
         unsupported!();
         incomplete_return!();
@@ -2252,35 +1273,18 @@ pub fn check_for_copper_link_ich8lan(adapter: &mut Adapter) -> AdResult {
      * aggressive resulting in many collisions. To avoid this, increase
      * the IPG and reduce Rx latency in the PHY.
      */
-    // if ((hw->mac.type >= e1000_pch2lan) && link) {
     if adapter.hw.mac.mac_type >= MacType::Mac_pch2lan && link {
-        // 	u16 speed, duplex;
         let mut speed: u16 = 0;
         let mut duplex: u16 = 0;
 
-        // 	e1000_get_speed_and_duplex_copper_generic(hw, &speed, &duplex);
         e1000_mac::get_speed_and_duplex_copper_generic(adapter, &mut speed, &mut duplex);
 
-        // 	tipg_reg = E1000_READ_REG(hw, E1000_TIPG);
-        // 	tipg_reg &= ~E1000_TIPG_IPGT_MASK;
         tipg_reg = adapter.read_register(E1000_TIPG);
         tipg_reg &= !E1000_TIPG_IPGT_MASK;
 
-        // 	if (duplex == HALF_DUPLEX && speed == SPEED_10) {
-        // 		tipg_reg |= 0xFF;
-        // 		/* Reduce Rx latency in analog PHY */
-        // 		emi_val = 0;
-        // 	} else if (hw->mac.type >= e1000_pch_spt &&
-        // 		   duplex == FULL_DUPLEX && speed != SPEED_1000) {
-        // 		tipg_reg |= 0xC;
-        // 		emi_val = 1;
-        // 	} else {
-        // 		/* Roll back the default values */
-        // 		tipg_reg |= 0x08;
-        // 		emi_val = 1;
-        // 	}
         if duplex == HALF_DUPLEX && speed == SPEED_10 {
             tipg_reg |= 0xFF;
+        	/* Reduce Rx latency in analog PHY */
             emi_val = 0;
         } else if adapter.hw.mac.mac_type >= MacType::Mac_pch_spt && duplex == FULL_DUPLEX
             && speed != SPEED_1000
@@ -2288,47 +1292,30 @@ pub fn check_for_copper_link_ich8lan(adapter: &mut Adapter) -> AdResult {
             tipg_reg |= 0x0C;
             emi_val = 1;
         } else {
+        	/* Roll back the default values */
             tipg_reg |= 0x08;
             emi_val = 1;
         }
 
-        // 	E1000_WRITE_REG(hw, E1000_TIPG, tipg_reg);
         adapter.write_register(E1000_TIPG, tipg_reg);
 
-        // 	ret_val = hw->phy.ops.acquire(hw);
-        // 	if (ret_val)
-        // 		return ret_val;
         try!(adapter.phy_acquire());
 
-        // 	if (hw->mac.type == e1000_pch2lan)
-        // 		emi_addr = I82579_RX_CONFIG;
-        // 	else
-        // 		emi_addr = I217_RX_CONFIG;
         if adapter.hw.mac.mac_type == MacType::Mac_pch2lan {
             emi_addr = I82579_RX_CONFIG as u16;
         } else {
             emi_addr = I217_RX_CONFIG as u16;
         }
 
-        // 	ret_val = e1000_write_emi_reg_locked(hw, emi_addr, emi_val);
         let write_emi_result = write_emi_reg_locked(adapter, emi_addr, emi_val);
 
-        // 	if (hw->mac.type >= e1000_pch_lpt) {
         if adapter.hw.mac.mac_type >= MacType::Mac_pch_lpt {
-            // 		u16 phy_reg;
             let mut phy_reg: u16 = 0;
 
-            // 		hw->phy.ops.read_reg_locked(hw, I217_PLL_CLOCK_GATE_REG,
-            // 					    &phy_reg);
             if let Err(e) = read_reg_locked(adapter, I217_PLL_CLOCK_GATE_REG, &mut phy_reg) {
                 eprintln!("(IGNORE) {:?}", e);
             }
 
-            // 		phy_reg &= ~I217_PLL_CLOCK_GATE_MASK;
-            // 		if (speed == SPEED_100 || speed == SPEED_10)
-            // 			phy_reg |= 0x3E8;
-            // 		else
-            // 			phy_reg |= 0xFA;
             phy_reg &= !I217_PLL_CLOCK_GATE_MASK as u16;
             if speed == SPEED_100 || speed == SPEED_10 {
                 phy_reg |= 0x3E8;
@@ -2336,23 +1323,10 @@ pub fn check_for_copper_link_ich8lan(adapter: &mut Adapter) -> AdResult {
                 phy_reg |= 0xFA;
             }
 
-            // 		hw->phy.ops.write_reg_locked(hw,
-            // 					     I217_PLL_CLOCK_GATE_REG,
-            // 					     phy_reg);
             if let Err(e) = write_reg_locked(adapter, I217_PLL_CLOCK_GATE_REG, phy_reg) {
                 eprintln!("(IGNORE) {:?}", e);
             }
 
-            // 		if (speed == SPEED_1000) {
-            // 			hw->phy.ops.read_reg_locked(hw, HV_PM_CTRL,
-            // 						    &phy_reg);
-
-            // 			phy_reg |= HV_PM_CTRL_K1_CLK_REQ;
-
-            // 			hw->phy.ops.write_reg_locked(hw, HV_PM_CTRL,
-            // 						     phy_reg);
-            // 			}
-            // 	 }
             if speed == SPEED_1000 {
                 if let Err(e) = read_reg_locked(adapter, HV_PM_CTRL, &mut phy_reg) {
                     eprintln!("(IGNORE) {:?}", e);
@@ -2363,46 +1337,20 @@ pub fn check_for_copper_link_ich8lan(adapter: &mut Adapter) -> AdResult {
                 }
             }
         }
-        // 	hw->phy.ops.release(hw);
-        // 	if (ret_val)
-        // 		return ret_val;
         try!(adapter.phy_release());
 
-        // 	if (hw->mac.type >= e1000_pch_spt) {
         if adapter.hw.mac.mac_type >= MacType::Mac_pch_spt {
-            // 		u16 data;
-            // 		u16 ptr_gap;
             let mut data: u16 = 0;
             let mut ptr_gap: u16 = 0;
 
-            // 		if (speed == SPEED_1000) {
             if speed == SPEED_1000 {
-                // 			ret_val = hw->phy.ops.acquire(hw);
-                // 			if (ret_val)
-                // 				return ret_val;
                 try!(adapter.phy_acquire());
-
-                // 			ret_val = hw->phy.ops.read_reg_locked(hw,
-                // 						      PHY_REG(776, 20),
-                // 						      &data);
-                // 			if (ret_val) {
-                // 				hw->phy.ops.release(hw);
-                // 				return ret_val;
-                // 			}
                 try!(
                     read_reg_locked(adapter, fn_phy_reg(776, 20), &mut data).or_else(|e| {
                         try!(adapter.phy_release());
                         Err(e)
                     })
                 );
-                // 			ptr_gap = (data & (0x3FF << 2)) >> 2;
-                // 			if (ptr_gap < 0x18) {
-                // 				data &= ~(0x3FF << 2);
-                // 				data |= (0x18 << 2);
-                // 				ret_val =
-                // 					hw->phy.ops.write_reg_locked(hw,
-                // 						PHY_REG(776, 20), data);
-                // 			}
                 ptr_gap = (data & (0x3FF << 2)) >> 2;
                 if ptr_gap < 0x18 {
                     data &= !(0x3FF << 2);
@@ -2416,46 +1364,19 @@ pub fn check_for_copper_link_ich8lan(adapter: &mut Adapter) -> AdResult {
                 } else {
                     try!(adapter.phy_release());
                 }
-            // 			hw->phy.ops.release(hw);
-            // 			if (ret_val)
-            // 				return ret_val;
-
-            // 		} else {
             } else {
-                // 			ret_val = hw->phy.ops.acquire(hw);
-                // 			if (ret_val)
-                // 				return ret_val;
                 try!(adapter.phy_acquire());
-                // 			ret_val = hw->phy.ops.write_reg_locked(hw,
-                // 						     PHY_REG(776, 20),
-                // 						     0xC023);
                 let res = write_reg_locked(adapter, fn_phy_reg(776, 20), 0xC023);
                 try!(adapter.phy_release());
                 try!(res);
-
-                // 			hw->phy.ops.release(hw);
-                // 			if (ret_val)
-                // 				return ret_val;
-
-                // 		}
             }
-            // 	}
         }
-
-        // }
     }
     /* I217 Packet Loss issue:
      * ensure that FEXTNVM4 Beacon Duration is set correctly
      * on power up.
      * Set the Beacon Duration for I217 to 8 usec
      */
-    // if (hw->mac.type >= e1000_pch_lpt) {
-    // 	u32 mac_reg;
-    // 	mac_reg = E1000_READ_REG(hw, E1000_FEXTNVM4);
-    // 	mac_reg &= ~E1000_FEXTNVM4_BEACON_DURATION_MASK;
-    // 	mac_reg |= E1000_FEXTNVM4_BEACON_DURATION_8USEC;
-    // 	E1000_WRITE_REG(hw, E1000_FEXTNVM4, mac_reg);
-    // }
     if adapter.hw.mac.mac_type >= MacType::Mac_pch_lpt {
         let mut mac_reg: u32;
         mac_reg = adapter.read_register(E1000_FEXTNVM4);
@@ -2465,14 +1386,6 @@ pub fn check_for_copper_link_ich8lan(adapter: &mut Adapter) -> AdResult {
     }
 
     /* Work-around I218 hang issue */
-    // if ((hw->device_id == E1000_DEV_ID_PCH_LPTLP_I218_LM) ||
-    //     (hw->device_id == E1000_DEV_ID_PCH_LPTLP_I218_V) ||
-    //     (hw->device_id == E1000_DEV_ID_PCH_I218_LM3) ||
-    //     (hw->device_id == E1000_DEV_ID_PCH_I218_V3)) {
-    // 	ret_val = e1000_k1_workaround_lpt_lp(hw, link);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // }
     if [
         E1000_DEV_ID_PCH_LPTLP_I218_LM,
         E1000_DEV_ID_PCH_LPTLP_I218_V,
@@ -2483,39 +1396,22 @@ pub fn check_for_copper_link_ich8lan(adapter: &mut Adapter) -> AdResult {
         try!(k1_workaround_lpt_lp(adapter, link));
     }
 
-    // if (hw->mac.type >= e1000_pch_lpt) {
-    // 	/* Set platform power management values for
-    //  * Latency Tolerance Reporting (LTR)
-    //  * Optimized Buffer Flush/Fill (OBFF)
-    // 	 */
-    // 	ret_val = e1000_platform_pm_pch_lpt(hw, link);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // }
     if adapter.hw.mac.mac_type >= MacType::Mac_pch_lpt {
+        /* Set platform power management values for
+         * Latency Tolerance Reporting (LTR)
+         * Optimized Buffer Flush/Fill (OBFF)
+         */
         try!(platform_pm_pch_lpt(adapter, link));
     }
 
-    // /* Clear link partner's EEE ability */
-    // hw->dev_spec.ich8lan.eee_lp_ability = 0;
+    /* Clear link partner's EEE ability */
     unsafe {
         adapter.hw.dev_spec.ich8lan.eee_lp_ability = 0;
     }
 
-    // if (hw->mac.type >= e1000_pch_lpt) {
     if adapter.hw.mac.mac_type >= MacType::Mac_pch_lpt {
-        // 	u32 fextnvm6 = E1000_READ_REG(hw, E1000_FEXTNVM6);
         let mut fextnvm6: u32 = adapter.read_register(E1000_FEXTNVM6);
 
-        // 	if (hw->mac.type == e1000_pch_spt) {
-        // 		/* FEXTNVM6 K1-off workaround - for SPT only */
-        // 		u32 pcieanacfg = E1000_READ_REG(hw, E1000_PCIEANACFG);
-
-        // 		if (pcieanacfg & E1000_FEXTNVM6_K1_OFF_ENABLE)
-        // 			fextnvm6 |= E1000_FEXTNVM6_K1_OFF_ENABLE;
-        // 		else
-        // 			fextnvm6 &= ~E1000_FEXTNVM6_K1_OFF_ENABLE;
-        // 	}
         if adapter.hw.mac.mac_type == MacType::Mac_pch_spt {
             let pcieanacfg: u32 = adapter.read_register(E1000_PCIEANACFG);
             if btst!(pcieanacfg, E1000_FEXTNVM6_K1_OFF_ENABLE) {
@@ -2524,41 +1420,23 @@ pub fn check_for_copper_link_ich8lan(adapter: &mut Adapter) -> AdResult {
                 fextnvm6 &= !E1000_FEXTNVM6_K1_OFF_ENABLE;
             }
         }
-        // 	if (hw->dev_spec.ich8lan.disable_k1_off == TRUE)
-        // 		fextnvm6 &= ~E1000_FEXTNVM6_K1_OFF_ENABLE;
         if unsafe { adapter.hw.dev_spec.ich8lan.disable_k1_off } == true {
             fextnvm6 &= !E1000_FEXTNVM6_K1_OFF_ENABLE;
         }
-        // 	E1000_WRITE_REG(hw, E1000_FEXTNVM6, fextnvm6);
         adapter.write_register(E1000_FEXTNVM6, fextnvm6);
-        // }
     }
 
-    // if (!link)
-    // 	return E1000_SUCCESS; /* No link detected */
     if !link {
         return Ok(());
     }
 
-    // mac->get_link_status = FALSE;
     adapter.hw.mac.get_link_status = false;
 
-    // switch (hw->mac.type) {
-    // case e1000_pch2lan:
-    // 	ret_val = e1000_k1_workaround_lv(hw);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // 	/* fall-thru */
-    // case e1000_pchlan:
-    // 	if (hw->phy.type == e1000_phy_82578) {
-    // 		ret_val = e1000_link_stall_workaround_hv(hw);
-    // 		if (ret_val)
-    // 			return ret_val;
-    // 	}
     if adapter.is_mac(MacType::Mac_pch2lan) {
         unsupported!();
         incomplete_return!();
     }
+
     if adapter.is_macs(&[MacType::Mac_pch2lan, MacType::Mac_pchlan]) {
         if adapter.hw.phy.phy_type == PhyType::Type_82578 {
             unsupported!();
@@ -2570,42 +1448,26 @@ pub fn check_for_copper_link_ich8lan(adapter: &mut Adapter) -> AdResult {
          * when it is passed from the PHY to the MAC to prevent
          * the MAC from misinterpreting the packet type.
          */
-        // 	hw->phy.ops.read_reg(hw, HV_KMRN_FIFO_CTRLSTA, &phy_reg);
         read_reg(adapter, HV_KMRN_FIFO_CTRLSTA, &mut phy_reg);
 
-        // 	phy_reg &= ~HV_KMRN_FIFO_CTRLSTA_PREAMBLE_MASK;
         phy_reg &= !HV_KMRN_FIFO_CTRLSTA_PREAMBLE_MASK;
 
-        // 	if ((E1000_READ_REG(hw, E1000_STATUS) & E1000_STATUS_FD) !=
-        // 	    E1000_STATUS_FD)
-        // 		phy_reg |= (1 << HV_KMRN_FIFO_CTRLSTA_PREAMBLE_SHIFT);
         if adapter.read_register(E1000_STATUS) & E1000_STATUS_FD != E1000_STATUS_FD {
             phy_reg |= (1 << HV_KMRN_FIFO_CTRLSTA_PREAMBLE_SHIFT);
         }
-        // 	hw->phy.ops.write_reg(hw, HV_KMRN_FIFO_CTRLSTA, phy_reg);
         if let Err(e) = write_reg(adapter, HV_KMRN_FIFO_CTRLSTA, phy_reg) {
             eprintln!("(IGNORE) {:?}", e);
         }
-        // 	break;
-        // default:
-        // 	break;
-        // }
     }
 
     /* Check if there was DownShift, must be checked
      * immediately after link-up
      */
-    // e1000_check_downshift_generic(hw);
     if let Err(e) = e1000_phy::check_downshift_generic(adapter) {
         eprintln!("(IGNORE) {:?}", e);
     }
 
     /* Enable/Disable EEE after link up */
-    // if (hw->phy.type > e1000_phy_82579) {
-    // 	ret_val = e1000_set_eee_pchlan(hw);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // }
     if adapter.hw.phy.phy_type > PhyType::Type_82579 {
         try!(set_eee_pchlan(adapter));
     }
@@ -2613,8 +1475,6 @@ pub fn check_for_copper_link_ich8lan(adapter: &mut Adapter) -> AdResult {
     /* If we are forcing speed/duplex, then we simply return since
      * we have already determined whether we have link or not.
      */
-    // if (!mac->autoneg)
-    // 	return -E1000_ERR_CONFIG;
     if !adapter.hw.mac.autoneg {
         return Err("Auto-Neg is not set".to_string());
     }
@@ -2623,7 +1483,6 @@ pub fn check_for_copper_link_ich8lan(adapter: &mut Adapter) -> AdResult {
      * of MAC speed/duplex configuration.  So we only need to
      * configure Collision Distance in the MAC.
      */
-    // mac->ops.config_collision_dist(hw);
     try!(
         adapter
             .hw
@@ -2642,9 +1501,6 @@ pub fn check_for_copper_link_ich8lan(adapter: &mut Adapter) -> AdResult {
      * settings because we may have had to re-autoneg with a
      * different link partner.
      */
-    // ret_val = e1000_config_fc_after_link_up_generic(hw);
-    // if (ret_val)
-    // 	DEBUGOUT("Error configuring flow control\n");
     e1000_mac::config_fc_after_link_up_generic(adapter)
 }
 
@@ -2654,11 +1510,6 @@ pub fn check_for_copper_link_ich8lan(adapter: &mut Adapter) -> AdResult {
 /// Acquires the mutex for performing NVM operations.
 pub fn acquire_nvm_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_verbose_println!();
-    // DEBUGFUNC("e1000_acquire_nvm_ich8lan");
-    // E1000_MUTEX_LOCK(&hw->dev_spec.ich8lan.nvm_mutex);
-    // return E1000_SUCCESS;
-    // e1000_verbose_println!(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LOCK ");
-    // e1000_mutex_lock!((adapter.hw.dev_spec.ich8lan.nvm_mutex));
     assert_ctx_lock_held!(adapter);
     Ok(())
 }
@@ -2669,11 +1520,6 @@ pub fn acquire_nvm_ich8lan(adapter: &mut Adapter) -> AdResult {
 /// Releases the mutex used while performing NVM operations.
 pub fn release_nvm_ich8lan(adapter: &mut Adapter) {
     e1000_verbose_println!();
-    // DEBUGFUNC("e1000_release_nvm_ich8lan");
-    // E1000_MUTEX_UNLOCK(&hw->dev_spec.ich8lan.nvm_mutex);
-    // return;
-    // e1000_verbose_println!("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< UNLOCK ");
-    // e1000_mutex_unlock!((adapter.hw.dev_spec.ich8lan.nvm_mutex));
     assert_ctx_lock_held!(adapter);
 }
 
@@ -2685,24 +1531,9 @@ pub fn release_nvm_ich8lan(adapter: &mut Adapter) {
 pub fn acquire_swflag_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_verbose_println!();
 
-    // e1000_verbose_println!(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> LOCK ");
-
-    // 	u32 extcnf_ctrl, timeout = PHY_CFG_TIMEOUT;
-    // 	s32 ret_val = E1000_SUCCESS;
-    // 	DEBUGFUNC("e1000_acquire_swflag_ich8lan");
-    // 	E1000_MUTEX_LOCK(&hw->dev_spec.ich8lan.swflag_mutex);
-    // e1000_mutex_lock!((adapter.hw.dev_spec.ich8lan.swflag_mutex));
     assert_ctx_lock_held!(adapter);
 
     let mut extcnf_ctrl = 0;
-    // 	while (timeout) {
-    // 		extcnf_ctrl = E1000_READ_REG(hw, E1000_EXTCNF_CTRL);
-    // 		if (!(extcnf_ctrl & E1000_EXTCNF_CTRL_SWFLAG))
-    // 			break;
-
-    // 		msec_delay_irq(1);
-    // 		timeout--;
-    // 	}
     let mut timeout = PHY_CFG_TIMEOUT;
     while timeout > 0 {
         extcnf_ctrl = adapter.read_register(E1000_EXTCNF_CTRL);
@@ -2712,30 +1543,13 @@ pub fn acquire_swflag_ich8lan(adapter: &mut Adapter) -> AdResult {
         do_msec_delay(1);
         timeout -= 1;
     }
-    // 	if (!timeout) {
-    // 		DEBUGOUT("SW has already locked the resource.\n");
-    // 		ret_val = -E1000_ERR_CONFIG;
-    // 		goto out;
-    // 	}
     if timeout == 0 {
-        // e1000_mutex_unlock!((adapter.hw.dev_spec.ich8lan.swflag_mutex));
         return Err("SW has already locked the resource".to_string());
     }
 
-    // 	extcnf_ctrl |= E1000_EXTCNF_CTRL_SWFLAG;
-    // 	E1000_WRITE_REG(hw, E1000_EXTCNF_CTRL, extcnf_ctrl);
     extcnf_ctrl |= E1000_EXTCNF_CTRL_SWFLAG;
     adapter.write_register(E1000_EXTCNF_CTRL, extcnf_ctrl);
 
-    // 	timeout = SW_FLAG_TIMEOUT;
-    // 	while (timeout) {
-    // 		extcnf_ctrl = E1000_READ_REG(hw, E1000_EXTCNF_CTRL);
-    // 		if (extcnf_ctrl & E1000_EXTCNF_CTRL_SWFLAG)
-    // 			break;
-
-    // 		msec_delay_irq(1);
-    // 		timeout--;
-    // 	}
     timeout = SW_FLAG_TIMEOUT;
     while timeout > 0 {
         extcnf_ctrl = adapter.read_register(E1000_EXTCNF_CTRL);
@@ -2745,26 +1559,11 @@ pub fn acquire_swflag_ich8lan(adapter: &mut Adapter) -> AdResult {
         do_msec_delay(1);
         timeout -= 1;
     }
-    // 	if (!timeout) {
-    // 		DEBUGOUT2("Failed to acquire the semaphore, "
-    //		"FW or HW has it: FWSM=0x%8.8x EXTCNF_CTRL=0x%8.8x)\n",
-    // 		E1000_READ_REG(hw, E1000_FWSM), extcnf_ctrl);
-    // 		extcnf_ctrl &= ~E1000_EXTCNF_CTRL_SWFLAG;
-    // 		E1000_WRITE_REG(hw, E1000_EXTCNF_CTRL, extcnf_ctrl);
-    // 		ret_val = -E1000_ERR_CONFIG;
-    // 		goto out;
-    // 	}
     if timeout == 0 {
         extcnf_ctrl &= !E1000_EXTCNF_CTRL_SWFLAG;
         adapter.write_register(E1000_EXTCNF_CTRL, extcnf_ctrl);
-        // e1000_mutex_unlock!((adapter.hw.dev_spec.ich8lan.swflag_mutex));
         return Err("Failed to acquire the semaphore, FW or HW has it.".to_string());
     }
-    // out:
-    // 	if (ret_val)
-    // 		E1000_MUTEX_UNLOCK(&hw->dev_spec.ich8lan.swflag_mutex);
-
-    // return ret_val;
     Ok(())
 }
 
@@ -2776,28 +1575,14 @@ pub fn acquire_swflag_ich8lan(adapter: &mut Adapter) -> AdResult {
 pub fn release_swflag_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_verbose_println!();
 
-    e1000_verbose_println!("<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< UNLOCK ");
-
-    // u32 extcnf_ctrl;
-    // DEBUGFUNC("e1000_release_swflag_ich8lan");
-
-    // extcnf_ctrl = E1000_READ_REG(hw, E1000_EXTCNF_CTRL);
     let mut extcnf_ctrl = adapter.read_register(E1000_EXTCNF_CTRL);
 
-    // if (extcnf_ctrl & E1000_EXTCNF_CTRL_SWFLAG) {
-    // 	extcnf_ctrl &= ~E1000_EXTCNF_CTRL_SWFLAG;
-    // 	E1000_WRITE_REG(hw, E1000_EXTCNF_CTRL, extcnf_ctrl);
-    // } else {
-    // 	DEBUGOUT("Semaphore unexpectedly released by sw/fw/hw\n");
-    // }
     if btst!(extcnf_ctrl, E1000_EXTCNF_CTRL_SWFLAG) {
         extcnf_ctrl &= !E1000_EXTCNF_CTRL_SWFLAG;
         adapter.write_register(E1000_EXTCNF_CTRL, extcnf_ctrl);
     } else {
         eprintln!("Semaphore unexpectedly released by sw/fw/hw");
     }
-    // E1000_MUTEX_UNLOCK(&hw->dev_spec.ich8lan.swflag_mutex);
-    // e1000_mutex_unlock!((adapter.hw.dev_spec.ich8lan.swflag_mutex));
     assert_ctx_lock_held!(adapter);
 
     Ok(())
@@ -2813,15 +1598,6 @@ pub fn check_mng_mode_ich8lan(adapter: &mut Adapter) -> bool {
     e1000_println!();
     incomplete!();
     false
-    // u32 fwsm;
-
-    // DEBUGFUNC("e1000_check_mng_mode_ich8lan");
-
-    // fwsm = E1000_READ_REG(hw, E1000_FWSM);
-
-    // return (fwsm & E1000_ICH_FWSM_FW_VALID) &&
-    //        ((fwsm & E1000_FWSM_MODE_MASK) ==
-    // (E1000_ICH_MNG_IAMT_MODE << E1000_FWSM_MODE_SHIFT));
 }
 
 /// e1000_check_mng_mode_pchlan - Checks management mode
@@ -2834,14 +1610,6 @@ pub fn check_mng_mode_pchlan(adapter: &mut Adapter) -> bool {
     e1000_println!();
     incomplete!();
     false
-    // u32 fwsm;
-
-    // DEBUGFUNC("e1000_check_mng_mode_pchlan");
-
-    // fwsm = E1000_READ_REG(hw, E1000_FWSM);
-
-    // return (fwsm & E1000_ICH_FWSM_FW_VALID) &&
-    // (fwsm & (E1000_ICH_MNG_IAMT_MODE << E1000_FWSM_MODE_SHIFT));
 }
 
 /// e1000_rar_set_pch2lan - Set receive address register
@@ -2856,60 +1624,6 @@ pub fn check_mng_mode_pchlan(adapter: &mut Adapter) -> bool {
 pub fn rar_set_pch2lan(adapter: &mut Adapter, addr: &[u8], index: usize) -> AdResult {
     e1000_println!();
     incomplete_return!();
-    // 	u32 rar_low, rar_high;
-
-    // 	DEBUGFUNC("e1000_rar_set_pch2lan");
-
-    // 	/* HW expects these in little endian so we reverse the byte order
-    //  * from network order (big endian) to little endian
-    // 	 */
-    // 	rar_low = ((u32) addr[0] |
-    // 		   ((u32) addr[1] << 8) |
-    // 		   ((u32) addr[2] << 16) | ((u32) addr[3] << 24));
-
-    // 	rar_high = ((u32) addr[4] | ((u32) addr[5] << 8));
-
-    // 	/* If MAC address zero, no need to set the AV bit */
-    // 	if (rar_low || rar_high)
-    // 		rar_high |= E1000_RAH_AV;
-
-    // 	if (index == 0) {
-    // 		E1000_WRITE_REG(hw, E1000_RAL(index), rar_low);
-    // 		E1000_WRITE_FLUSH(hw);
-    // 		E1000_WRITE_REG(hw, E1000_RAH(index), rar_high);
-    // 		E1000_WRITE_FLUSH(hw);
-    // 		return E1000_SUCCESS;
-    // 	}
-
-    // 	/* RAR[1-6] are owned by manageability.  Skip those and program the
-    //  * next address into the SHRA register array.
-    // 	 */
-    // 	if (index < (u32) (hw->mac.rar_entry_count)) {
-    // 		s32 ret_val;
-
-    // 		ret_val = e1000_acquire_swflag_ich8lan(hw);
-    // 		if (ret_val)
-    // 			goto out;
-
-    // 		E1000_WRITE_REG(hw, E1000_SHRAL(index - 1), rar_low);
-    // 		E1000_WRITE_FLUSH(hw);
-    // 		E1000_WRITE_REG(hw, E1000_SHRAH(index - 1), rar_high);
-    // 		E1000_WRITE_FLUSH(hw);
-
-    // 		e1000_release_swflag_ich8lan(hw);
-
-    // 		/* verify the register updates */
-    // 		if ((E1000_READ_REG(hw, E1000_SHRAL(index - 1)) == rar_low) &&
-    // 		    (E1000_READ_REG(hw, E1000_SHRAH(index - 1)) == rar_high))
-    // 			return E1000_SUCCESS;
-
-    // 		DEBUGOUT2("SHRA[%d] might be locked by ME - FWSM=0x%8.8x\n",
-    // 			 (index - 1), E1000_READ_REG(hw, E1000_FWSM));
-    // 	}
-
-    // out:
-    // 	DEBUGOUT1("Failed to write receive address at index %d\n", index);
-    // return -E1000_ERR_CONFIG;
 }
 
 /// e1000_rar_set_pch_lpt - Set receive address registers
@@ -2923,19 +1637,11 @@ pub fn rar_set_pch2lan(adapter: &mut Adapter, addr: &[u8], index: usize) -> AdRe
 /// registers that are shared between the Host and manageability engine (ME).
 pub fn rar_set_pch_lpt(adapter: &mut Adapter, addr: &[u8], index: usize) -> AdResult {
     e1000_println!();
-    // 	u32 rar_low, rar_high;
-    // 	u32 wlock_mac;
     let mut wlock_mac: u32;
-
-    // 	DEBUGFUNC("e1000_rar_set_pch_lpt");
 
     /* HW expects these in little endian so we reverse the byte order
      * from network order (big endian) to little endian
      */
-    // 	rar_low = ((u32) addr[0] | ((u32) addr[1] << 8) |
-    // 		   ((u32) addr[2] << 16) | ((u32) addr[3] << 24));
-    // 	rar_high = ((u32) addr[4] | ((u32) addr[5] << 8));
-
     let (rar_low, mut rar_high): (u32, u32) = {
         // let addr = &adapter.hw.mac.addr;
         let low: u32 = (addr[0] as u32) | (addr[1] as u32) << 8 | (addr[2] as u32) << 16
@@ -2945,19 +1651,10 @@ pub fn rar_set_pch_lpt(adapter: &mut Adapter, addr: &[u8], index: usize) -> AdRe
     };
 
     /* If MAC address zero, no need to set the AV bit */
-    // 	if (rar_low || rar_high)
-    // 		rar_high |= E1000_RAH_AV;
     if rar_low != 0 || rar_high != 0 {
         rar_high |= E1000_RAH_AV;
     }
 
-    // 	if (index == 0) {
-    // 		E1000_WRITE_REG(hw, E1000_RAL(index), rar_low);
-    // 		E1000_WRITE_FLUSH(hw);
-    // 		E1000_WRITE_REG(hw, E1000_RAH(index), rar_high);
-    // 		E1000_WRITE_FLUSH(hw);
-    // 		return E1000_SUCCESS;
-    // 	}
     if index == 0 {
         do_write_register(adapter, E1000_RAL(index), rar_low);
         do_write_flush(adapter);
@@ -2969,46 +1666,27 @@ pub fn rar_set_pch_lpt(adapter: &mut Adapter, addr: &[u8], index: usize) -> AdRe
     /* The manageability engine (ME) can lock certain SHRAR registers that
      * it is using - those registers are unavailable for use.
      */
-    // 	if (index < hw->mac.rar_entry_count) {
-    // 		wlock_mac = E1000_READ_REG(hw, E1000_FWSM) &
-    // 			    E1000_FWSM_WLOCK_MAC_MASK;
-    // 		wlock_mac >>= E1000_FWSM_WLOCK_MAC_SHIFT;
     if index < adapter.hw.mac.rar_entry_count as usize {
         wlock_mac = adapter.read_register(E1000_FWSM) & E1000_FWSM_WLOCK_MAC_MASK;
         wlock_mac >>= E1000_FWSM_WLOCK_MAC_SHIFT;
         /* Check if all SHRAR registers are locked */
-        // if (wlock_mac == 1)
-        //     goto out;
         if wlock_mac == 1 {
             return Err(format!(
                 "Failed to write receive address at index {}",
                 index
             ));
         }
-        // if ((wlock_mac == 0) || (index <= wlock_mac)) {
-        //     s32 ret_val;
         if wlock_mac == 0 || index <= wlock_mac as usize {
-            // ret_val = e1000_acquire_swflag_ich8lan(hw);
-            // if (ret_val)
-            // 	goto out;
             try!(acquire_swflag_ich8lan(adapter));
 
-            // E1000_WRITE_REG(hw, E1000_SHRAL_PCH_LPT(index - 1), rar_low);
-            // E1000_WRITE_FLUSH(hw);
             adapter.write_register(E1000_SHRAL_PCH_LPT(index - 1), rar_low);
             adapter.write_flush();
-            // E1000_WRITE_REG(hw, E1000_SHRAH_PCH_LPT(index - 1), rar_high);
-            // E1000_WRITE_FLUSH(hw);
             adapter.write_register(E1000_SHRAH_PCH_LPT(index - 1), rar_high);
             adapter.write_flush();
 
-            // e1000_release_swflag_ich8lan(hw);
             try!(release_swflag_ich8lan(adapter));
 
             /* verify the register updates */
-            // if ((E1000_READ_REG(hw, E1000_SHRAL_PCH_LPT(index - 1)) == rar_low) &&
-            // 	(E1000_READ_REG(hw, E1000_SHRAH_PCH_LPT(index - 1)) == rar_high))
-            // 	return E1000_SUCCESS;
             if adapter.read_register(E1000_SHRAL_PCH_LPT(index - 1)) != rar_low
                 || adapter.read_register(E1000_SHRAH_PCH_LPT(index - 1)) != rar_high
             {
@@ -3019,11 +1697,6 @@ pub fn rar_set_pch_lpt(adapter: &mut Adapter, addr: &[u8], index: usize) -> AdRe
             }
         }
     }
-
-    // out:
-    // 	DEBUGOUT1("Failed to write receive address at index %d\n", index);
-    // return -E1000_ERR_CONFIG;
-    // incomplete_return!();
     Ok(())
 }
 
@@ -3037,39 +1710,16 @@ pub fn rar_set_pch_lpt(adapter: &mut Adapter, addr: &[u8], index: usize) -> AdRe
 pub fn update_mc_addr_list_pch2lan(adapter: &mut Adapter, mc_addr_count: u32) -> AdResult {
     e1000_println!();
 
-    // 	u16 phy_reg = 0;
-    // 	int i;
-    // 	s32 ret_val;
     let mut phy_reg: u16 = 0;
 
-    // 	DEBUGFUNC("e1000_update_mc_addr_list_pch2lan");
-
-    // 	e1000_update_mc_addr_list_generic(hw, mc_addr_list, mc_addr_count);
     e1000_mac::update_mc_addr_list_generic(adapter, mc_addr_count);
 
-    e1000_println!("update_mc_addr_list_generic done");
-
-    // 	ret_val = hw->phy.ops.acquire(hw);
-    // 	if (ret_val)
-    // 		return;
     try!(adapter.phy_acquire());
-
-    // 	ret_val = e1000_enable_phy_wakeup_reg_access_bm(hw, &phy_reg);
-    // 	if (ret_val)
-    // 		goto release;
     try!(
         e1000_phy::enable_phy_wakeup_reg_access_bm(adapter, &mut phy_reg)
             .or_else(|e| adapter.phy_release().and(Err(e)))
     );
 
-    // 	for (i = 0; i < hw->mac.mta_reg_count; i++) {
-    // 		hw->phy.ops.write_reg_page(hw, BM_MTA(i),
-    // 					   (u16)(hw->mac.mta_shadow[i] &
-    // 						 0xFFFF));
-    // 		hw->phy.ops.write_reg_page(hw, (BM_MTA(i) + 1),
-    // 					   (u16)((hw->mac.mta_shadow[i] >> 16) &
-    // 						 0xFFFF));
-    // 	}
     let write = match adapter.hw.phy.ops.write_reg_page {
         Some(f) => f,
         None => {
@@ -3094,16 +1744,12 @@ pub fn update_mc_addr_list_pch2lan(adapter: &mut Adapter, mc_addr_count: u32) ->
             ).or_else(|e| adapter.phy_release().and(Err(e)))
         );
     }
-    // 	e1000_disable_phy_wakeup_reg_access_bm(hw, &phy_reg);
     try!(
         e1000_phy::disable_phy_wakeup_reg_access_bm(adapter, &mut phy_reg)
             .or_else(|e| adapter.phy_release().and(Err(e)))
     );
 
-    // release:
-    // hw->phy.ops.release(hw);
     try!(adapter.phy_release());
-    e1000_println!("done");
     Ok(())
 }
 
@@ -3116,25 +1762,9 @@ pub fn update_mc_addr_list_pch2lan(adapter: &mut Adapter, mc_addr_count: u32) ->
 pub fn check_reset_block_ich8lan(adapter: &mut Adapter) -> Result<bool, String> {
     e1000_println!();
 
-    // u32 fwsm;
-    // bool blocked = FALSE;
-    // int i = 0;
     let mut fwsm: u32;
     let mut blocked;
     let mut i = 0;
-
-    // DEBUGFUNC("e1000_check_reset_block_ich8lan");
-
-    // do {
-    // 	fwsm = E1000_READ_REG(hw, E1000_FWSM);
-    // 	if (!(fwsm & E1000_ICH_FWSM_RSPCIPHY)) {
-    // 		blocked = TRUE;
-    // 		msec_delay(10);
-    // 		continue;
-    // 	}
-    // 	blocked = FALSE;
-    // } while (blocked && (i++ < 30));
-    // return blocked ? E1000_BLK_PHY_RESET : E1000_SUCCESS;
 
     loop {
         fwsm = adapter.read_register(E1000_FWSM);
@@ -3159,47 +1789,22 @@ pub fn check_reset_block_ich8lan(adapter: &mut Adapter) -> Result<bool, String> 
 ///
 pub fn write_smbus_addr(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
-    // u16 phy_data;
-    // u32 strap = E1000_READ_REG(hw, E1000_STRAP);
-    // u32 freq = (strap & E1000_STRAP_SMT_FREQ_MASK) >>
-    // 	E1000_STRAP_SMT_FREQ_SHIFT;
-    // s32 ret_val;
     let mut phy_data: u16 = 0;
     let mut strap: u32 = adapter.read_register(E1000_STRAP);
     let mut freq: u32 = (strap & E1000_STRAP_SMT_FREQ_MASK) >> E1000_STRAP_SMT_FREQ_SHIFT;
 
-    // strap &= E1000_STRAP_SMBUS_ADDRESS_MASK;
     strap &= E1000_STRAP_SMBUS_ADDRESS_MASK;
 
-    // ret_val = e1000_read_phy_reg_hv_locked(hw, HV_SMB_ADDR, &phy_data);
-    // if (ret_val)
-    // 	return ret_val;
     try!(e1000_phy::read_phy_reg_hv_locked(
         adapter,
         HV_SMB_ADDR,
         &mut phy_data,
     ));
 
-    // phy_data &= ~HV_SMB_ADDR_MASK;
-    // phy_data |= (strap >> E1000_STRAP_SMBUS_ADDRESS_SHIFT);
-    // phy_data |= HV_SMB_ADDR_PEC_EN | HV_SMB_ADDR_VALID;
-
     phy_data &= !HV_SMB_ADDR_MASK as u16;
     phy_data |= (strap >> E1000_STRAP_SMBUS_ADDRESS_SHIFT) as u16;
     phy_data |= (HV_SMB_ADDR_PEC_EN | HV_SMB_ADDR_VALID) as u16;
 
-    // if (hw->phy.type == e1000_phy_i217) {
-    // 	/* Restore SMBus frequency */
-    // 	if (freq--) {
-    // 		phy_data &= ~HV_SMB_ADDR_FREQ_MASK;
-    // 		phy_data |= (freq & (1 << 0)) <<
-    // 			HV_SMB_ADDR_FREQ_LOW_SHIFT;
-    // 		phy_data |= (freq & (1 << 1)) <<
-    // 			(HV_SMB_ADDR_FREQ_HIGH_SHIFT - 1);
-    // 	} else {
-    // 		DEBUGOUT("Unsupported SMB frequency in PHY\n");
-    // 	}
-    // }
     if adapter.hw.phy.phy_type == PhyType::Type_i217 {
         if freq > 0 {
             freq -= 1;
@@ -3210,8 +1815,6 @@ pub fn write_smbus_addr(adapter: &mut Adapter) -> AdResult {
             e1000_println!("Unsupported SMB frequency in PHY\n");
         }
     }
-    // return e1000_write_phy_reg_hv_locked(hw, HV_SMB_ADDR, phy_data);
-    // incomplete_return!();
     e1000_phy::write_phy_reg_hv_locked(adapter, HV_SMB_ADDR, phy_data)
 }
 
@@ -3223,10 +1826,6 @@ pub fn write_smbus_addr(adapter: &mut Adapter) -> AdResult {
 pub fn sw_lcd_config_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
 
-    // 	struct e1000_phy_info *phy = &hw->phy;
-    // 	u32 i, data, cnf_size, cnf_base_addr, sw_cfg_mask;
-    // 	s32 ret_val = E1000_SUCCESS;
-    // 	u16 word_addr, reg_data, reg_addr, phy_page = 0;
     let mut data: u32;
     let mut cnf_size: u32;
     let mut cnf_base_addr: u32;

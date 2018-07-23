@@ -12,12 +12,12 @@ SYSROOTFLAG?=
 CRATE_TYPE=lib
 OBJDIR?=/tmp/rkpi/objs
 LIBDIR?=/tmp/rkpi/rlibs
-
 COMPILERFLAGS?=-C opt-level=3 -C debuginfo=2 -C panic=abort
 
-# TARGET_MACHINE?=192.168.75.68
 
 ######## TARGET SETUP
+
+# TODO: Clean up this mess
 
 kernel_DIR=${CWD}/kernel
 kernel_LIBRS=${kernel_DIR}/lib.rs
@@ -55,8 +55,7 @@ interpolate_SRCS!=find ${interpolate_DIR} -name "*.rs"
 interpolate_DEPS=
 
 
-
-######## KERNEL DEPENDENCIES TARGETS
+######## KERNEL DEPENDENCY TARGETS
 
 ${OBJDIR}/core.o: ${RUST_SRC}/libcore/Cargo.toml
 	@echo -e "\033[1m===> Building ${.TARGET:T:R}\033[0m"
@@ -66,8 +65,6 @@ ${OBJDIR}/core.o: ${RUST_SRC}/libcore/Cargo.toml
 		--target ${TARGET_TRIPLE} -Z force-unstable-if-unmarked \
 		${SYSROOTFLAG} 
 
-###################################
-
 ${OBJDIR}/std_unicode.o: ${RUST_SRC}/libstd_unicode/Cargo.toml
 	@echo -e "\033[1m===> Building ${.TARGET:T:R}\033[0m"
 	@rustc --crate-name ${.TARGET:R:T} ${${.TARGET:T:R:S/$/_LIBRS/}} \
@@ -75,8 +72,6 @@ ${OBJDIR}/std_unicode.o: ${RUST_SRC}/libstd_unicode/Cargo.toml
 		--emit=link,dep-info,obj ${COMPILERFLAGS} --out-dir ${OBJDIR} -L all=${OBJDIR} \
 		--target ${TARGET_TRIPLE} -Z force-unstable-if-unmarked \
 		${SYSROOTFLAG}
-
-###################################
 
 ${OBJDIR}/alloc.o: ${RUST_SRC}/liballoc/Cargo.toml
 	@echo -e "\033[1m===> Building ${.TARGET:T:R}\033[0m"
@@ -86,8 +81,6 @@ ${OBJDIR}/alloc.o: ${RUST_SRC}/liballoc/Cargo.toml
 		--target ${TARGET_TRIPLE} -Z force-unstable-if-unmarked \
 		${SYSROOTFLAG}
 
-###################################
-
 ${OBJDIR}/alloc_kernel.o: ${alloc_kernel_LIBRS}
 	@echo -e "\033[1m===> Building ${.TARGET:T:R}\033[0m"
 	@rustc --crate-name ${.TARGET:R:T} ${${.TARGET:T:R:S/$/_LIBRS/}} \
@@ -95,8 +88,6 @@ ${OBJDIR}/alloc_kernel.o: ${alloc_kernel_LIBRS}
 		--emit=link,dep-info,obj ${COMPILERFLAGS} --out-dir ${OBJDIR} -L all=${OBJDIR} \
 		--target ${TARGET_TRIPLE} -Z force-unstable-if-unmarked \
 		${SYSROOTFLAG}
-
-###################################
 
 ${OBJDIR}/rand.o: ${RUST_SRC}/vendor/rand/Cargo.toml
 	@echo -e "\033[1m===> Building ${.TARGET:T:R}\033[0m"
@@ -106,8 +97,6 @@ ${OBJDIR}/rand.o: ${RUST_SRC}/vendor/rand/Cargo.toml
 		--target ${TARGET_TRIPLE} -Z force-unstable-if-unmarked \
 		${SYSROOTFLAG}
 
-###################################
-
 ${OBJDIR}/collections.o: ${RUST_SRC}/libcollections/Cargo.toml
 	@echo -e "\033[1m===> Building ${.TARGET:T:R}\033[0m"
 	@rustc --crate-name ${.TARGET:R:T} ${${.TARGET:T:R:S/$/_LIBRS/}} \
@@ -115,8 +104,6 @@ ${OBJDIR}/collections.o: ${RUST_SRC}/libcollections/Cargo.toml
 		--emit=link,dep-info,obj ${COMPILERFLAGS} --out-dir ${OBJDIR} -L all=${OBJDIR} \
 		--target ${TARGET_TRIPLE} -Z force-unstable-if-unmarked \
 		${SYSROOTFLAG}
-
-###################################
 
 ${OBJDIR}/spin.o: ${spin_SRCS}
 	@echo -e "\033[1m===> Building ${.TARGET:T:R}\033[0m"
@@ -170,52 +157,6 @@ install-libs: ${LIBDIR}
 	@echo -e "\033[1m===> Installing shared rust libs to ${LIBDIR}\033[0m"
 	@cp ${OBJDIR}/*.rlib ${LIBDIR}/
 	@cp ${OBJDIR}/*.so ${LIBDIR}/
-
-# rustkpi.ko: ${OBJDIR}/kmod.o
-
-# rustkpi-test.ko:
-# 	@${MAKE} -C kmod-test
-
-# if_rem.ko:
-# 	@${MAKE} -C kmod-e1000
-
-# install-e1000: rustkpi.ko if_rem.ko
-# 	@echo -e "\033[1m===> Installing ${.ALLSRC} on target ${TARGET_MACHINE}\033[0m"
-# 	@scp rustkpi.ko root@${TARGET_MACHINE}:/boot/modules
-# 	@scp kmod-e1000/if_rem.ko root@${TARGET_MACHINE}:/boot/modules
-
-# install-test: rustkpi.ko rustkpi-test.ko
-# 	@echo -e "\033[1m===> Installing ${.ALLSRC} on target ${TARGET_MACHINE}\033[0m"
-# 	@scp rustkpi.ko root@${TARGET_MACHINE}:/boot/modules
-# 	@scp kmod-test/rustkpi-test.ko root@${TARGET_MACHINE}:/boot/modules
-
-# load:
-# 	@echo -e "\033[1m===> Loading kmod on target ${TARGET_MACHINE}\033[0m"
-# 	@ssh root@${TARGET_MACHINE} kldload rustkpi-test
-
-# load-e1000:
-# 	@echo -e "\033[1m===> Loading kmod on target ${TARGET_MACHINE}\033[0m"
-# 	@ssh root@${TARGET_MACHINE} kldload if_rem.ko
-
-# unload:
-# 	@echo -e "\033[1m===> Unloading kmod on target ${TARGET_MACHINE}\033[0m"
-# 	@ssh root@${TARGET_MACHINE} kldunload rustkpi-test
-
-# unload-e1000:
-# 	@echo -e "\033[1m===> Unloading kmod on target ${TARGET_MACHINE}\033[0m"
-# 	@ssh root@${TARGET_MACHINE} kldunload if_rem.ko
-
-# test:	install-test
-# 	@echo -e "\033[1m===> Testing kmod on target ${TARGET_MACHINE}\033[0m"
-# 	@${MAKE} load
-# 	@sleep 3
-# 	@${MAKE} unload
-
-# test-e1000: install-e1000
-# 	@echo -e "\033[1m===> Testing if_rem.ko on target ${TARGET_MACHINE}\033[0m"
-# 	@${MAKE} load-e1000
-# 	@sleep 3
-# 	@${MAKE} unload-e1000
 
 clean-all:
 	${MAKE} clean
