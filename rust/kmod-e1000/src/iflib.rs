@@ -53,7 +53,6 @@ use sys::e1000::e1000_tx_desc;
 use sys::e1000::e1000_rx_desc;
 
 use sys::iflib::iflib_set_mac;
-// use sys::iflib::if_pkt_info;
 use sys::iflib::if_txrx;
 use sys::iflib::if_softc_ctx;
 pub use sys::iflib::IftCounter;
@@ -74,11 +73,7 @@ pub const EM_CAPS: u32 = IFCAP_TSO4 | IFCAP_TXCSUM | IFCAP_LRO | IFCAP_RXCSUM |
     IFCAP_WOL | IFCAP_VLAN_HWTSO | IFCAP_HWCSUM | IFCAP_VLAN_HWTAGGING |
     IFCAP_VLAN_HWCSUM | IFCAP_VLAN_MTU;
 
-
-// #define EM_TSO_SIZE		(65535 + sizeof(struct ether_vlan_header))
 pub const EM_TSO_SIZE: u32 = (65535 + kernel::mem::size_of::<ether_vlan_header>() as u32);
-
-
 
 
 #[derive(Debug)]
@@ -141,21 +136,18 @@ impl IfNet {
             if_setsendqready(ptr);
         }
     }
-    // if_setifheaderlen(ifp, sizeof(struct ether_vlan_header));
     pub fn set_ifheaderlen(&mut self, len: i32) {
         let ptr: *mut ifnet = self.inner.as_ptr();
         unsafe {
             if_setifheaderlen(ptr, len);
         }
     }
-    // if_setcapabilitiesbit(ifp, cap, 0);
     pub fn set_capabilitiesbit(&mut self, setbit: i32, clearbit: i32) {
         let ptr: *mut ifnet = self.inner.as_ptr();
         unsafe {
             if_setcapabilitiesbit(ptr, setbit, clearbit);
         }
     }
-    // if_setcapenablebit(ifp, cap, 0);
     pub fn set_capenablebit(&mut self, setcap: i32, clearcap: i32) -> i32 {
         let ptr: *mut ifnet = self.inner.as_ptr();
         unsafe { if_setcapenablebit(ptr, setcap, clearcap) }
@@ -224,39 +216,8 @@ impl kernel::fmt::Debug for IfNet {
 }
 
 
-
-
 pub struct IfLibShared {
     pub inner: NonNull<if_softc_ctx>,
-    // pub struct if_softc_ctx {
-    //     pub isc_vectors: ::kernel::sys::raw::c_int,
-    //     pub isc_nrxqsets: ::kernel::sys::raw::c_int,
-    //     pub isc_ntxqsets: ::kernel::sys::raw::c_int,
-    //     pub isc_msix_bar: ::kernel::sys::raw::c_int,
-    //     pub isc_tx_nsegments: ::kernel::sys::raw::c_int,
-    //     pub isc_ntxd: [::kernel::sys::raw::c_int; 8usize],
-    //     pub isc_nrxd: [::kernel::sys::raw::c_int; 8usize],
-    //     pub isc_txqsizes: [u32; 8usize],
-    //     pub isc_rxqsizes: [u32; 8usize],
-    //     pub isc_txd_size: [u8; 8usize],
-    //     pub isc_rxd_size: [u8; 8usize],
-    //     pub isc_tx_tso_segments_max: ::kernel::sys::raw::c_int,
-    //     pub isc_tx_tso_size_max: ::kernel::sys::raw::c_int,
-    //     pub isc_tx_tso_segsize_max: ::kernel::sys::raw::c_int,
-    //     pub isc_tx_csum_flags: ::kernel::sys::raw::c_int,
-    //     pub isc_capenable: ::kernel::sys::raw::c_int,
-    //     pub isc_rss_table_size: ::kernel::sys::raw::c_int,
-    //     pub isc_rss_table_mask: ::kernel::sys::raw::c_int,
-    //     pub isc_nrxqsets_max: ::kernel::sys::raw::c_int,
-    //     pub isc_ntxqsets_max: ::kernel::sys::raw::c_int,
-    //     pub isc_intr: iflib_intr_mode_t,
-    //     pub isc_max_frame_size: u16,
-    //     pub isc_min_frame_size: u16,
-    //     pub isc_pause_frames: u32,
-    //     pub isc_vendor_info: pci_vendor_info_t,
-    //     pub isc_disable_msix: ::kernel::sys::raw::c_int,
-    //     pub isc_txrx: if_txrx_t,
-    // }
 }
 impl IfLibShared {
     pub fn setup(&mut self, mactype: MacType) -> Result<(), String> {
@@ -278,7 +239,7 @@ impl IfLibShared {
             unsupported!();
             incomplete_return!();
         } else if mactype >= MacType::EM_MAC_MIN {
-            // Real hardware
+            // I218/219 is here
             self.isc_txqsizes[0] = roundup2!(
                 ((self.isc_ntxd[0] + 1) as u32 *
                      kernel::mem::size_of::<e1000_tx_desc>() as u32),
@@ -296,7 +257,7 @@ impl IfLibShared {
             // A struct with iflib callback functions
             self.isc_txrx = &EM_TXRX as *const if_txrx;
         } else {
-            // bhyve emulation (82545 only)
+            // emulated device in bhyve (82545 only)
             self.isc_txqsizes[0] = roundup2!(
                 ((self.isc_ntxd[0] + 1) as u32 *
                      kernel::mem::size_of::<e1000_tx_desc>() as u32),
@@ -369,9 +330,6 @@ pub struct IfMedia {
     pub inner: NonNull<ifmedia>, // iflib internal struct
 }
 impl IfMedia {
-    // pub fn ifmedia_add(ifm: *mut ifmedia, mword: ::kernel::sys::raw::c_int,
-    //                    data: ::kernel::sys::raw::c_int,
-    //                    aux: *mut ::kernel::sys::raw::c_void);
     pub fn add(&mut self, mword: i32, data: i32, aux: *mut c_void) {
         let ptr: *mut ifmedia = self.inner.as_ptr();
         unsafe {
@@ -410,16 +368,6 @@ impl kernel::fmt::Debug for IfMediaReq {
 
 pub struct IfRxdUpdate {
     pub inner: NonNull<if_rxd_update>,
-// pub struct if_rxd_update {
-//     pub iru_paddrs: *mut u64,
-//     pub iru_vaddrs: *mut caddr_t,
-//     pub iru_idxs: *mut qidx_t,
-//     pub iru_pidx: qidx_t,
-//     pub iru_qsidx: u16,
-//     pub iru_count: u16,
-//     pub iru_buf_size: u16,
-//     pub iru_flidx: u8,
-// }
 }
 impl kernel::ops::Deref for IfRxdUpdate {
     type Target = if_rxd_update;
@@ -442,26 +390,6 @@ impl kernel::fmt::Debug for IfRxdUpdate {
 
 pub struct IfPacketInfo {
     pub inner: NonNull<if_pkt_info>,
-    // pub ipi_segs: *mut bus_dma_segment_t,
-    // pub ipi_len: u32,
-    // pub ipi_qsidx: u16,
-    // pub ipi_nsegs: qidx_t,
-    // pub ipi_ndescs: qidx_t,
-    // pub ipi_flags: u16,
-    // pub ipi_pidx: qidx_t,
-    // pub ipi_new_pidx: qidx_t,
-    // pub ipi_ehdrlen: u8,
-    // pub ipi_ip_hlen: u8,
-    // pub ipi_tcp_hlen: u8,
-    // pub ipi_ipproto: u8,
-    // pub ipi_csum_flags: u32,
-    // pub ipi_tso_segsz: u16,
-    // pub ipi_vtag: u16,
-    // pub ipi_etype: u16,
-    // pub ipi_tcp_hflags: u8,
-    // pub ipi_mflags: u8,
-    // pub ipi_tcp_seq: u32,
-    // pub ipi_tcp_sum: u32,
 }
 impl kernel::ops::Deref for IfPacketInfo {
     type Target = if_pkt_info;
@@ -482,28 +410,8 @@ impl kernel::fmt::Debug for IfPacketInfo {
     }
 }
 
-// #[derive(Debug, Default)]
-// pub struct if_rxd_frag {
-//     pub irf_flid: u8,
-//     pub irf_idx: u16,
-//     pub irf_len: u16,
-// }
-
 pub struct IfRxdInfo {
     pub inner: NonNull<if_rxd_info>,
-    // pub iri_qsidx: u16,
-    // pub iri_vtag: u16,
-    // pub iri_len: u16,
-    // pub iri_cidx: qidx_t,
-    // pub iri_ifp: *mut ifnet,
-    // pub iri_frags: if_rxd_frag_t, (if_rxd_frag_t = *mut if_rxd_frag)
-    // pub iri_flowid: u32,
-    // pub iri_csum_flags: u32,
-    // pub iri_csum_data: u32,
-    // pub iri_flags: u8,
-    // pub iri_nfrags: u8,
-    // pub iri_rsstype: u8,
-    // pub iri_pad: u8,
 }
 impl IfRxdInfo {
     pub fn frags_slice(&mut self, len: usize) -> &mut [if_rxd_frag] {
@@ -528,28 +436,3 @@ impl kernel::fmt::Debug for IfRxdInfo {
         })
     }
 }
-
-
-
-// typedef struct if_txrx {
-// 	int (*ift_txd_encap) (void *, if_pkt_info_t);
-// 	void (*ift_txd_flush) (void *, uint16_t, qidx_t pidx);
-// 	int (*ift_txd_credits_update) (void *, uint16_t qsidx, bool clear);
-
-// 	int (*ift_rxd_available) (void *, uint16_t qsidx, qidx_t pidx, qidx_t budget);
-// 	int (*ift_rxd_pkt_get) (void *, if_rxd_info_t ri);
-// 	void (*ift_rxd_refill) (void * , if_rxd_update_t iru);
-// 	void (*ift_rxd_flush) (void *, uint16_t qsidx, uint8_t flidx, qidx_t pidx);
-// 	int (*ift_legacy_intr) (void *);
-// } *if_txrx_t;
-
-// struct if_txrx lem_txrx = {
-//     em_isc_txd_encap,
-//     em_isc_txd_flush,
-//     em_isc_txd_credits_update,
-//     lem_isc_rxd_available,
-//     lem_isc_rxd_pkt_get,
-//     lem_isc_rxd_refill,
-//     em_isc_rxd_flush,
-//     em_intr
-// };

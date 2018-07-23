@@ -1,34 +1,3 @@
-// #define E1000_REGISTER(hw, reg) (((hw)->mac.type >= e1000_82543) \
-//     ? reg : e1000_translate_register_82542(reg))
-
-// #define E1000_READ_REG(hw, reg) \
-//     bus_space_read_4(((struct e1000_osdep *)(hw)->back)->mem_bus_space_tag, \
-//         ((struct e1000_osdep *)(hw)->back)->mem_bus_space_handle, \
-//         E1000_REGISTER(hw, reg))
-
-// #[macro_export]
-// macro_rules! e1000_register {
-//     ($mactype:ident, $reg:expr) => {
-//         match $mactype {
-//             x if x >= sys::e1000::MacType::82543 => $reg,
-//             _ => e1000_82542::e1000_translate_register($reg)
-//         }
-//     }
-// }
-
-// #[macro_export]
-// macro_rules! e1000_read_reg {
-//     ($mactype:ident, $reg:expr) => {
-//     }
-// }
-
-// #[macro_export]
-// macro_rules! set_mac_ops {
-//     ($fn:ident, $module:ident) => {
-//         adapter.hw.mac.ops.$fn = Some($module::$fn)
-//     }
-// }
-
 #[macro_export]
 macro_rules! e1000_println {
     () => (
@@ -121,8 +90,8 @@ macro_rules! eprintln {
 #[macro_export]
 macro_rules! incomplete {
     () => {
-        println!("INCOMPLETE => {}", function_path!());
-        println!("============> {}:{}:{}", file!(), line!(), column!());
+        println!("===> INCOMPLETE FUNCTION => {}", function_path!());
+        println!("===> {}:{}:{}", file!(), line!(), column!());
     }
 }
 
@@ -203,8 +172,6 @@ macro_rules! btst {
         (($a) & ($b)) != 0
     }
 }
-
-// #define E1000_DIVIDE_ROUND_UP(a, b)	(((a) + (b) - 1) / (b)) /* ceil(a/b) */
 
 #[macro_export]
 macro_rules! divide_round_up {

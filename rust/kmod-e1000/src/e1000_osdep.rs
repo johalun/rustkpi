@@ -76,8 +76,6 @@ extern "C" {
 }
 
 
-// #define E1000_REGISTER(hw, reg) (((hw)->mac.type >= e1000_82543) \
-//     ? reg : e1000_translate_register_82542(reg))
 pub fn register(hw: &Hardware, reg: u32) -> u32 {
     // e1000_println!();
     match hw.mac.mac_type {
@@ -86,18 +84,12 @@ pub fn register(hw: &Hardware, reg: u32) -> u32 {
     }
 }
 
-// #define E1000_WRITE_FLUSH(a) E1000_READ_REG(a, E1000_STATUS)
-
 pub fn do_write_flush(adapter: &Adapter) {
     do_read_register(adapter, E1000_STATUS);
 }
 
-// TODO? replace bus_* ffi with rust functions?
+// TODO: replace bus_* ffi with pure Rust functions?
 
-// #define E1000_READ_REG(hw, reg) \
-//     bus_space_read_4(((struct e1000_osdep *)(hw)->back)->mem_bus_space_tag, \
-//         ((struct e1000_osdep *)(hw)->back)->mem_bus_space_handle, \
-//         E1000_REGISTER(hw, reg))
 pub fn do_read_register(adapter: &Adapter, reg: u32) -> u32 {
     // e1000_println!();
     unsafe {
@@ -109,10 +101,6 @@ pub fn do_read_register(adapter: &Adapter, reg: u32) -> u32 {
     }
 }
 
-// #define E1000_WRITE_REG(hw, reg, value) \
-//     bus_space_write_4(((struct e1000_osdep *)(hw)->back)->mem_bus_space_tag, \
-//         ((struct e1000_osdep *)(hw)->back)->mem_bus_space_handle, \
-//         E1000_REGISTER(hw, reg), value)
 pub fn do_write_register(adapter: &Adapter, reg: u32, value: u32) {
     // e1000_println!();
     unsafe {
@@ -125,10 +113,6 @@ pub fn do_write_register(adapter: &Adapter, reg: u32, value: u32) {
     }
 }
 
-// #define E1000_WRITE_REG_ARRAY(hw, reg, index, value) \
-//     bus_space_write_4(((struct e1000_osdep *)(hw)->back)->mem_bus_space_tag, \
-//         ((struct e1000_osdep *)(hw)->back)->mem_bus_space_handle, \
-//         E1000_REGISTER(hw, reg) + ((index)<< 2), value)
 pub fn do_write_register_array(adapter: &Adapter, reg: u32, index: u32, value: u32) {
     // e1000_println!();
     unsafe {
@@ -144,13 +128,6 @@ pub fn do_write_register_array(adapter: &Adapter, reg: u32, index: u32, value: u
 
 
 
-// #define E1000_WRITE_REG_IO(hw, reg, value) do {\
-//     bus_space_write_4(((struct e1000_osdep *)(hw)->back)->io_bus_space_tag, \
-//         ((struct e1000_osdep *)(hw)->back)->io_bus_space_handle, \
-//         (hw)->io_base, reg); \
-//     bus_space_write_4(((struct e1000_osdep *)(hw)->back)->io_bus_space_tag, \
-//         ((struct e1000_osdep *)(hw)->back)->io_bus_space_handle, \
-//         (hw)->io_base + 4, value); } while (0)
 pub fn do_write_register_io(adapter: &Adapter, reg: u32, value: u32) {
     // e1000_println!();
     unsafe {
@@ -186,18 +163,6 @@ pub fn do_msec_delay(msecs: usize) {
 
 
 
-
-
-
-
-
-
-
-// struct resource {
-// 	struct resource_i	*__r_i;
-// 	bus_space_tag_t		r_bustag; /* bus_space tag */
-// 	bus_space_handle_t	r_bushandle;	/* bus_space handle */
-// };
 
 #[derive(Debug)]
 pub struct Resource {
@@ -236,9 +201,6 @@ impl kernel::ops::DerefMut for Resource {
 }
 impl Drop for Resource {
     fn drop(&mut self) {
-        e1000_println!("<<<<<<<<<<<<<<<<<<<< DROP >>>>>>>>>>>>>>>>>>>>");
-        e1000_println!("inner: {:?}", self.inner);
-        e1000_println!("dev: {:?}", self.dev);
         unsafe {
             bus_release_resource(
                 self.dev.as_ptr() as *mut kernel::sys::bus_sys::device,
@@ -252,13 +214,6 @@ impl Drop for Resource {
 
 #[derive(Debug)]
 pub struct OsDep {
-    // bus_space_tag_t    mem_bus_space_tag;
-    // bus_space_handle_t mem_bus_space_handle;
-    // bus_space_tag_t    io_bus_space_tag;
-    // bus_space_handle_t io_bus_space_handle;
-    // bus_space_tag_t    flash_bus_space_tag;
-    // bus_space_handle_t flash_bus_space_handle;
-    // device_t	   dev;
     pub mem_bus_space_tag: bus_space_tag_t,
     pub mem_bus_space_handle: bus_space_handle_t,
     pub io_bus_space_tag: bus_space_tag_t,
@@ -266,25 +221,11 @@ pub struct OsDep {
     pub flash_bus_space_tag: bus_space_tag_t,
     pub flash_bus_space_handle: bus_space_handle_t,
 }
-// impl Clone for OsDep {
-//     fn clone(&self) -> Self {
-//         *self
-//     }
-// }
 impl Drop for OsDep {
     fn drop(&mut self) {
-        e1000_println!("<<<<<<<<<<<<<<<<<<<< DROP >>>>>>>>>>>>>>>>>>>>");
+        // Clean up?
     }
 }
-// impl kernel::fmt::Debug for OsDep {
-//     fn fmt(&self, f: &mut kernel::fmt::Formatter) -> kernel::fmt::Result {
-//         write!(
-//             f,
-//             "OsDep {{ mem_bus_space_handle: {:x} }}",
-//             self.mem_bus_space_handle
-//         )
-//     }
-// }
 
 
 #[derive(Debug)]
@@ -357,7 +298,6 @@ impl PciDevice {
 }
 impl Drop for PciDevice {
     fn drop(&mut self) {
-        e1000_println!("<<<<<<<<<<<<<<<<<<<< DROP >>>>>>>>>>>>>>>>>>>>");
         e1000_println!("inner: {:?}", self.inner);
     }
 }

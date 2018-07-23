@@ -36,20 +36,12 @@ pub struct Hardware {
 
     pub dev_spec: DevSpec,
 }
+
 impl Hardware {}
-// impl fmt::Debug for Hardware {
-//     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-//         write!(
-//             f,
-//             "Hardware {{ vendor_id: 0x{:4x}, device_id: 0x{:4x} }}",
-//             self.vendor_id,
-//             self.device_id
-//         )
-//     }
-// }
+
 impl Drop for Hardware {
     fn drop(&mut self) {
-        e1000_println!("<<<<<<<<<<<<<<<<<<<< DROP >>>>>>>>>>>>>>>>>>>>");
+        // Any manual clean up?
     }
 }
 
@@ -107,8 +99,6 @@ pub struct ShadowRam {
     pub modified: bool,
 }
 
-// #[derive(Debug)]
-// #[allow(non_camel_case_types)]
 pub struct DevSpec_ich8lan {
     pub kmrn_lock_loss_workaround_enabled: bool,
     pub shadow_ram: [ShadowRam; 2048],
@@ -153,16 +143,10 @@ impl kernel::ops::DerefMut for MappedMemory {
 }
 impl Drop for MappedMemory {
     fn drop(&mut self) {
-        e1000_println!("<<<<<<<<<<<<<<<<<<<< DROP >>>>>>>>>>>>>>>>>>>>");
         e1000_println!("ptr: {:?}", self.ptr);
         e1000_println!("len: {:?}", self.len);
     }
 }
-// impl fmt::Debug for MappedMemory {
-//     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-//         write!(f, "MappedMemory)
-//     }
-// }
 
 #[derive(Debug)]
 pub struct FcInfo {
@@ -281,9 +265,6 @@ pub struct NvmOps {
 impl NvmOps {
     pub fn init_generic(&mut self) {
         e1000_println!();
-        /*
-	nvm->ops.reload = e1000_reload_nvm_generic;
-         */
         self.reload = Some(e1000_nvm::reload_nvm_generic);
     }
 }
@@ -316,10 +297,6 @@ pub struct MbxOps {
 impl MbxOps {
     pub fn init_generic(&mut self) {
         e1000_println!();
-        /*
-	mbx->ops.read_posted = e1000_read_posted_mbx;
-	mbx->ops.write_posted = e1000_write_posted_mbx;
-         */
         self.read_posted = Some(e1000_mbx::read_posted);
         self.write_posted = Some(e1000_mbx::write_posted);
     }
@@ -411,20 +388,15 @@ impl MacOps {
     pub fn init_generic(&mut self) {
         e1000_println!();
         /* General Setup */
-        // mac->ops.set_lan_id = e1000_set_lan_id_multi_port_pcie;
         self.set_lan_id = Some(e1000_mac::set_lan_id_multi_port_pcie);
-        // mac->ops.read_mac_addr = e1000_read_mac_addr_generic;
         self.read_mac_addr = Some(e1000_nvm::read_mac_addr_generic);
-        // mac->ops.config_collision_dist = e1000_config_collision_dist_generic;
         self.config_collision_dist = Some(e1000_mac::config_collision_dist_generic);
 
         /* LED */
         /* LINK */
         /* Management */
         /* VLAN, MC, etc. */
-        // mac->ops.rar_set = e1000_rar_set_generic;
         self.rar_set = Some(e1000_mac::rar_set_generic);
-        // mac->ops.validate_mdi_setting = e1000_validate_mdi_setting_generic;
         self.validate_mdi_setting = Some(e1000_mac::validate_mdi_setting_generic);
     }
 }

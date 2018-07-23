@@ -1835,25 +1835,12 @@ pub fn sw_lcd_config_ich8lan(adapter: &mut Adapter) -> AdResult {
     let mut reg_addr: [u16; 1] = [0];
     let mut phy_page: u16 = 0;
 
-    // 	DEBUGFUNC("e1000_sw_lcd_config_ich8lan");
-
     /* Initialize the PHY from the NVM on ICH platforms.  This
      *  is needed due to an issue where the NVM configuration is
      *  not properly autoloaded after power transitions.
      *  Therefore, after each PHY reset, we will load the
      *  configuration data out of the NVM manually.
      */
-    // 	switch (hw->mac.type) {
-    // 	case e1000_ich8lan:
-    // 		if (phy->type != e1000_phy_igp_3)
-    // 			return ret_val;
-
-    // 		if ((hw->device_id == E1000_DEV_ID_ICH8_IGP_AMT) ||
-    // 		    (hw->device_id == E1000_DEV_ID_ICH8_IGP_C)) {
-    // 			sw_cfg_mask = E1000_FEXTNVM_SW_CONFIG;
-    // 			break;
-    // 		}
-    // 		/* Fall-thru */
 
     'mac: loop {
         if adapter.is_mac(MacType::Mac_ich8lan) {
@@ -1869,16 +1856,6 @@ pub fn sw_lcd_config_ich8lan(adapter: &mut Adapter) -> AdResult {
                 break 'mac;
             }
         }
-        // 	case e1000_pchlan:
-        // 	case e1000_pch2lan:
-        // 	case e1000_pch_lpt:
-        // 	case e1000_pch_spt:
-        // 	case e1000_pch_cnp:
-        // 		sw_cfg_mask = E1000_FEXTNVM_SW_CONFIG_ICH8M;
-        // 		break;
-        // 	default:
-        // 		return ret_val;
-        // 	}
         let pchs = [
             MacType::Mac_pchlan,
             MacType::Mac_pch2lan,
@@ -1893,14 +1870,8 @@ pub fn sw_lcd_config_ich8lan(adapter: &mut Adapter) -> AdResult {
         e1000_println!("Returning early from end of mac loop");
         return Ok(());
     }
-    // 	ret_val = hw->phy.ops.acquire(hw);
-    // 	if (ret_val)
-    // 		return ret_val;
     try!(adapter.phy_acquire());
 
-    // 	data = E1000_READ_REG(hw, E1000_FEXTNVM);
-    // 	if (!(data & sw_cfg_mask))
-    // 		goto release;
     data = adapter.read_register(E1000_FEXTNVM);
     if !btst!(data, sw_cfg_mask) {
         e1000_println!("Returning early sw_cfg_mask match error");
@@ -1910,10 +1881,6 @@ pub fn sw_lcd_config_ich8lan(adapter: &mut Adapter) -> AdResult {
     /* Make sure HW does not configure LCD from PHY
      *  extended configuration before SW configuration
      */
-    // 	data = E1000_READ_REG(hw, E1000_EXTCNF_CTRL);
-    // 	if ((hw->mac.type < e1000_pch2lan) &&
-    // 	    (data & E1000_EXTCNF_CTRL_LCD_WRITE_ENABLE))
-    // 			goto release;
     data = adapter.read_register(E1000_EXTCNF_CTRL);
     if adapter.hw.mac.mac_type < MacType::Mac_pch2lan
         && btst!(data, E1000_EXTCNF_CTRL_LCD_WRITE_ENABLE)
@@ -1922,11 +1889,6 @@ pub fn sw_lcd_config_ich8lan(adapter: &mut Adapter) -> AdResult {
         return adapter.phy_release();
     }
 
-    // 	cnf_size = E1000_READ_REG(hw, E1000_EXTCNF_SIZE);
-    // 	cnf_size &= E1000_EXTCNF_SIZE_EXT_PCIE_LENGTH_MASK;
-    // 	cnf_size >>= E1000_EXTCNF_SIZE_EXT_PCIE_LENGTH_SHIFT;
-    // 	if (!cnf_size)
-    // 		goto release;
     cnf_size = adapter.read_register(E1000_EXTCNF_SIZE);
     cnf_size &= E1000_EXTCNF_SIZE_EXT_PCIE_LENGTH_MASK;
     cnf_size >>= E1000_EXTCNF_SIZE_EXT_PCIE_LENGTH_SHIFT;
@@ -1935,29 +1897,9 @@ pub fn sw_lcd_config_ich8lan(adapter: &mut Adapter) -> AdResult {
         return adapter.phy_release();
     }
 
-    // 	cnf_base_addr = data & E1000_EXTCNF_CTRL_EXT_CNF_POINTER_MASK;
-    // 	cnf_base_addr >>= E1000_EXTCNF_CTRL_EXT_CNF_POINTER_SHIFT;
     cnf_base_addr = data & E1000_EXTCNF_CTRL_EXT_CNF_POINTER_MASK;
     cnf_base_addr >>= E1000_EXTCNF_CTRL_EXT_CNF_POINTER_SHIFT;
 
-    // 	if (((hw->mac.type == e1000_pchlan) &&
-    // 	     !(data & E1000_EXTCNF_CTRL_OEM_WRITE_ENABLE)) ||
-    // 	    (hw->mac.type > e1000_pchlan)) {
-    // 		/* HW configures the SMBus address and LEDs when the
-    //		 *  OEM and LCD Write Enable bits are set in the NVM.
-    //		 *  When both NVM bits are cleared, SW will configure
-    //		 *  them instead.
-    // 		 */
-    // 		ret_val = e1000_write_smbus_addr(hw);
-    // 		if (ret_val)
-    // 			goto release;
-
-    // 		data = E1000_READ_REG(hw, E1000_LEDCTL);
-    // 		ret_val = e1000_write_phy_reg_hv_locked(hw, HV_LED_CONFIG,
-    // 							(u16)data);
-    // 		if (ret_val)
-    // 			goto release;
-    // 	}
     if (adapter.is_mac(MacType::Mac_pchlan) && !btst!(data, E1000_EXTCNF_CTRL_OEM_WRITE_ENABLE))
         || adapter.hw.mac.mac_type > MacType::Mac_pchlan
     {
@@ -1976,21 +1918,11 @@ pub fn sw_lcd_config_ich8lan(adapter: &mut Adapter) -> AdResult {
     /* Configure LCD from extended configuration region. */
 
     /* cnf_base_addr is in DWORD */
-    // 	word_addr = (u16)(cnf_base_addr << 1);
     word_addr = (cnf_base_addr << 1) as u16;
-
-    // 	for (i = 0; i < cnf_size; i++) {
-    // 		ret_val = hw->nvm.ops.read(hw, (word_addr + i *  2), 1,
-    // 					   &reg_data);
-    // 		if (ret_val)
-    // 			goto release;
-
-    e1000_println!("Got cnf_size = {}", cnf_size);
 
     for i in 0..cnf_size as u16 {
         let res = adapter.nvm_read(word_addr + i * 2, 1, &mut reg_data);
         if res.is_err() {
-            e1000_println!("Returning early because nvm_read error");
             return adapter.phy_release().and(res);
         }
 
@@ -2001,29 +1933,17 @@ pub fn sw_lcd_config_ich8lan(adapter: &mut Adapter) -> AdResult {
 
         let res = adapter.nvm_read(word_addr + i * 2 + 1, 1, &mut reg_addr);
         if res.is_err() {
-            e1000_println!("Returning early because second nvm_read error");
             return adapter.phy_release().and(res);
         }
 
         /* Save off the PHY page for future writes. */
-        // 		if (reg_addr == IGP01E1000_PHY_PAGE_SELECT) {
-        // 			phy_page = reg_data;
-        // 			continue;
-        // 		}
         if reg_addr[0] == IGP01E1000_PHY_PAGE_SELECT as u16 {
             phy_page = reg_data[0];
             continue;
         }
-        // 		reg_addr &= PHY_REG_MASK;
-        // 		reg_addr |= phy_page;
         reg_addr[0] &= PHY_REG_MASK as u16;
         reg_addr[0] |= phy_page;
 
-        // ret_val = phy->ops.write_reg_locked(hw, (u32)reg_addr,
-        // 				    reg_data);
-        // if (ret_val)
-        //     goto release;
-        // 	}
         let res = adapter.phy_write_reg_locked(reg_addr[0] as u32, reg_data[0]);
         if res.is_err() {
             e1000_println!("Returning early because phy_write_reg_locked error");
@@ -2031,9 +1951,6 @@ pub fn sw_lcd_config_ich8lan(adapter: &mut Adapter) -> AdResult {
         }
     }
 
-    // release:
-    // 	hw->phy.ops.release(hw);
-    // return ret_val;
     adapter.phy_release()
 }
 
@@ -2048,75 +1965,6 @@ pub fn sw_lcd_config_ich8lan(adapter: &mut Adapter) -> AdResult {
 pub fn k1_gig_workaround_hv(adapter: &mut Adapter, link: bool) -> AdResult {
     e1000_println!();
     incomplete_return!();
-
-    // 	s32 ret_val = E1000_SUCCESS;
-    // 	u16 status_reg = 0;
-    // 	bool k1_enable = hw->dev_spec.ich8lan.nvm_k1_enabled;
-
-    // 	DEBUGFUNC("e1000_k1_gig_workaround_hv");
-
-    // 	if (hw->mac.type != e1000_pchlan)
-    // 		return E1000_SUCCESS;
-
-    // 	/* Wrap the whole flow with the sw flag */
-    // 	ret_val = hw->phy.ops.acquire(hw);
-    // 	if (ret_val)
-    // 		return ret_val;
-
-    // 	/* Disable K1 when link is 1Gbps, otherwise use the NVM setting */
-    // 	if (link) {
-    // 		if (hw->phy.type == e1000_phy_82578) {
-    // 			ret_val = hw->phy.ops.read_reg_locked(hw, BM_CS_STATUS,
-    // 							      &status_reg);
-    // 			if (ret_val)
-    // 				goto release;
-
-    // 			status_reg &= (BM_CS_STATUS_LINK_UP |
-    // 				       BM_CS_STATUS_RESOLVED |
-    // 				       BM_CS_STATUS_SPEED_MASK);
-
-    // 			if (status_reg == (BM_CS_STATUS_LINK_UP |
-    // 					   BM_CS_STATUS_RESOLVED |
-    // 					   BM_CS_STATUS_SPEED_1000))
-    // 				k1_enable = FALSE;
-    // 		}
-
-    // 		if (hw->phy.type == e1000_phy_82577) {
-    // 			ret_val = hw->phy.ops.read_reg_locked(hw, HV_M_STATUS,
-    // 							      &status_reg);
-    // 			if (ret_val)
-    // 				goto release;
-
-    // 			status_reg &= (HV_M_STATUS_LINK_UP |
-    // 				       HV_M_STATUS_AUTONEG_COMPLETE |
-    // 				       HV_M_STATUS_SPEED_MASK);
-
-    // 			if (status_reg == (HV_M_STATUS_LINK_UP |
-    // 					   HV_M_STATUS_AUTONEG_COMPLETE |
-    // 					   HV_M_STATUS_SPEED_1000))
-    // 				k1_enable = FALSE;
-    // 		}
-
-    // 		/* Link stall fix for link up */
-    // 		ret_val = hw->phy.ops.write_reg_locked(hw, PHY_REG(770, 19),
-    // 						       0x0100);
-    // 		if (ret_val)
-    // 			goto release;
-
-    // 	} else {
-    // 		/* Link stall fix for link down */
-    // 		ret_val = hw->phy.ops.write_reg_locked(hw, PHY_REG(770, 19),
-    // 						       0x4100);
-    // 		if (ret_val)
-    // 			goto release;
-    // 	}
-
-    // 	ret_val = e1000_configure_k1_ich8lan(hw, k1_enable);
-
-    // release:
-    // 	hw->phy.ops.release(hw);
-
-    // 	return ret_val;
 }
 
 /// e1000_configure_k1_ich8lan - Configure K1 power state
@@ -2130,47 +1978,6 @@ pub fn k1_gig_workaround_hv(adapter: &mut Adapter, link: bool) -> AdResult {
 pub fn configure_k1_ich8lan(adapter: &mut Adapter, k1_enable: bool) -> AdResult {
     e1000_println!();
     incomplete_return!();
-
-    // 	s32 ret_val;
-    // 	u32 ctrl_reg = 0;
-    // 	u32 ctrl_ext = 0;
-    // 	u32 reg = 0;
-    // 	u16 kmrn_reg = 0;
-
-    // 	DEBUGFUNC("e1000_configure_k1_ich8lan");
-
-    // 	ret_val = e1000_read_kmrn_reg_locked(hw, E1000_KMRNCTRLSTA_K1_CONFIG,
-    // 					     &kmrn_reg);
-    // 	if (ret_val)
-    // 		return ret_val;
-
-    // 	if (k1_enable)
-    // 		kmrn_reg |= E1000_KMRNCTRLSTA_K1_ENABLE;
-    // 	else
-    // 		kmrn_reg &= ~E1000_KMRNCTRLSTA_K1_ENABLE;
-
-    // 	ret_val = e1000_write_kmrn_reg_locked(hw, E1000_KMRNCTRLSTA_K1_CONFIG,
-    // 					      kmrn_reg);
-    // 	if (ret_val)
-    // 		return ret_val;
-
-    // 	usec_delay(20);
-    // 	ctrl_ext = E1000_READ_REG(hw, E1000_CTRL_EXT);
-    // 	ctrl_reg = E1000_READ_REG(hw, E1000_CTRL);
-
-    // 	reg = ctrl_reg & ~(E1000_CTRL_SPD_1000 | E1000_CTRL_SPD_100);
-    // 	reg |= E1000_CTRL_FRCSPD;
-    // 	E1000_WRITE_REG(hw, E1000_CTRL, reg);
-
-    // 	E1000_WRITE_REG(hw, E1000_CTRL_EXT, ctrl_ext | E1000_CTRL_EXT_SPD_BYPS);
-    // 	E1000_WRITE_FLUSH(hw);
-    // 	usec_delay(20);
-    // 	E1000_WRITE_REG(hw, E1000_CTRL, ctrl_reg);
-    // 	E1000_WRITE_REG(hw, E1000_CTRL_EXT, ctrl_ext);
-    // 	E1000_WRITE_FLUSH(hw);
-    // 	usec_delay(20);
-
-    // 	return E1000_SUCCESS;
 }
 
 /// e1000_oem_bits_config_ich8lan - SW-based LCD Configuration
@@ -2183,30 +1990,15 @@ pub fn configure_k1_ich8lan(adapter: &mut Adapter, k1_enable: bool) -> AdResult 
 pub fn oem_bits_config_ich8lan(adapter: &mut Adapter, d0_state: bool) -> AdResult {
     e1000_println!();
 
-    // 	s32 ret_val = 0;
-    // 	u32 mac_reg;
-    // 	u16 oem_reg;
     let mut mac_reg: u32 = 0;
     let mut oem_reg: u16 = 0;
 
-    // 	DEBUGFUNC("e1000_oem_bits_config_ich8lan");
-
-    // 	if (hw->mac.type < e1000_pchlan)
-    // 		return ret_val;
     if adapter.hw.mac.mac_type < MacType::Mac_pchlan {
         return Ok(());
     }
 
-    // 	ret_val = hw->phy.ops.acquire(hw);
-    // 	if (ret_val)
-    // 		return ret_val;
     try!(adapter.phy_acquire());
 
-    // 	if (hw->mac.type == e1000_pchlan) {
-    // 		mac_reg = E1000_READ_REG(hw, E1000_EXTCNF_CTRL);
-    // 		if (mac_reg & E1000_EXTCNF_CTRL_OEM_WRITE_ENABLE)
-    // 			goto release;
-    // 	}
     if adapter.is_mac(MacType::Mac_pchlan) {
         mac_reg = adapter.read_register(E1000_EXTCNF_CTRL);
         if btst!(mac_reg, E1000_EXTCNF_CTRL_OEM_WRITE_ENABLE) {
@@ -2214,42 +2006,19 @@ pub fn oem_bits_config_ich8lan(adapter: &mut Adapter, d0_state: bool) -> AdResul
         }
     }
 
-    // 	mac_reg = E1000_READ_REG(hw, E1000_FEXTNVM);
-    // 	if (!(mac_reg & E1000_FEXTNVM_SW_CONFIG_ICH8M))
-    // 		goto release;
     mac_reg = adapter.read_register(E1000_FEXTNVM);
     if !btst!(mac_reg, E1000_FEXTNVM_SW_CONFIG_ICH8M) {
         return adapter.phy_release();
     }
 
-    // 	mac_reg = E1000_READ_REG(hw, E1000_PHY_CTRL);
     mac_reg = adapter.read_register(E1000_PHY_CTRL);
 
-    // 	ret_val = hw->phy.ops.read_reg_locked(hw, HV_OEM_BITS, &oem_reg);
-    // 	if (ret_val)
-    // 		goto release;
     let res = adapter.phy_read_reg_locked(HV_OEM_BITS, &mut oem_reg);
     if res.is_err() {
         return adapter.phy_release().and(res);
     }
-    // 	oem_reg &= ~(HV_OEM_BITS_GBE_DIS | HV_OEM_BITS_LPLU);
     oem_reg &= !(HV_OEM_BITS_GBE_DIS | HV_OEM_BITS_LPLU);
 
-    // 	if (d0_state) {
-    // 		if (mac_reg & E1000_PHY_CTRL_GBE_DISABLE)
-    // 			oem_reg |= HV_OEM_BITS_GBE_DIS;
-
-    // 		if (mac_reg & E1000_PHY_CTRL_D0A_LPLU)
-    // 			oem_reg |= HV_OEM_BITS_LPLU;
-    // 	} else {
-    // 		if (mac_reg & (E1000_PHY_CTRL_GBE_DISABLE |
-    // 		    E1000_PHY_CTRL_NOND0A_GBE_DISABLE))
-    // 			oem_reg |= HV_OEM_BITS_GBE_DIS;
-
-    // 		if (mac_reg & (E1000_PHY_CTRL_D0A_LPLU |
-    // 		    E1000_PHY_CTRL_NOND0A_LPLU))
-    // 			oem_reg |= HV_OEM_BITS_LPLU;
-    // 	}
     if d0_state {
         if btst!(mac_reg, E1000_PHY_CTRL_GBE_DISABLE) {
             oem_reg |= HV_OEM_BITS_GBE_DIS;
@@ -2273,9 +2042,6 @@ pub fn oem_bits_config_ich8lan(adapter: &mut Adapter, d0_state: bool) -> AdResul
     }
 
     /* Set Restart auto-neg to activate the bits */
-    // 	if ((d0_state || (hw->mac.type != e1000_pchlan)) &&
-    // 	    !hw->phy.ops.check_reset_block(hw))
-    // 		oem_reg |= HV_OEM_BITS_RESTART_AN;
     if d0_state || !adapter.is_mac(MacType::Mac_pchlan) {
         match adapter.check_reset_block() {
             Ok(true) => (),
@@ -2284,10 +2050,6 @@ pub fn oem_bits_config_ich8lan(adapter: &mut Adapter, d0_state: bool) -> AdResul
         }
     }
 
-    // 	ret_val = hw->phy.ops.write_reg_locked(hw, HV_OEM_BITS, oem_reg);
-    // release:
-    // 	hw->phy.ops.release(hw);
-    // 	return ret_val;
     let res = adapter.phy_write_reg_locked(HV_OEM_BITS, oem_reg);
     adapter.phy_release().and(res)
 }
@@ -2297,21 +2059,6 @@ pub fn oem_bits_config_ich8lan(adapter: &mut Adapter, d0_state: bool) -> AdResul
 pub fn set_mdio_slow_mode_hv(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
     incomplete_return!();
-
-    // s32 ret_val;
-    // u16 data;
-
-    // DEBUGFUNC("e1000_set_mdio_slow_mode_hv");
-
-    // ret_val = hw->phy.ops.read_reg(hw, HV_KMRN_MODE_CTRL, &data);
-    // if (ret_val)
-    // 	return ret_val;
-
-    // data |= HV_KMRN_MDIO_SLOW;
-
-    // ret_val = hw->phy.ops.write_reg(hw, HV_KMRN_MODE_CTRL, data);
-
-    // return ret_val;
 }
 
 /// e1000_hv_phy_workarounds_ich8lan - A series of Phy workarounds to be
@@ -2319,86 +2066,6 @@ pub fn set_mdio_slow_mode_hv(adapter: &mut Adapter) -> AdResult {
 pub fn hv_phy_workarounds_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
     incomplete_return!();
-
-    // 	s32 ret_val = E1000_SUCCESS;
-    // 	u16 phy_data;
-
-    // 	DEBUGFUNC("e1000_hv_phy_workarounds_ich8lan");
-
-    // 	if (hw->mac.type != e1000_pchlan)
-    // 		return E1000_SUCCESS;
-
-    // 	/* Set MDIO slow mode before any other MDIO access */
-    // 	if (hw->phy.type == e1000_phy_82577) {
-    // 		ret_val = e1000_set_mdio_slow_mode_hv(hw);
-    // 		if (ret_val)
-    // 			return ret_val;
-    // 	}
-
-    // 	if (((hw->phy.type == e1000_phy_82577) &&
-    // 	     ((hw->phy.revision == 1) || (hw->phy.revision == 2))) ||
-    // 	    ((hw->phy.type == e1000_phy_82578) && (hw->phy.revision == 1))) {
-    // 		/* Disable generation of early preamble */
-    // 		ret_val = hw->phy.ops.write_reg(hw, PHY_REG(769, 25), 0x4431);
-    // 		if (ret_val)
-    // 			return ret_val;
-
-    // 		/* Preamble tuning for SSC */
-    // 		ret_val = hw->phy.ops.write_reg(hw, HV_KMRN_FIFO_CTRLSTA,
-    // 						0xA204);
-    // 		if (ret_val)
-    // 			return ret_val;
-    // 	}
-
-    // 	if (hw->phy.type == e1000_phy_82578) {
-    // 		/* Return registers to default by doing a soft reset then
-    //  * writing 0x3140 to the control register.
-    // 		 */
-    // 		if (hw->phy.revision < 2) {
-    // 			e1000_phy_sw_reset_generic(hw);
-    // 			ret_val = hw->phy.ops.write_reg(hw, PHY_CONTROL,
-    // 							0x3140);
-    // 			if (ret_val)
-    // 				return ret_val;
-    // 		}
-    // 	}
-
-    // 	/* Select page 0 */
-    // 	ret_val = hw->phy.ops.acquire(hw);
-    // 	if (ret_val)
-    // 		return ret_val;
-
-    // 	hw->phy.addr = 1;
-    // 	ret_val = e1000_write_phy_reg_mdic(hw, IGP01E1000_PHY_PAGE_SELECT, 0);
-    // 	hw->phy.ops.release(hw);
-    // 	if (ret_val)
-    // 		return ret_val;
-
-    // 	/* Configure the K1 Si workaround during phy reset assuming there is
-    //  * link so that it disables K1 if link is in 1Gbps.
-    // 	 */
-    // 	ret_val = e1000_k1_gig_workaround_hv(hw, TRUE);
-    // 	if (ret_val)
-    // 		return ret_val;
-
-    // 	/* Workaround for link disconnects on a busy hub in half duplex */
-    // 	ret_val = hw->phy.ops.acquire(hw);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // 	ret_val = hw->phy.ops.read_reg_locked(hw, BM_PORT_GEN_CFG, &phy_data);
-    // 	if (ret_val)
-    // 		goto release;
-    // 	ret_val = hw->phy.ops.write_reg_locked(hw, BM_PORT_GEN_CFG,
-    // 					       phy_data & 0x00FF);
-    // 	if (ret_val)
-    // 		goto release;
-
-    // 	/* set MSE higher to enable link to stay up when noise is high */
-    // 	ret_val = e1000_write_emi_reg_locked(hw, I82577_MSE_THRESHOLD, 0x0034);
-    // release:
-    // 	hw->phy.ops.release(hw);
-
-    // 	return ret_val;
 }
 
 /// e1000_copy_rx_addrs_to_phy_ich8lan - Copy Rx addresses from MAC to PHY
@@ -2406,61 +2073,12 @@ pub fn hv_phy_workarounds_ich8lan(adapter: &mut Adapter) -> AdResult {
 pub fn copy_rx_addrs_to_phy_ich8lan(adapter: &mut Adapter) {
     e1000_println!();
     incomplete!();
-
-    // 	u32 mac_reg;
-    // 	u16 i, phy_reg = 0;
-    // 	s32 ret_val;
-
-    // 	DEBUGFUNC("e1000_copy_rx_addrs_to_phy_ich8lan");
-
-    // 	ret_val = hw->phy.ops.acquire(hw);
-    // 	if (ret_val)
-    // 		return;
-    // 	ret_val = e1000_enable_phy_wakeup_reg_access_bm(hw, &phy_reg);
-    // 	if (ret_val)
-    // 		goto release;
-
-    // 	/* Copy both RAL/H (rar_entry_count) and SHRAL/H to PHY */
-    // 	for (i = 0; i < (hw->mac.rar_entry_count); i++) {
-    // 		mac_reg = E1000_READ_REG(hw, E1000_RAL(i));
-    // 		hw->phy.ops.write_reg_page(hw, BM_RAR_L(i),
-    // 					   (u16)(mac_reg & 0xFFFF));
-    // 		hw->phy.ops.write_reg_page(hw, BM_RAR_M(i),
-    // 					   (u16)((mac_reg >> 16) & 0xFFFF));
-
-    // 		mac_reg = E1000_READ_REG(hw, E1000_RAH(i));
-    // 		hw->phy.ops.write_reg_page(hw, BM_RAR_H(i),
-    // 					   (u16)(mac_reg & 0xFFFF));
-    // 		hw->phy.ops.write_reg_page(hw, BM_RAR_CTRL(i),
-    // 					   (u16)((mac_reg & E1000_RAH_AV)
-    // 						 >> 16));
-    // 	}
-
-    // 	e1000_disable_phy_wakeup_reg_access_bm(hw, &phy_reg);
-
-    // release:
-    // 	hw->phy.ops.release(hw);
 }
 
 pub fn calc_rx_da_crc(mac: &[u8]) -> u32 {
     e1000_println!();
     incomplete!();
     0
-
-    // u32 poly = 0xEDB88320;	/* Polynomial for 802.3 CRC calculation */
-    // u32 i, j, mask, crc;
-
-    // DEBUGFUNC("e1000_calc_rx_da_crc");
-
-    // crc = 0xffffffff;
-    // for (i = 0; i < 6; i++) {
-    // 	crc = crc ^ mac[i];
-    // 	for (j = 8; j > 0; j--) {
-    // 		mask = (crc & 1)/// (-1);
-    // 		crc = (crc >> 1) ^ (poly & mask);
-    // 	}
-    // }
-    // return ~crc;
 }
 
 /// e1000_lv_jumbo_workaround_ich8lan - required for jumbo frame operation
@@ -2469,110 +2087,47 @@ pub fn calc_rx_da_crc(mac: &[u8]) -> u32 {
 /// @enable: flag to enable/disable workaround when enabling/disabling jumbos
 pub fn lv_jumbo_workaround(adapter: &mut Adapter, enable: bool) -> AdResult {
     e1000_println!("enable = {}", enable);
-    // incomplete_return!();
 
-    // s32 ret_val = E1000_SUCCESS;
-    // u16 phy_reg, data;
-    // u32 mac_reg;
-    // u16 i;
     let mut phy_reg: u16 = 0;
     let mut data: u16 = 0;
     let mut mac_reg: u32 = 0;
 
-    // DEBUGFUNC("e1000_lv_jumbo_workaround_ich8lan");
-
-    // if (hw->mac.type < e1000_pch2lan)
-    // 	return E1000_SUCCESS;
     if adapter.hw.mac.mac_type < MacType::Mac_pch2lan {
         return Ok(());
     }
 
-    // /* disable Rx path while enabling/disabling workaround */
-    // hw->phy.ops.read_reg(hw, PHY_REG(769, 20), &phy_reg);
-    // ret_val = hw->phy.ops.write_reg(hw, PHY_REG(769, 20),
-    // 				phy_reg | (1 << 14));
-    // if (ret_val)
-    // 	return ret_val;
+    /* disable Rx path while enabling/disabling workaround */
     try!(adapter.phy_read_reg(fn_phy_reg(769, 20), &mut phy_reg));
     try!(adapter.phy_write_reg(fn_phy_reg(769, 20), phy_reg | (1 << 14),));
 
-    // if (enable) {
     if enable {
-        // 	/* Write Rx addresses (rar_entry_count for RAL/H, and
-        // 	 * SHRAL/H) and initial CRC values to the MAC
-        // 	 */
-        // 	for (i = 0; i < hw->mac.rar_entry_count; i++) {
-        // 		u8 mac_addr[ETH_ADDR_LEN] = {0};
-        // 		u32 addr_high, addr_low;
-
-        // 		addr_high = E1000_READ_REG(hw, E1000_RAH(i));
-        // 		if (!(addr_high & E1000_RAH_AV))
-        // 			continue;
-        // 		addr_low = E1000_READ_REG(hw, E1000_RAL(i));
-        // 		mac_addr[0] = (addr_low & 0xFF);
-        // 		mac_addr[1] = ((addr_low >> 8) & 0xFF);
-        // 		mac_addr[2] = ((addr_low >> 16) & 0xFF);
-        // 		mac_addr[3] = ((addr_low >> 24) & 0xFF);
-        // 		mac_addr[4] = (addr_high & 0xFF);
-        // 		mac_addr[5] = ((addr_high >> 8) & 0xFF);
-
-        // 		E1000_WRITE_REG(hw, E1000_PCH_RAICC(i),
-        // 				e1000_calc_rx_da_crc(mac_addr));
-        // 	}
+        /* Write Rx addresses (rar_entry_count for RAL/H, and
+         * SHRAL/H) and initial CRC values to the MAC
+         */
 
         /* Write Rx addresses to the PHY */
-        // 	e1000_copy_rx_addrs_to_phy_ich8lan(hw);
         copy_rx_addrs_to_phy_ich8lan(adapter);
 
         /* Enable jumbo frame workaround in the MAC */
-        // 	mac_reg = E1000_READ_REG(hw, E1000_FFLT_DBG);
-        // 	mac_reg &= ~(1 << 14);
-        // 	mac_reg |= (7 << 15);
-        // 	E1000_WRITE_REG(hw, E1000_FFLT_DBG, mac_reg);
         mac_reg = adapter.read_register(E1000_FFLT_DBG);
         mac_reg &= !(1 << 14);
         mac_reg |= (7 << 15);
         adapter.write_register(E1000_FFLT_DBG, mac_reg);
 
-        // 	mac_reg = E1000_READ_REG(hw, E1000_RCTL);
-        // 	mac_reg |= E1000_RCTL_SECRC;
-        // 	E1000_WRITE_REG(hw, E1000_RCTL, mac_reg);
         adapter.set_register_bit(E1000_RCTL, E1000_RCTL_SECRC);
 
-        // 	ret_val = e1000_read_kmrn_reg_generic(hw,
-        // 					E1000_KMRNCTRLSTA_CTRL_OFFSET,
-        // 					&data);
-        // 	if (ret_val)
-        // 		return ret_val;
         try!(e1000_phy::read_kmrn_reg_generic(
             adapter,
             E1000_KMRNCTRLSTA_CTRL_OFFSET,
             &mut data,
         ));
 
-        // 	ret_val = e1000_write_kmrn_reg_generic(hw,
-        // 					E1000_KMRNCTRLSTA_CTRL_OFFSET,
-        // 					data | (1 << 0));
-        // 	if (ret_val)
-        // 		return ret_val;
         try!(e1000_phy::write_kmrn_reg_generic(
             adapter,
             E1000_KMRNCTRLSTA_CTRL_OFFSET,
             data | (1 << 0),
         ));
 
-        // 	ret_val = e1000_read_kmrn_reg_generic(hw,
-        // 					E1000_KMRNCTRLSTA_HD_CTRL,
-        // 					&data);
-        // 	if (ret_val)
-        // 		return ret_val;
-        // 	data &= ~(0xF << 8);
-        // 	data |= (0xB << 8);
-        // 	ret_val = e1000_write_kmrn_reg_generic(hw,
-        // 					E1000_KMRNCTRLSTA_HD_CTRL,
-        // 					data);
-        // 	if (ret_val)
-        // 		return ret_val;
         try!(e1000_phy::read_kmrn_reg_generic(
             adapter,
             E1000_KMRNCTRLSTA_HD_CTRL,
@@ -2587,74 +2142,32 @@ pub fn lv_jumbo_workaround(adapter: &mut Adapter, enable: bool) -> AdResult {
         ));
 
         /* Enable jumbo frame workaround in the PHY */
-        // 	hw->phy.ops.read_reg(hw, PHY_REG(769, 23), &data);
-        // 	data &= ~(0x7F << 5);
-        // 	data |= (0x37 << 5);
-        // 	ret_val = hw->phy.ops.write_reg(hw, PHY_REG(769, 23), data);
-        // 	if (ret_val)
-        // 		return ret_val;
         try!(adapter.phy_read_reg(fn_phy_reg(769, 23), &mut data));
         data &= !(0x7F << 5);
         data |= 0x37 << 5;
         try!(adapter.phy_write_reg(fn_phy_reg(769, 23), data));
 
-        // 	hw->phy.ops.read_reg(hw, PHY_REG(769, 16), &data);
-        // 	data &= ~(1 << 13);
-        // 	ret_val = hw->phy.ops.write_reg(hw, PHY_REG(769, 16), data);
-        // 	if (ret_val)
-        // 		return ret_val;
         try!(adapter.phy_read_reg(fn_phy_reg(769, 16), &mut data));
         data &= !(1 << 13);
         try!(adapter.phy_write_reg(fn_phy_reg(769, 16), data));
 
-        // 	hw->phy.ops.read_reg(hw, PHY_REG(776, 20), &data);
-        // 	data &= ~(0x3FF << 2);
-        // 	data |= (E1000_TX_PTR_GAP << 2);
-        // 	ret_val = hw->phy.ops.write_reg(hw, PHY_REG(776, 20), data);
-        // 	if (ret_val)
-        // 		return ret_val;
         try!(adapter.phy_read_reg(fn_phy_reg(776, 20), &mut data));
         data &= !(0x3FF << 2);
         data |= E1000_TX_PTR_GAP << 2;
         try!(adapter.phy_write_reg(fn_phy_reg(776, 20), data));
 
-        // 	ret_val = hw->phy.ops.write_reg(hw, PHY_REG(776, 23), 0xF100);
-        // 	if (ret_val)
-        // 		return ret_val;
         try!(adapter.phy_write_reg(fn_phy_reg(776, 23), 0xF100));
 
-        // 	hw->phy.ops.read_reg(hw, HV_PM_CTRL, &data);
-        // 	ret_val = hw->phy.ops.write_reg(hw, HV_PM_CTRL, data |
-        // 					(1 << 10));
-        // 	if (ret_val)
-        // 		return ret_val;
         try!(adapter.phy_read_reg(HV_PM_CTRL, &mut data));
         try!(adapter.phy_write_reg(HV_PM_CTRL, data | (1 << 10)));
 
         incomplete_return!();
-    // } else {
     } else {
         /* Write MAC register values back to h/w defaults */
-        // 	mac_reg = E1000_READ_REG(hw, E1000_FFLT_DBG);
-        // 	mac_reg &= ~(0xF << 14);
-        // 	E1000_WRITE_REG(hw, E1000_FFLT_DBG, mac_reg);
         adapter.clear_register_bit(E1000_FFLT_DBG, 0xF << 14);
 
-        // 	mac_reg = E1000_READ_REG(hw, E1000_RCTL);
-        // 	mac_reg &= ~E1000_RCTL_SECRC;
-        // 	E1000_WRITE_REG(hw, E1000_RCTL, mac_reg);
         adapter.clear_register_bit(E1000_RCTL, E1000_RCTL_SECRC);
 
-        // 	ret_val = e1000_read_kmrn_reg_generic(hw,
-        // 					E1000_KMRNCTRLSTA_CTRL_OFFSET,
-        // 					&data);
-        // 	if (ret_val)
-        // 		return ret_val;
-        // 	ret_val = e1000_write_kmrn_reg_generic(hw,
-        // 					E1000_KMRNCTRLSTA_CTRL_OFFSET,
-        // 					data & ~(1 << 0));
-        // 	if (ret_val)
-        // 		return ret_val;
         try!(e1000_phy::read_kmrn_reg_generic(
             adapter,
             E1000_KMRNCTRLSTA_CTRL_OFFSET,
@@ -2666,18 +2179,6 @@ pub fn lv_jumbo_workaround(adapter: &mut Adapter, enable: bool) -> AdResult {
             data & !(1 << 0),
         ));
 
-        // 	ret_val = e1000_read_kmrn_reg_generic(hw,
-        // 					E1000_KMRNCTRLSTA_HD_CTRL,
-        // 					&data);
-        // 	if (ret_val)
-        // 		return ret_val;
-        // 	data &= ~(0xF << 8);
-        // 	data |= (0xB << 8);
-        // 	ret_val = e1000_write_kmrn_reg_generic(hw,
-        // 					E1000_KMRNCTRLSTA_HD_CTRL,
-        // 					data);
-        // 	if (ret_val)
-        // 		return ret_val;
         try!(e1000_phy::read_kmrn_reg_generic(
             adapter,
             E1000_KMRNCTRLSTA_HD_CTRL,
@@ -2692,53 +2193,26 @@ pub fn lv_jumbo_workaround(adapter: &mut Adapter, enable: bool) -> AdResult {
         ));
 
         /* Write PHY register values back to h/w defaults */
-        // 	hw->phy.ops.read_reg(hw, PHY_REG(769, 23), &data);
-        // 	data &= ~(0x7F << 5);
-        // 	ret_val = hw->phy.ops.write_reg(hw, PHY_REG(769, 23), data);
-        // 	if (ret_val)
-        // 		return ret_val;
         try!(adapter.phy_read_reg(fn_phy_reg(769, 23), &mut data));
         data &= !(0x7F << 5);
         try!(adapter.phy_write_reg(fn_phy_reg(769, 23), data));
 
-        // 	hw->phy.ops.read_reg(hw, PHY_REG(769, 16), &data);
-        // 	data |= (1 << 13);
-        // 	ret_val = hw->phy.ops.write_reg(hw, PHY_REG(769, 16), data);
-        // 	if (ret_val)
-        // 		return ret_val;
         try!(adapter.phy_read_reg(fn_phy_reg(769, 16), &mut data));
         data |= 1 << 13;
         try!(adapter.phy_write_reg(fn_phy_reg(769, 16), data));
 
-        // 	hw->phy.ops.read_reg(hw, PHY_REG(776, 20), &data);
-        // 	data &= ~(0x3FF << 2);
-        // 	data |= (0x8 << 2);
-        // 	ret_val = hw->phy.ops.write_reg(hw, PHY_REG(776, 20), data);
-        // 	if (ret_val)
-        // 		return ret_val;
         try!(adapter.phy_read_reg(fn_phy_reg(776, 20), &mut data));
         data &= !(0x3FF << 2);
         data |= 0x8 << 2;
         try!(adapter.phy_write_reg(fn_phy_reg(776, 20), data));
 
-        // 	ret_val = hw->phy.ops.write_reg(hw, PHY_REG(776, 23), 0x7E00);
-        // 	if (ret_val)
-        // 		return ret_val;
         try!(adapter.phy_write_reg(fn_phy_reg(776, 23), 0x7E00));
 
-        // 	hw->phy.ops.read_reg(hw, HV_PM_CTRL, &data);
-        // 	ret_val = hw->phy.ops.write_reg(hw, HV_PM_CTRL, data &
-        // 					~(1 << 10));
-        // 	if (ret_val)
-        // 		return ret_val;
-        // }
         try!(adapter.phy_read_reg(HV_PM_CTRL, &mut data));
         try!(adapter.phy_write_reg(HV_PM_CTRL, data & !(1 << 10)));
     }
 
-    // /* re-enable Rx path after enabling/disabling workaround */
-    // return hw->phy.ops.write_reg(hw, PHY_REG(769, 20), phy_reg &
-    // 			     ~(1 << 14));
+    /* re-enable Rx path after enabling/disabling workaround */
     adapter.phy_write_reg(fn_phy_reg(769, 20), phy_reg & !(1 << 14))
 }
 
@@ -2747,33 +2221,13 @@ pub fn lv_jumbo_workaround(adapter: &mut Adapter, enable: bool) -> AdResult {
 pub fn lv_phy_workarounds_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
 
-    // 	s32 ret_val = E1000_SUCCESS;
-
-    // 	DEBUGFUNC("e1000_lv_phy_workarounds_ich8lan");
-
-    // 	if (hw->mac.type != e1000_pch2lan)
-    // 		return E1000_SUCCESS;
     if !adapter.is_mac(MacType::Mac_pch2lan) {
         return Ok(());
     }
 
     /* Set MDIO slow mode before any other MDIO access */
-    // 	ret_val = e1000_set_mdio_slow_mode_hv(hw);
-    // 	if (ret_val)
-    // 		return ret_val;
     try!(set_mdio_slow_mode_hv(adapter));
 
-    // 	ret_val = hw->phy.ops.acquire(hw);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // 	/* set MSE higher to enable link to stay up when noise is high */
-    // 	ret_val = e1000_write_emi_reg_locked(hw, I82579_MSE_THRESHOLD, 0x0034);
-    // 	if (ret_val)
-    // 		goto release;
-    // 	/* drop link after 5 times MSE threshold was reached */
-    // 	ret_val = e1000_write_emi_reg_locked(hw, I82579_MSE_LINK_DOWN, 0x0005);
-    // release:
-    // 	hw->phy.ops.release(hw);
     let mut res = Ok(());
     try!(adapter.phy_acquire());
 
@@ -2785,7 +2239,6 @@ pub fn lv_phy_workarounds_ich8lan(adapter: &mut Adapter) -> AdResult {
 
     try!(adapter.phy_release());
 
-    // 	return ret_val;
     res
 }
 
@@ -2797,46 +2250,6 @@ pub fn lv_phy_workarounds_ich8lan(adapter: &mut Adapter) -> AdResult {
 pub fn k1_workaround_lv(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
     incomplete_return!();
-
-    // s32 ret_val = E1000_SUCCESS;
-    // u16 status_reg = 0;
-
-    // DEBUGFUNC("e1000_k1_workaround_lv");
-
-    // if (hw->mac.type != e1000_pch2lan)
-    // 	return E1000_SUCCESS;
-
-    // /* Set K1 beacon duration based on 10Mbs speed */
-    // ret_val = hw->phy.ops.read_reg(hw, HV_M_STATUS, &status_reg);
-    // if (ret_val)
-    // 	return ret_val;
-
-    // if ((status_reg & (HV_M_STATUS_LINK_UP | HV_M_STATUS_AUTONEG_COMPLETE))
-    //     == (HV_M_STATUS_LINK_UP | HV_M_STATUS_AUTONEG_COMPLETE)) {
-    // 	if (status_reg &
-    // 	    (HV_M_STATUS_SPEED_1000 | HV_M_STATUS_SPEED_100)) {
-    // 		u16 pm_phy_reg;
-
-    // 		/* LV 1G/100 Packet drop issue wa  */
-    // 		ret_val = hw->phy.ops.read_reg(hw, HV_PM_CTRL,
-    // 					       &pm_phy_reg);
-    // 		if (ret_val)
-    // 			return ret_val;
-    // 		pm_phy_reg &= ~HV_PM_CTRL_K1_ENABLE;
-    // 		ret_val = hw->phy.ops.write_reg(hw, HV_PM_CTRL,
-    // 						pm_phy_reg);
-    // 		if (ret_val)
-    // 			return ret_val;
-    // 	} else {
-    // 		u32 mac_reg;
-    // 		mac_reg = E1000_READ_REG(hw, E1000_FEXTNVM4);
-    // 		mac_reg &= ~E1000_FEXTNVM4_BEACON_DURATION_MASK;
-    // 		mac_reg |= E1000_FEXTNVM4_BEACON_DURATION_16USEC;
-    // 		E1000_WRITE_REG(hw, E1000_FEXTNVM4, mac_reg);
-    // 	}
-    // }
-
-    // return ret_val;
 }
 
 /// e1000_gate_hw_phy_config_ich8lan - disable PHY config via hardware
@@ -2848,21 +2261,9 @@ pub fn k1_workaround_lv(adapter: &mut Adapter) -> AdResult {
 pub fn gate_hw_phy_config_ich8lan(adapter: &mut Adapter, gate: bool) {
     e1000_println!();
 
-    // u32 extcnf_ctrl;
-    // DEBUGFUNC("e1000_gate_hw_phy_config_ich8lan");
-
-    // if (hw->mac.type < e1000_pch2lan)
-    // 	return;
     if adapter.hw.mac.mac_type < MacType::Mac_pch2lan {
         return;
     }
-
-    // extcnf_ctrl = E1000_READ_REG(hw, E1000_EXTCNF_CTRL);
-    // if (gate)
-    // 	extcnf_ctrl |= E1000_EXTCNF_CTRL_GATE_PHY_CFG;
-    // else
-    // 	extcnf_ctrl &= ~E1000_EXTCNF_CTRL_GATE_PHY_CFG;
-    // E1000_WRITE_REG(hw, E1000_EXTCNF_CTRL, extcnf_ctrl);
 
     if gate {
         adapter.set_register_bit(E1000_EXTCNF_CTRL, E1000_EXTCNF_CTRL_GATE_PHY_CFG);
@@ -2879,18 +2280,10 @@ pub fn gate_hw_phy_config_ich8lan(adapter: &mut Adapter, gate: bool) {
 pub fn lan_init_done_ich8lan(adapter: &mut Adapter) {
     e1000_println!();
 
-    // u32 data, loop = E1000_ICH8_LAN_INIT_TIMEOUT;
     let mut data: u32;
     let mut count: u32 = E1000_ICH8_LAN_INIT_TIMEOUT;
 
-    // DEBUGFUNC("e1000_lan_init_done_ich8lan");
-
-    // /* Wait for basic configuration completes before proceeding */
-    // do {
-    // 	data = E1000_READ_REG(hw, E1000_STATUS);
-    // 	data &= E1000_STATUS_LAN_INIT_DONE;
-    // 	usec_delay(100);
-    // } while ((!data) && --loop);
+    /* Wait for basic configuration completes before proceeding */
     loop {
         data = adapter.read_register(E1000_STATUS);
         data &= E1000_STATUS_LAN_INIT_DONE;
@@ -2904,16 +2297,11 @@ pub fn lan_init_done_ich8lan(adapter: &mut Adapter) {
      * count reaches 0, loading the configuration from NVM will
      * leave the PHY in a bad state possibly resulting in no link.
      */
-    // if (loop == 0)
-    // 	DEBUGOUT("LAN_INIT_DONE not set, increase timeout\n");
     if count == 0 {
         e1000_println!("LAN_INIT_DONE not set, increase timeout");
     }
 
     /* Clear the Init Done bit for the next init event */
-    // data = E1000_READ_REG(hw, E1000_STATUS);
-    // data &= ~E1000_STATUS_LAN_INIT_DONE;
-    // E1000_WRITE_REG(hw, E1000_STATUS, data);
     adapter.clear_register_bit(E1000_STATUS, E1000_STATUS_LAN_INIT_DONE);
 }
 
@@ -2922,14 +2310,7 @@ pub fn lan_init_done_ich8lan(adapter: &mut Adapter) {
 pub fn post_phy_reset_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
 
-    // s32 ret_val = E1000_SUCCESS;
-    // u16 reg;
     let mut reg: u16 = 0;
-
-    // DEBUGFUNC("e1000_post_phy_reset_ich8lan");
-
-    // if (hw->phy.ops.check_reset_block(hw))
-    // 	return E1000_SUCCESS;
 
     match adapter.check_reset_block() {
         Ok(true) => return Ok(()),
@@ -2938,24 +2319,9 @@ pub fn post_phy_reset_ich8lan(adapter: &mut Adapter) -> AdResult {
     }
 
     /* Allow time for h/w to get to quiescent state after reset */
-    // msec_delay(10);
     do_msec_delay(10);
 
     /* Perform any necessary post-reset workarounds */
-    // switch (hw->mac.type) {
-    // case e1000_pchlan:
-    // 	ret_val = e1000_hv_phy_workarounds_ich8lan(hw);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // 	break;
-    // case e1000_pch2lan:
-    // 	ret_val = e1000_lv_phy_workarounds_ich8lan(hw);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // 	break;
-    // default:
-    // 	break;
-    // }
     if adapter.is_mac(MacType::Mac_pchlan) {
         try!(hv_phy_workarounds_ich8lan(adapter));
     }
@@ -2964,11 +2330,6 @@ pub fn post_phy_reset_ich8lan(adapter: &mut Adapter) -> AdResult {
     }
 
     /* Clear the host wakeup bit after lcd reset */
-    // if (hw->mac.type >= e1000_pchlan) {
-    // 	hw->phy.ops.read_reg(hw, BM_PORT_GEN_CFG, &reg);
-    // 	reg &= ~BM_WUC_HOST_WU_BIT;
-    // 	hw->phy.ops.write_reg(hw, BM_PORT_GEN_CFG, reg);
-    // }
     if adapter.hw.mac.mac_type >= MacType::Mac_pchlan {
         adapter.phy_read_reg(BM_PORT_GEN_CFG, &mut reg);
         reg &= !BM_WUC_HOST_WU_BIT as u16;
@@ -2976,25 +2337,15 @@ pub fn post_phy_reset_ich8lan(adapter: &mut Adapter) -> AdResult {
     }
 
     /* Configure the LCD with the extended configuration region in NVM */
-    // ret_val = e1000_sw_lcd_config_ich8lan(hw);
-    // if (ret_val)
-    // 	return ret_val;
     try!(sw_lcd_config_ich8lan(adapter));
 
     /* Configure the LCD with the OEM bits in NVM */
-    // ret_val = e1000_oem_bits_config_ich8lan(hw, TRUE);
     if let Err(e) = oem_bits_config_ich8lan(adapter, true) {
         eprintln!("(IGNORE) {:?}", e);
     }
 
-    // if (hw->mac.type == e1000_pch2lan) {
-    // 	/* Ungate automatic PHY configuration on non-managed 82579 */
-    // 	if (!(E1000_READ_REG(hw, E1000_FWSM) &
-    // 	    E1000_ICH_FWSM_FW_VALID)) {
-    // 		msec_delay(10);
-    // 		e1000_gate_hw_phy_config_ich8lan(hw, FALSE);
-    // 	}
     if adapter.is_mac(MacType::Mac_pch2lan) {
+        /* Ungate automatic PHY configuration on non-managed 82579 */
         if !btst!(adapter.read_register(E1000_FWSM), E1000_ICH_FWSM_FW_VALID) {
             do_msec_delay(10);
             gate_hw_phy_config_ich8lan(adapter, false);
@@ -3002,14 +2353,6 @@ pub fn post_phy_reset_ich8lan(adapter: &mut Adapter) -> AdResult {
     }
 
     /* Set EEE LPI Update Timer to 200usec */
-    // 	ret_val = hw->phy.ops.acquire(hw);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // 	ret_val = e1000_write_emi_reg_locked(hw,
-    // 					     I82579_LPI_UPDATE_TIMER,
-    // 					     0x1387);
-    // 	hw->phy.ops.release(hw);
-    // }
     try!(adapter.phy_acquire());
     let res = write_emi_reg_locked(adapter, I82579_LPI_UPDATE_TIMER as u16, 0x1387);
     try!(adapter.phy_release());
@@ -3026,24 +2369,14 @@ pub fn post_phy_reset_ich8lan(adapter: &mut Adapter) -> AdResult {
 pub fn phy_hw_reset_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
 
-    // s32 ret_val = E1000_SUCCESS;
-    // DEBUGFUNC("e1000_phy_hw_reset_ich8lan");
-
     /* Gate automatic PHY configuration by hardware on non-managed 82579 */
-    // if ((hw->mac.type == e1000_pch2lan) &&
-    //     !(E1000_READ_REG(hw, E1000_FWSM) & E1000_ICH_FWSM_FW_VALID))
-    // 	e1000_gate_hw_phy_config_ich8lan(hw, TRUE);
     if adapter.hw.mac.mac_type == MacType::Mac_pch2lan
         && !btst!(adapter.read_register(E1000_FWSM), E1000_ICH_FWSM_FW_VALID)
     {
         gate_hw_phy_config_ich8lan(adapter, true);
     }
-    // ret_val = e1000_phy_hw_reset_generic(hw);
-    // if (ret_val)
-    // 	return ret_val;
     try!(e1000_phy::phy_hw_reset_generic(adapter));
 
-    // return e1000_post_phy_reset_ich8lan(hw);
     post_phy_reset_ich8lan(adapter)
 }
 
@@ -3059,24 +2392,6 @@ pub fn phy_hw_reset_ich8lan(adapter: &mut Adapter) -> AdResult {
 pub fn set_lplu_state_pchlan(adapter: &mut Adapter, active: bool) -> AdResult {
     e1000_println!();
     incomplete_return!();
-
-    // s32 ret_val;
-    // u16 oem_reg;
-
-    // DEBUGFUNC("e1000_set_lplu_state_pchlan");
-    // ret_val = hw->phy.ops.read_reg(hw, HV_OEM_BITS, &oem_reg);
-    // if (ret_val)
-    // 	return ret_val;
-
-    // if (active)
-    // 	oem_reg |= HV_OEM_BITS_LPLU;
-    // else
-    // 	oem_reg &= ~HV_OEM_BITS_LPLU;
-
-    // if (!hw->phy.ops.check_reset_block(hw))
-    // 	oem_reg |= HV_OEM_BITS_RESTART_AN;
-
-    // return hw->phy.ops.write_reg(hw, HV_OEM_BITS, oem_reg);
 }
 
 /// e1000_set_d0_lplu_state_ich8lan - Set Low Power Linkup D0 state
@@ -3093,86 +2408,6 @@ pub fn set_lplu_state_pchlan(adapter: &mut Adapter, active: bool) -> AdResult {
 pub fn set_d0_lplu_state_ich8lan(adapter: &mut Adapter, active: bool) -> AdResult {
     e1000_println!();
     incomplete_return!();
-
-    // struct e1000_phy_info *phy = &hw->phy;
-    // u32 phy_ctrl;
-    // s32 ret_val = E1000_SUCCESS;
-    // u16 data;
-
-    // DEBUGFUNC("e1000_set_d0_lplu_state_ich8lan");
-
-    // if (phy->type == e1000_phy_ife)
-    // 	return E1000_SUCCESS;
-
-    // phy_ctrl = E1000_READ_REG(hw, E1000_PHY_CTRL);
-
-    // if (active) {
-    // 	phy_ctrl |= E1000_PHY_CTRL_D0A_LPLU;
-    // 	E1000_WRITE_REG(hw, E1000_PHY_CTRL, phy_ctrl);
-
-    // 	if (phy->type != e1000_phy_igp_3)
-    // 		return E1000_SUCCESS;
-
-    // 	/* Call gig speed drop workaround on LPLU before accessing
-    //  * any PHY registers
-    // 	 */
-    // 	if (hw->mac.type == e1000_ich8lan)
-    // 		e1000_gig_downshift_workaround_ich8lan(hw);
-
-    // 	/* When LPLU is enabled, we should disable SmartSpeed */
-    // 	ret_val = phy->ops.read_reg(hw,
-    // 				    IGP01E1000_PHY_PORT_CONFIG,
-    // 				    &data);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // 	data &= ~IGP01E1000_PSCFR_SMART_SPEED;
-    // 	ret_val = phy->ops.write_reg(hw,
-    // 				     IGP01E1000_PHY_PORT_CONFIG,
-    // 				     data);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // } else {
-    // 	phy_ctrl &= ~E1000_PHY_CTRL_D0A_LPLU;
-    // 	E1000_WRITE_REG(hw, E1000_PHY_CTRL, phy_ctrl);
-
-    // 	if (phy->type != e1000_phy_igp_3)
-    // 		return E1000_SUCCESS;
-
-    // 	/* LPLU and SmartSpeed are mutually exclusive.  LPLU is used
-    //  * during Dx states where the power conservation is most
-    //  * important.  During driver activity we should enable
-    //  * SmartSpeed, so performance is maintained.
-    // 	 */
-    // 	if (phy->smart_speed == e1000_smart_speed_on) {
-    // 		ret_val = phy->ops.read_reg(hw,
-    // 					    IGP01E1000_PHY_PORT_CONFIG,
-    // 					    &data);
-    // 		if (ret_val)
-    // 			return ret_val;
-
-    // 		data |= IGP01E1000_PSCFR_SMART_SPEED;
-    // 		ret_val = phy->ops.write_reg(hw,
-    // 					     IGP01E1000_PHY_PORT_CONFIG,
-    // 					     data);
-    // 		if (ret_val)
-    // 			return ret_val;
-    // 	} else if (phy->smart_speed == e1000_smart_speed_off) {
-    // 		ret_val = phy->ops.read_reg(hw,
-    // 					    IGP01E1000_PHY_PORT_CONFIG,
-    // 					    &data);
-    // 		if (ret_val)
-    // 			return ret_val;
-
-    // 		data &= ~IGP01E1000_PSCFR_SMART_SPEED;
-    // 		ret_val = phy->ops.write_reg(hw,
-    // 					     IGP01E1000_PHY_PORT_CONFIG,
-    // 					     data);
-    // 		if (ret_val)
-    // 			return ret_val;
-    // 	}
-    // }
-
-    // return E1000_SUCCESS;
 }
 
 /// e1000_set_d3_lplu_state_ich8lan - Set Low Power Linkup D3 state
@@ -3189,84 +2424,6 @@ pub fn set_d0_lplu_state_ich8lan(adapter: &mut Adapter, active: bool) -> AdResul
 pub fn set_d3_lplu_state_ich8lan(adapter: &mut Adapter, active: bool) -> AdResult {
     e1000_println!();
     incomplete_return!();
-
-    // struct e1000_phy_info *phy = &hw->phy;
-    // u32 phy_ctrl;
-    // s32 ret_val = E1000_SUCCESS;
-    // u16 data;
-
-    // DEBUGFUNC("e1000_set_d3_lplu_state_ich8lan");
-
-    // phy_ctrl = E1000_READ_REG(hw, E1000_PHY_CTRL);
-
-    // if (!active) {
-    // 	phy_ctrl &= ~E1000_PHY_CTRL_NOND0A_LPLU;
-    // 	E1000_WRITE_REG(hw, E1000_PHY_CTRL, phy_ctrl);
-
-    // 	if (phy->type != e1000_phy_igp_3)
-    // 		return E1000_SUCCESS;
-
-    // 	/* LPLU and SmartSpeed are mutually exclusive.  LPLU is used
-    //  * during Dx states where the power conservation is most
-    //  * important.  During driver activity we should enable
-    //  * SmartSpeed, so performance is maintained.
-    // 	 */
-    // 	if (phy->smart_speed == e1000_smart_speed_on) {
-    // 		ret_val = phy->ops.read_reg(hw,
-    // 					    IGP01E1000_PHY_PORT_CONFIG,
-    // 					    &data);
-    // 		if (ret_val)
-    // 			return ret_val;
-
-    // 		data |= IGP01E1000_PSCFR_SMART_SPEED;
-    // 		ret_val = phy->ops.write_reg(hw,
-    // 					     IGP01E1000_PHY_PORT_CONFIG,
-    // 					     data);
-    // 		if (ret_val)
-    // 			return ret_val;
-    // 	} else if (phy->smart_speed == e1000_smart_speed_off) {
-    // 		ret_val = phy->ops.read_reg(hw,
-    // 					    IGP01E1000_PHY_PORT_CONFIG,
-    // 					    &data);
-    // 		if (ret_val)
-    // 			return ret_val;
-
-    // 		data &= ~IGP01E1000_PSCFR_SMART_SPEED;
-    // 		ret_val = phy->ops.write_reg(hw,
-    // 					     IGP01E1000_PHY_PORT_CONFIG,
-    // 					     data);
-    // 		if (ret_val)
-    // 			return ret_val;
-    // 	}
-    // } else if ((phy->autoneg_advertised == E1000_ALL_SPEED_DUPLEX) ||
-    // 	   (phy->autoneg_advertised == E1000_ALL_NOT_GIG) ||
-    // 	   (phy->autoneg_advertised == E1000_ALL_10_SPEED)) {
-    // 	phy_ctrl |= E1000_PHY_CTRL_NOND0A_LPLU;
-    // 	E1000_WRITE_REG(hw, E1000_PHY_CTRL, phy_ctrl);
-
-    // 	if (phy->type != e1000_phy_igp_3)
-    // 		return E1000_SUCCESS;
-
-    // 	/* Call gig speed drop workaround on LPLU before accessing
-    //  * any PHY registers
-    // 	 */
-    // 	if (hw->mac.type == e1000_ich8lan)
-    // 		e1000_gig_downshift_workaround_ich8lan(hw);
-
-    // 	/* When LPLU is enabled, we should disable SmartSpeed */
-    // 	ret_val = phy->ops.read_reg(hw,
-    // 				    IGP01E1000_PHY_PORT_CONFIG,
-    // 				    &data);
-    // 	if (ret_val)
-    // 		return ret_val;
-
-    // 	data &= ~IGP01E1000_PSCFR_SMART_SPEED;
-    // 	ret_val = phy->ops.write_reg(hw,
-    // 				     IGP01E1000_PHY_PORT_CONFIG,
-    // 				     data);
-    // }
-
-    // return ret_val;
 }
 
 /// e1000_valid_nvm_bank_detect_ich8lan - finds out the valid bank 0 or 1
@@ -3278,13 +2435,6 @@ pub fn set_d3_lplu_state_ich8lan(adapter: &mut Adapter, active: bool) -> AdResul
 pub fn valid_nvm_bank_detect_ich8lan(adapter: &mut Adapter, bank: &mut u32) -> AdResult {
     e1000_verbose_println!();
 
-    // u32 eecd;
-    // struct e1000_nvm_info *nvm = &hw->nvm;
-    // u32 bank1_offset = nvm->flash_bank_size * sizeof(u16);
-    // u32 act_offset = E1000_ICH_NVM_SIG_WORD * 2 + 1;
-    // u32 nvm_dword = 0;
-    // u8 sig_byte = 0;
-    // s32 ret_val;
     let mut bank1_offset: u32 =
         adapter.hw.nvm.flash_bank_size * kernel::mem::size_of::<u16>() as u32;
     let mut act_offset: u32 = E1000_ICH_NVM_SIG_WORD * 2 + 1;
@@ -3292,35 +2442,16 @@ pub fn valid_nvm_bank_detect_ich8lan(adapter: &mut Adapter, bank: &mut u32) -> A
     let mut sig_byte: u8 = 0;
     let mut eecd: u32;
 
-    // DEBUGFUNC("e1000_valid_nvm_bank_detect_ich8lan");
-
     let macs1 = [MacType::Mac_pch_spt, MacType::Mac_pch_cnp];
     let macs2 = [MacType::Mac_ich8lan, MacType::Mac_ich9lan];
 
-    // switch (hw->mac.type) {
-    // case e1000_pch_spt:
-    // case e1000_pch_cnp:
-
     if adapter.is_macs(&macs1) {
-        // 	bank1_offset = nvm->flash_bank_size;
-        // 	act_offset = E1000_ICH_NVM_SIG_WORD;
-        //      /* set bank to 0 in case flash read fails */
-        // 	*bank = 0;
+        /* set bank to 0 in case flash read fails */
         bank1_offset = adapter.hw.nvm.flash_bank_size;
         act_offset = E1000_ICH_NVM_SIG_WORD;
         *bank = 0;
 
         /* Check bank 0 */
-        // 	ret_val = e1000_read_flash_dword_ich8lan(hw, act_offset,
-        // 						 &nvm_dword);
-        // 	if (ret_val)
-        // 		return ret_val;
-        // 	sig_byte = (u8)((nvm_dword & 0xFF00) >> 8);
-        // 	if ((sig_byte & E1000_ICH_NVM_VALID_SIG_MASK) ==
-        // 	    E1000_ICH_NVM_SIG_VALUE) {
-        // 		*bank = 0;
-        // 		return E1000_SUCCESS;
-        // 	}
         try!(read_flash_dword_ich8lan(
             adapter,
             act_offset,
@@ -3332,18 +2463,7 @@ pub fn valid_nvm_bank_detect_ich8lan(adapter: &mut Adapter, bank: &mut u32) -> A
             return Ok(());
         }
 
-        // 	/* Check bank 1 */
-        // 	ret_val = e1000_read_flash_dword_ich8lan(hw, act_offset +
-        // 						 bank1_offset,
-        // 						 &nvm_dword);
-        // 	if (ret_val)
-        // 		return ret_val;
-        // 	sig_byte = (u8)((nvm_dword & 0xFF00) >> 8);
-        // 	if ((sig_byte & E1000_ICH_NVM_VALID_SIG_MASK) ==
-        // 	    E1000_ICH_NVM_SIG_VALUE) {
-        // 		*bank = 1;
-        // 		return E1000_SUCCESS;
-        // 	}
+        /* Check bank 1 */
         try!(read_flash_dword_ich8lan(
             adapter,
             act_offset + bank1_offset,
@@ -3354,25 +2474,9 @@ pub fn valid_nvm_bank_detect_ich8lan(adapter: &mut Adapter, bank: &mut u32) -> A
             *bank = 1;
             return Ok(());
         }
-        // 	DEBUGOUT("ERROR: No valid NVM bank present\n");
-        // 	return -E1000_ERR_NVM;
         return Err("No valid NVM bank present".to_string());
     }
-    // case e1000_ich8lan:
-    // case e1000_ich9lan:
     else if adapter.is_macs(&macs2) {
-        // 	eecd = E1000_READ_REG(hw, E1000_EECD);
-        // 	if ((eecd & E1000_EECD_SEC1VAL_VALID_MASK) ==
-        // 	    E1000_EECD_SEC1VAL_VALID_MASK) {
-        // 		if (eecd & E1000_EECD_SEC1VAL)
-        // 			*bank = 1;
-        // 		else
-        // 			*bank = 0;
-
-        // 		return E1000_SUCCESS;
-        // 	}
-        // 	DEBUGOUT("Unable to determine valid NVM bank via EEC - reading flash signature\n");
-        // 	/* fall-thru */
         eecd = adapter.read_register(E1000_EECD);
         if eecd & E1000_EECD_SEC1VAL_VALID_MASK == E1000_EECD_SEC1VAL_VALID_MASK {
             if btst!(eecd, E1000_EECD_SEC1VAL) {
@@ -3384,38 +2488,17 @@ pub fn valid_nvm_bank_detect_ich8lan(adapter: &mut Adapter, bank: &mut u32) -> A
         }
         e1000_println!("Unable to determine valid NVM bank via EEC - reading flash signature");
     }
-    // default:
-    // 	/* set bank to 0 in case flash read fails */
-    // 	*bank = 0;
+    /* set bank to 0 in case flash read fails */
     *bank = 0;
 
-    // 	/* Check bank 0 */
-    // 	ret_val = e1000_read_flash_byte_ich8lan(hw, act_offset,
-    // 						&sig_byte);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // 	if ((sig_byte & E1000_ICH_NVM_VALID_SIG_MASK) ==
-    // 	    E1000_ICH_NVM_SIG_VALUE) {
-    // 		*bank = 0;
-    // 		return E1000_SUCCESS;
-    // 	}
+    /* Check bank 0 */
     try!(read_flash_byte_ich8lan(adapter, act_offset, &mut sig_byte));
     if sig_byte & E1000_ICH_NVM_VALID_SIG_MASK as u8 == E1000_ICH_NVM_SIG_VALUE as u8 {
         *bank = 0;
         return Ok(());
     }
 
-    // 	/* Check bank 1 */
-    // 	ret_val = e1000_read_flash_byte_ich8lan(hw, act_offset +
-    // 						bank1_offset,
-    // 						&sig_byte);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // 	if ((sig_byte & E1000_ICH_NVM_VALID_SIG_MASK) ==
-    // 	    E1000_ICH_NVM_SIG_VALUE) {
-    // 		*bank = 1;
-    // 		return E1000_SUCCESS;
-    // 	}
+    /* Check bank 1 */
     try!(read_flash_byte_ich8lan(
         adapter,
         act_offset + bank1_offset,
@@ -3426,9 +2509,6 @@ pub fn valid_nvm_bank_detect_ich8lan(adapter: &mut Adapter, bank: &mut u32) -> A
         return Ok(());
     }
 
-    // 	DEBUGOUT("ERROR: No valid NVM bank present\n");
-    // 	return -E1000_ERR_NVM;
-    // }
     Err("No valid NVM bank present".to_string())
 }
 
@@ -3442,33 +2522,16 @@ pub fn valid_nvm_bank_detect_ich8lan(adapter: &mut Adapter, bank: &mut u32) -> A
 pub fn read_nvm_spt(adapter: &mut Adapter, offset: u16, words: u16, data: &mut [u16]) -> AdResult {
     e1000_println!();
 
-    //  struct e1000_nvm_info *nvm = &hw->nvm;
-    // 	struct e1000_dev_spec_ich8lan *dev_spec = &hw->dev_spec.ich8lan;
-    // 	u32 act_offset;
-    // 	s32 ret_val = E1000_SUCCESS;
-    // 	u32 bank = 0;
-    // 	u32 dword = 0;
-    // 	u16 offset_to_read;
-    // 	u16 i;
     let mut act_offset: u32 = 0;
     let mut bank: u32 = 0;
     let mut dword: u32 = 0;
     let mut offset_to_read: u32 = 0;
 
-    // 	DEBUGFUNC("e1000_read_nvm_spt");
-
-    // 	if ((offset >= nvm->word_size) || (words > nvm->word_size - offset) ||
-    // 	    (words == 0)) {
-    // 		DEBUGOUT("nvm parameter(s) out of bounds\n");
-    // 		ret_val = -E1000_ERR_NVM;
-    // 		goto out;
-    // 	}
     if offset >= adapter.hw.nvm.word_size || words > adapter.hw.nvm.word_size - offset || words == 0
     {
         return Err("nvm parameter(s) out of bounds".to_string());
     }
 
-    // 	nvm->ops.acquire(hw);
     try!(
         adapter
             .hw
@@ -3479,41 +2542,14 @@ pub fn read_nvm_spt(adapter: &mut Adapter, offset: u16, words: u16, data: &mut [
             .and_then(|f| f(adapter))
     );
 
-    // 	ret_val = e1000_valid_nvm_bank_detect_ich8lan(hw, &bank);
-    // 	if (ret_val != E1000_SUCCESS) {
-    // 		DEBUGOUT("Could not detect valid bank, assuming bank 0\n");
-    // 		bank = 0;
-    // 	}
     try!(valid_nvm_bank_detect_ich8lan(adapter, &mut bank));
 
-    // 	act_offset = (bank) ? nvm->flash_bank_size : 0;
-    // 	act_offset += offset;
     act_offset = match bank > 0 {
         true => adapter.hw.nvm.flash_bank_size,
         false => 0,
     };
     act_offset += offset as u32;
 
-    // 	ret_val = E1000_SUCCESS;
-
-    // 	for (i = 0; i < words; i += 2) {
-    // 		if (words - i == 1) {
-    // 			if (dev_spec->shadow_ram[offset+i].modified) {
-    // 				data[i] = dev_spec->shadow_ram[offset+i].value;
-    // 			} else {
-    // 				offset_to_read = act_offset + i -
-    // 						 ((act_offset + i) % 2);
-    // 				ret_val =
-    // 				   e1000_read_flash_dword_ich8lan(hw,
-    // 								 offset_to_read,
-    // 								 &dword);
-    // 				if (ret_val)
-    // 					break;
-    // 				if ((act_offset + i) % 2 == 0)
-    // 					data[i] = (u16)(dword & 0xFFFF);
-    // 				else
-    // 					data[i] = (u16)((dword >> 16) & 0xFFFF);
-    // 			}
     let mut res = Ok(());
     for i in (0..words as usize).step_by(2) {
         if words - i as u16 == 1 {
@@ -3532,28 +2568,6 @@ pub fn read_nvm_spt(adapter: &mut Adapter, offset: u16, words: u16, data: &mut [
                     data[i] = ((dword >> 16) & 0xFFFF) as u16;
                 }
             }
-        //	} else {
-        //		offset_to_read = act_offset + i;
-        //		if (!(dev_spec->shadow_ram[offset+i].modified) ||
-        //		    !(dev_spec->shadow_ram[offset+i+1].modified)) {
-        //			ret_val =
-        //			   e1000_read_flash_dword_ich8lan(hw,
-        //							 offset_to_read,
-        //							 &dword);
-        //			if (ret_val)
-        //				break;
-        //		}
-        //		if (dev_spec->shadow_ram[offset+i].modified)
-        //			data[i] = dev_spec->shadow_ram[offset+i].value;
-        //		else
-        //			data[i] = (u16) (dword & 0xFFFF);
-        //		if (dev_spec->shadow_ram[offset+i].modified)
-        //			data[i+1] =
-        //			   dev_spec->shadow_ram[offset+i+1].value;
-        //		else
-        //			data[i+1] = (u16) (dword >> 16 & 0xFFFF);
-        //	}
-        //}
         } else {
             offset_to_read = act_offset + i as u32;
             if !unsafe { adapter.hw.dev_spec.ich8lan.shadow_ram[offset as usize + i].modified }
@@ -3579,7 +2593,6 @@ pub fn read_nvm_spt(adapter: &mut Adapter, offset: u16, words: u16, data: &mut [
             }
         }
     }
-    // 	nvm->ops.release(hw);
     try!(
         adapter
             .hw
@@ -3593,11 +2606,6 @@ pub fn read_nvm_spt(adapter: &mut Adapter, offset: u16, words: u16, data: &mut [
             })
     );
 
-    // out:
-    // 	if (ret_val)
-    // 		DEBUGOUT1("NVM read error: %d\n", ret_val);
-
-    // 	return ret_val;
     res
 }
 
@@ -3616,31 +2624,16 @@ pub fn read_nvm_ich8lan(
 ) -> AdResult {
     e1000_verbose_println!();
 
-    // 	struct e1000_nvm_info *nvm = &hw->nvm;
-    // 	struct e1000_dev_spec_ich8lan *dev_spec = &hw->dev_spec.ich8lan;
-    // 	u32 act_offset;
-    // 	s32 ret_val = E1000_SUCCESS;
-    // 	u32 bank = 0;
-    // 	u16 i, word;
     let mut act_offset: u32;
     let mut bank: u32 = 0;
     let mut word: u16 = 0;
 
-    // 	DEBUGFUNC("e1000_read_nvm_ich8lan");
-
-    // 	if ((offset >= nvm->word_size) || (words > nvm->word_size - offset) ||
-    // 	    (words == 0)) {
-    // 		DEBUGOUT("nvm parameter(s) out of bounds\n");
-    // 		ret_val = -E1000_ERR_NVM;
-    // 		goto out;
-    // 	}
     if offset >= adapter.hw.nvm.word_size || words > (adapter.hw.nvm.word_size - offset)
         || words == 0
     {
         return Err("nvm parameter out of bounds".to_string());
     }
 
-    // 	nvm->ops.acquire(hw);
     try!(
         adapter
             .hw
@@ -3651,18 +2644,11 @@ pub fn read_nvm_ich8lan(
             .and_then(|f| f(adapter))
     );
 
-    // 	ret_val = e1000_valid_nvm_bank_detect_ich8lan(hw, &bank);
-    // 	if (ret_val != E1000_SUCCESS) {
-    // 		DEBUGOUT("Could not detect valid bank, assuming bank 0\n");
-    // 		bank = 0;
-    // 	}
     if let Err(e) = valid_nvm_bank_detect_ich8lan(adapter, &mut bank) {
         e1000_println!("Could not detect valid bank, assuming bank 0");
         bank = 0;
     }
 
-    // 	act_offset = (bank) ? nvm->flash_bank_size : 0;
-    // 	act_offset += offset;
     act_offset = if bank != 0 {
         adapter.hw.nvm.flash_bank_size
     } else {
@@ -3670,19 +2656,6 @@ pub fn read_nvm_ich8lan(
     };
     act_offset += offset as u32;
 
-    // 	ret_val = E1000_SUCCESS;
-    // 	for (i = 0; i < words; i++) {
-    // 		if (dev_spec->shadow_ram[offset+i].modified) {
-    // 			data[i] = dev_spec->shadow_ram[offset+i].value;
-    // 		} else {
-    // 			ret_val = e1000_read_flash_word_ich8lan(hw,
-    // 								act_offset + i,
-    // 								&word);
-    // 			if (ret_val)
-    // 				break;
-    // 			data[i] = word;
-    // 		}
-    // 	}
     let mut res = Ok(());
     for i in 0..words as usize {
         if unsafe { adapter.hw.dev_spec.ich8lan.shadow_ram[offset as usize + i].modified } {
@@ -3696,7 +2669,6 @@ pub fn read_nvm_ich8lan(
         }
     }
 
-    // 	nvm->ops.release(hw);
     try!(
         adapter
             .hw
@@ -3710,10 +2682,6 @@ pub fn read_nvm_ich8lan(
             })
     );
 
-    // out:
-    // 	if (ret_val)
-    // 		DEBUGOUT1("NVM read error: %d\n", ret_val);
-    // 	return ret_val;
     res
 }
 
@@ -3725,37 +2693,21 @@ pub fn read_nvm_ich8lan(
 pub fn flash_cycle_init_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_verbose_println!();
 
-    // union ich8_hws_flash_status hsfsts;
-    // s32 ret_val = -E1000_ERR_NVM;
     let mut hsfsts: Ich8HwsFlashStatus = Default::default(); // Need to initialize!
 
-    // DEBUGFUNC("e1000_flash_cycle_init_ich8lan");
-
-    // hsfsts.regval = E1000_READ_FLASH_REG16(hw, ICH_FLASH_HSFSTS);
     hsfsts.regval = adapter.read_flash_register16(ICH_FLASH_HSFSTS);
 
     /* Check if the flash descriptor is valid */
-    // if (!hsfsts.hsf_status.fldesvalid) {
-    // 	DEBUGOUT("Flash descriptor invalid.  SW Sequencing must be used.\n");
-    // 	return -E1000_ERR_NVM;
-    // }
     if unsafe { hsfsts.hsf_status.fldesvalid() } == 0 {
         e1000_println!("Flash descriptor invalid. SW Sequencing must be used.");
         return Err("Flash descriptor invalid. SW Sequencing must be used.".to_string());
     }
     /* Clear FCERR and DAEL in hw status by writing 1 */
-    // hsfsts.hsf_status.flcerr = 1;
-    // hsfsts.hsf_status.dael = 1;
     unsafe {
         hsfsts.hsf_status.set_flcerr(1);
         hsfsts.hsf_status.set_dael(1);
     }
 
-    // if (hw->mac.type >= e1000_pch_spt)
-    // 	E1000_WRITE_FLASH_REG(hw, ICH_FLASH_HSFSTS,
-    // 			      hsfsts.regval & 0xFFFF);
-    // else
-    // 	E1000_WRITE_FLASH_REG16(hw, ICH_FLASH_HSFSTS, hsfsts.regval);
     if adapter.hw.mac.mac_type >= MacType::Mac_pch_spt {
         adapter.write_flash_register(ICH_FLASH_HSFSTS, (unsafe { hsfsts.regval } as u32) & 0xFFFF);
     } else {
@@ -3770,22 +2722,11 @@ pub fn flash_cycle_init_ich8lan(adapter: &mut Adapter) -> AdResult {
      *  completed.
      */
 
-    // if (!hsfsts.hsf_status.flcinprog) {
-    // 	/* There is no cycle running at present,
-    //   *  so we can start a cycle.
-    //   *  Begin by setting Flash Cycle Done.
-    // 	 */
-    // 	hsfsts.hsf_status.flcdone = 1;
-    // 	if (hw->mac.type >= e1000_pch_spt)
-    // 		E1000_WRITE_FLASH_REG(hw, ICH_FLASH_HSFSTS,
-    // 				      hsfsts.regval & 0xFFFF);
-    // 	else
-    // 		E1000_WRITE_FLASH_REG16(hw, ICH_FLASH_HSFSTS,
-    // 					hsfsts.regval);
-    // 	ret_val = E1000_SUCCESS;
-    // } else {
-    // 	s32 i;
     if unsafe { hsfsts.hsf_status.flcinprog() } == 0 {
+        /* There is no cycle running at present,
+         *  so we can start a cycle.
+         *  Begin by setting Flash Cycle Done.
+         */
         unsafe { hsfsts.hsf_status.set_flcdone(1) };
         if adapter.hw.mac.mac_type >= MacType::Mac_pch_spt {
             adapter
@@ -3797,15 +2738,6 @@ pub fn flash_cycle_init_ich8lan(adapter: &mut Adapter) -> AdResult {
         /* Otherwise poll for sometime so the current
          *  cycle has a chance to end before giving up.
          */
-        // 	for (i = 0; i < ICH_FLASH_READ_COMMAND_TIMEOUT; i++) {
-        // 		hsfsts.regval = E1000_READ_FLASH_REG16(hw,
-        // 						      ICH_FLASH_HSFSTS);
-        // 		if (!hsfsts.hsf_status.flcinprog) {
-        // 			ret_val = E1000_SUCCESS;
-        // 			break;
-        // 		}
-        // 		usec_delay(1);
-        // 	}
         let mut status = E1000_ERR_NVM;
         for i in 0..ICH_FLASH_READ_COMMAND_TIMEOUT {
             hsfsts.regval = adapter.read_flash_register16(ICH_FLASH_HSFSTS);
@@ -3815,23 +2747,10 @@ pub fn flash_cycle_init_ich8lan(adapter: &mut Adapter) -> AdResult {
             }
             do_usec_delay(1);
         }
-        // 	if (ret_val == E1000_SUCCESS) {
-        // 		/* Successful in waiting for previous cycle to timeout,
-        //		 *  now set the Flash Cycle Done.
-        // 		 */
-        // 		hsfsts.hsf_status.flcdone = 1;
-        // 		if (hw->mac.type >= e1000_pch_spt)
-        // 			E1000_WRITE_FLASH_REG(hw, ICH_FLASH_HSFSTS,
-        // 					      hsfsts.regval & 0xFFFF);
-        // 		else
-        // 			E1000_WRITE_FLASH_REG16(hw, ICH_FLASH_HSFSTS,
-        // 						hsfsts.regval);
-        // 	} else {
-        // 		DEBUGOUT("Flash controller busy, cannot get access\n");
-        // 	}
-        // }
-        // return ret_val;
         if status == E1000_SUCCESS {
+            /* Successful in waiting for previous cycle to timeout,
+             *  now set the Flash Cycle Done.
+             */
             unsafe { hsfsts.hsf_status.set_flcdone(1) };
             if adapter.hw.mac.mac_type >= MacType::Mac_pch_spt {
                 adapter.write_flash_register(
@@ -3856,21 +2775,11 @@ pub fn flash_cycle_init_ich8lan(adapter: &mut Adapter) -> AdResult {
 pub fn flash_cycle_ich8lan(adapter: &mut Adapter, timeout: u32) -> AdResult {
     e1000_verbose_println!();
 
-    // union ich8_hws_flash_ctrl hsflctl;
-    // union ich8_hws_flash_status hsfsts;
-    // u32 i = 0;
     let mut hsfsts: Ich8HwsFlashStatus = Default::default(); // Need to initialize!
     let mut hsflctl: Ich8HwsFlashCtrl = Default::default();
     let mut i: u32 = 0;
 
-    // DEBUGFUNC("e1000_flash_cycle_ich8lan");
-
     /* Start a cycle by writing 1 in Flash Cycle Go in Hw Flash Control */
-    // if (hw->mac.type >= e1000_pch_spt)
-    // 	hsflctl.regval = E1000_READ_FLASH_REG(hw, ICH_FLASH_HSFSTS)>>16;
-    // else
-    // 	hsflctl.regval = E1000_READ_FLASH_REG16(hw, ICH_FLASH_HSFCTL);
-    // hsflctl.hsf_ctrl.flcgo = 1;
     if adapter.hw.mac.mac_type >= MacType::Mac_pch_spt {
         hsflctl.regval = (adapter.read_flash_register(ICH_FLASH_HSFSTS) >> 16) as u16;
     } else {
@@ -3880,11 +2789,6 @@ pub fn flash_cycle_ich8lan(adapter: &mut Adapter, timeout: u32) -> AdResult {
         hsflctl.hsf_ctrl.set_flcgo(1);
     }
 
-    // if (hw->mac.type >= e1000_pch_spt)
-    // 	E1000_WRITE_FLASH_REG(hw, ICH_FLASH_HSFSTS,
-    // 			      hsflctl.regval << 16);
-    // else
-    // 	E1000_WRITE_FLASH_REG16(hw, ICH_FLASH_HSFCTL, hsflctl.regval);
     if adapter.hw.mac.mac_type >= MacType::Mac_pch_spt {
         adapter.write_flash_register(ICH_FLASH_HSFSTS, (unsafe { hsflctl.regval } as u32) << 16);
     } else {
@@ -3892,12 +2796,6 @@ pub fn flash_cycle_ich8lan(adapter: &mut Adapter, timeout: u32) -> AdResult {
     }
 
     /* wait till FDONE bit is set to 1 */
-    // do {
-    // 	hsfsts.regval = E1000_READ_FLASH_REG16(hw, ICH_FLASH_HSFSTS);
-    // 	if (hsfsts.hsf_status.flcdone)
-    // 		break;
-    // 	usec_delay(1);
-    // } while (i++ < timeout);
     loop {
         hsfsts.regval = adapter.read_flash_register16(ICH_FLASH_HSFSTS);
         if unsafe { hsfsts.hsf_status.flcdone() } != 0 {
@@ -3909,9 +2807,6 @@ pub fn flash_cycle_ich8lan(adapter: &mut Adapter, timeout: u32) -> AdResult {
         }
         i += 1;
     }
-    // if (hsfsts.hsf_status.flcdone && !hsfsts.hsf_status.flcerr)
-    // 	   return E1000_SUCCESS;
-    // return -E1000_ERR_NVM;
     unsafe {
         if hsfsts.hsf_status.flcdone() != 0 && hsfsts.hsf_status.flcerr() == 0 {
             Ok(())
@@ -3929,17 +2824,11 @@ pub fn flash_cycle_ich8lan(adapter: &mut Adapter, timeout: u32) -> AdResult {
 /// Reads the flash dword at offset into data.  Offset is converted
 /// to bytes before read.
 pub fn read_flash_dword_ich8lan(adapter: &mut Adapter, offset: u32, data: &mut u32) -> AdResult {
-    // DEBUGFUNC("e1000_read_flash_dword_ich8lan");
     e1000_verbose_println!();
 
-    // if (!data)
-    // 	return -E1000_ERR_NVM;
-
-    // /* Must convert word offset into bytes. */
-    // offset <<= 1;
+    /* Must convert word offset into bytes. */
     let shifted_offset = offset << 1;
 
-    // return e1000_read_flash_data32_ich8lan(hw, offset, data);
     read_flash_data32_ich8lan(adapter, shifted_offset, data)
 }
 
@@ -3953,14 +2842,9 @@ pub fn read_flash_dword_ich8lan(adapter: &mut Adapter, offset: u32, data: &mut u
 pub fn read_flash_word_ich8lan(adapter: &mut Adapter, offset: u32, data: &mut u16) -> AdResult {
     e1000_verbose_println!();
 
-    // DEBUGFUNC("e1000_read_flash_word_ich8lan");
-    // if (!data)
-    // 	return -E1000_ERR_NVM;
-    // /* Must convert offset into bytes. */
-    // offset <<= 1;
-    // return e1000_read_flash_data_ich8lan(hw, offset, 2, data);
-
+    /* Must convert offset into bytes. */
     let shifted_offset = offset << 1;
+
     read_flash_data_ich8lan(adapter, shifted_offset, 2, data)
 }
 
@@ -3973,31 +2857,19 @@ pub fn read_flash_word_ich8lan(adapter: &mut Adapter, offset: u32, data: &mut u1
 pub fn read_flash_byte_ich8lan(adapter: &mut Adapter, offset: u32, data: &mut u8) -> AdResult {
     e1000_verbose_println!();
 
-    // s32 ret_val;
-    // u16 word = 0;
-
     let mut word: u16 = 0;
 
     /* In SPT, only 32 bits access is supported,
      * so this function should not be called.
      */
-    // if (hw->mac.type >= e1000_pch_spt)
-    // 	return -E1000_ERR_NVM;
-    // else
-    // 	ret_val = e1000_read_flash_data_ich8lan(hw, offset, 1, &word);
     if adapter.hw.mac.mac_type >= MacType::Mac_pch_spt {
         return Err("Only 32 bit access supported in SPT".to_string());
     }
 
     try!(read_flash_data_ich8lan(adapter, offset, 1, &mut word));
 
-    // if (ret_val)
-    // 	return ret_val;
-
-    // *data = (u8)word;
     *data = word as u8;
 
-    // return E1000_SUCCESS;
     Ok(())
 }
 
@@ -4016,74 +2888,44 @@ pub fn read_flash_data_ich8lan(
 ) -> AdResult {
     e1000_verbose_println!();
 
-    // union ich8_hws_flash_status hsfsts;
-    // union ich8_hws_flash_ctrl hsflctl;
-    // u32 flash_linear_addr;
-    // u32 flash_data = 0;
-    // s32 ret_val = -E1000_ERR_NVM;
-    // u8 count = 0;
     let mut hsfsts: Ich8HwsFlashStatus = Default::default(); // Need to initialize!
     let mut hsflctl: Ich8HwsFlashCtrl = Default::default();
     let mut flash_linear_addr: u32;
     let mut flash_data: u32 = 0;
     let mut count: u8 = 0;
 
-    // DEBUGFUNC("e1000_read_flash_data_ich8lan");
-
-    // if (size < 1 || size > 2 || offset > ICH_FLASH_LINEAR_ADDR_MASK)
-    // 	return -E1000_ERR_NVM;
     if size < 1 || size > 2 || offset > ICH_FLASH_LINEAR_ADDR_MASK {
         return Err("Size or offset out of bounds".to_string());
     }
 
-    // flash_linear_addr = ((ICH_FLASH_LINEAR_ADDR_MASK & offset) +
-    // 		     hw->nvm.flash_base_addr);
     flash_linear_addr = (ICH_FLASH_LINEAR_ADDR_MASK & offset) + adapter.hw.nvm.flash_base_addr;
 
-    // do {
     loop {
-        // usec_delay(1);
         do_usec_delay(1);
 
         /* Steps */
-        // ret_val = e1000_flash_cycle_init_ich8lan(hw);
-        // if (ret_val != E1000_SUCCESS)
-        // 	break;
         if let Err(e) = flash_cycle_init_ich8lan(adapter) {
             eprintln!("{:?}", e);
             break;
         }
 
-        // hsflctl.regval = E1000_READ_FLASH_REG16(hw, ICH_FLASH_HSFCTL);
         hsflctl.regval = adapter.read_flash_register16(ICH_FLASH_HSFCTL);
 
         /* 0b/1b corresponds to 1 or 2 byte size, respectively. */
-        // hsflctl.hsf_ctrl.fldbcount = size - 1;
-        // hsflctl.hsf_ctrl.flcycle = ICH_CYCLE_READ;
         unsafe {
             hsflctl.hsf_ctrl.set_fldbcount(size as u16 - 1);
             hsflctl.hsf_ctrl.set_flcycle(ICH_CYCLE_READ as u16);
         }
 
-        // E1000_WRITE_FLASH_REG16(hw, ICH_FLASH_HSFCTL, hsflctl.regval);
-        // E1000_WRITE_FLASH_REG(hw, ICH_FLASH_FADDR, flash_linear_addr);
         adapter.write_flash_register16(ICH_FLASH_HSFCTL, unsafe { hsflctl.regval });
         adapter.write_flash_register(ICH_FLASH_FADDR, flash_linear_addr);
 
-        // ret_val = e1000_flash_cycle_ich8lan(hw, ICH_FLASH_READ_COMMAND_TIMEOUT);
-        // 	/* Check if FCERR is set to 1, if set to 1, clear it
-        //	 *  and try the whole sequence a few more times, else
-        //	 *  read in (shift in) the Flash Data0, the order is
-        //	 *  least significant byte first msb to lsb
-        // 	 */
-        // 	if (ret_val == E1000_SUCCESS) {
-        // 		flash_data = E1000_READ_FLASH_REG(hw, ICH_FLASH_FDATA0);
-        // 		if (size == 1)
-        // 			*data = (u8)(flash_data & 0x000000FF);
-        // 		else if (size == 2)
-        // 			*data = (u16)(flash_data & 0x0000FFFF);
-        // 		break;
         if flash_cycle_ich8lan(adapter, ICH_FLASH_READ_COMMAND_TIMEOUT).is_ok() {
+            /* Check if FCERR is set to 1, if set to 1, clear it
+             *  and try the whole sequence a few more times, else
+             *  read in (shift in) the Flash Data0, the order is
+             *  least significant byte first msb to lsb
+             */
             flash_data = adapter.read_flash_register(ICH_FLASH_FDATA0);
             if size == 1 {
                 *data = (flash_data & 0x000000FF) as u16;
@@ -4092,24 +2934,11 @@ pub fn read_flash_data_ich8lan(
             }
             break;
         } else {
-            // 	} else {
-            // 		/* If we've gotten here, then things are probably
-            //		 *  completely hosed, but if the error condition is
-            //		 *  detected, it won't hurt to give it another try...
-            //		 *  ICH_FLASH_CYCLE_REPEAT_COUNT times.
-            // 		 */
-            // 		hsfsts.regval = E1000_READ_FLASH_REG16(hw,
-            // 						      ICH_FLASH_HSFSTS);
-            // 		if (hsfsts.hsf_status.flcerr) {
-            // 			/* Repeat for some time before giving up. */
-            // 			continue;
-            // 		} else if (!hsfsts.hsf_status.flcdone) {
-            // 			DEBUGOUT("Timeout error - flash cycle did not complete.\n");
-            // 			break;
-            // 		}
-            // 	}
-            // } while (count++ < ICH_FLASH_CYCLE_REPEAT_COUNT);
-
+            /* If we've gotten here, then things are probably
+             *  completely hosed, but if the error condition is
+             *  detected, it won't hurt to give it another try...
+             *  ICH_FLASH_CYCLE_REPEAT_COUNT times.
+             */
             hsfsts.regval = adapter.read_flash_register16(ICH_FLASH_HSFSTS);
             if unsafe { hsfsts.hsf_status.flcerr() } != 0 {
                 continue;
@@ -4123,7 +2952,6 @@ pub fn read_flash_data_ich8lan(
         }
         count += 1;
     }
-    // return ret_val;
     Ok(())
 }
 
@@ -4136,37 +2964,20 @@ pub fn read_flash_data_ich8lan(
 pub fn read_flash_data32_ich8lan(adapter: &mut Adapter, offset: u32, data: &mut u32) -> AdResult {
     e1000_verbose_println!();
 
-    // union ich8_hws_flash_status hsfsts;
-    // union ich8_hws_flash_ctrl hsflctl;
-    // u32 flash_linear_addr;
-    // s32 ret_val = -E1000_ERR_NVM;
-    // u8 count = 0;
     let mut hsfsts: Ich8HwsFlashStatus = Default::default(); // Need to initialize!
     let mut hsflctl: Ich8HwsFlashCtrl = Default::default();
     let mut flash_linear_addr: u32;
     let mut count: u8 = 0;
 
-    // DEBUGFUNC("e1000_read_flash_data_ich8lan");
-
-    // 	if (offset > ICH_FLASH_LINEAR_ADDR_MASK ||
-    // 	    hw->mac.type < e1000_pch_spt)
-    // 		return -E1000_ERR_NVM;
     if offset > ICH_FLASH_LINEAR_ADDR_MASK || adapter.hw.mac.mac_type < MacType::Mac_pch_spt {
         return Err("Offset too large or unsupported hardware".to_string());
     }
 
-    // flash_linear_addr = ((ICH_FLASH_LINEAR_ADDR_MASK & offset) +
-    // 		     hw->nvm.flash_base_addr);
     flash_linear_addr = (ICH_FLASH_LINEAR_ADDR_MASK & offset) + adapter.hw.nvm.flash_base_addr;
 
-    // do {
     loop {
-        // usec_delay(1);
         do_usec_delay(1);
         /* Steps */
-        // ret_val = e1000_flash_cycle_init_ich8lan(hw);
-        // if (ret_val != E1000_SUCCESS)
-        //     break;
         if let Err(e) = flash_cycle_init_ich8lan(adapter) {
             eprintln!("{:?}", e);
             break;
@@ -4175,12 +2986,9 @@ pub fn read_flash_data32_ich8lan(adapter: &mut Adapter, offset: u32, data: &mut 
         /* In SPT, This register is in Lan memory space, not flash.
          *  Therefore, only 32 bit access is supported
          */
-        // hsflctl.regval = E1000_READ_FLASH_REG(hw, ICH_FLASH_HSFSTS)>>16;
         hsflctl.regval = (adapter.read_flash_register(ICH_FLASH_HSFSTS) >> 16) as u16;
 
         /* 0b/1b corresponds to 1 or 2 byte size, respectively. */
-        // hsflctl.hsf_ctrl.fldbcount = sizeof(u32) - 1;
-        // hsflctl.hsf_ctrl.flcycle = ICH_CYCLE_READ;
         unsafe {
             hsflctl
                 .hsf_ctrl
@@ -4191,41 +2999,23 @@ pub fn read_flash_data32_ich8lan(adapter: &mut Adapter, offset: u32, data: &mut 
         /* In SPT, This register is in Lan memory space, not flash.
          *  Therefore, only 32 bit access is supported
          */
-        // E1000_WRITE_FLASH_REG(hw, ICH_FLASH_HSFSTS, (u32)hsflctl.regval << 16);
-        // E1000_WRITE_FLASH_REG(hw, ICH_FLASH_FADDR, flash_linear_addr);
         adapter.write_flash_register(ICH_FLASH_HSFSTS, (unsafe { hsflctl.regval } as u32) << 16);
         adapter.write_flash_register(ICH_FLASH_FADDR, flash_linear_addr);
 
-        // ret_val = e1000_flash_cycle_ich8lan(hw, ICH_FLASH_READ_COMMAND_TIMEOUT);
         /* Check if FCERR is set to 1, if set to 1, clear it
          *  and try the whole sequence a few more times, else
          *  read in (shift in) the Flash Data0, the order is
          *  least significant byte first msb to lsb
          */
-        // if (ret_val == E1000_SUCCESS) {
-        //     *data = E1000_READ_FLASH_REG(hw, ICH_FLASH_FDATA0);
-        //     break;
-        // } else {
-        //     /* If we've gotten here, then things are probably
-        //      *  completely hosed, but if the error condition is
-        //      *  detected, it won't hurt to give it another try...
-        //      *  ICH_FLASH_CYCLE_REPEAT_COUNT times.
-        //      */
-        //     hsfsts.regval = E1000_READ_FLASH_REG16(hw,
-        // 					   ICH_FLASH_HSFSTS);
-        //     if (hsfsts.hsf_status.flcerr) {
-        // 	/* Repeat for some time before giving up. */
-        // 	continue;
-        //     } else if (!hsfsts.hsf_status.flcdone) {
-        // 	DEBUGOUT("Timeout error - flash cycle did not complete.\n");
-        // 	break;
-        //     }
-        // }
-        // } while (count++ < ICH_FLASH_CYCLE_REPEAT_COUNT);
         if flash_cycle_ich8lan(adapter, ICH_FLASH_READ_COMMAND_TIMEOUT).is_ok() {
             *data = adapter.read_flash_register(ICH_FLASH_FDATA0);
             break;
         } else {
+            /* If we've gotten here, then things are probably
+             *  completely hosed, but if the error condition is
+             *  detected, it won't hurt to give it another try...
+             *  ICH_FLASH_CYCLE_REPEAT_COUNT times.
+             */
             hsfsts.regval = adapter.read_flash_register16(ICH_FLASH_HSFSTS);
 
             if unsafe { hsfsts.hsf_status.flcerr() } != 0 {
@@ -4252,29 +3042,6 @@ pub fn read_flash_data32_ich8lan(adapter: &mut Adapter, offset: u32, data: &mut 
 /// Writes a byte or word to the NVM using the flash access registers.
 pub fn write_nvm_ich8lan(adapter: &mut Adapter, offset: u16, words: u16, data: &[u16]) -> AdResult {
     e1000_println!();
-
-    // struct e1000_nvm_info *nvm = &hw->nvm;
-    // struct e1000_dev_spec_ich8lan *dev_spec = &hw->dev_spec.ich8lan;
-    // u16 i;
-
-    // DEBUGFUNC("e1000_write_nvm_ich8lan");
-
-    // if ((offset >= nvm->word_size) || (words > nvm->word_size - offset) ||
-    //     (words == 0)) {
-    // 	DEBUGOUT("nvm parameter(s) out of bounds\n");
-    // 	return -E1000_ERR_NVM;
-    // }
-
-    // nvm->ops.acquire(hw);
-
-    // for (i = 0; i < words; i++) {
-    // 	dev_spec->shadow_ram[offset+i].modified = TRUE;
-    // 	dev_spec->shadow_ram[offset+i].value = data[i];
-    // }
-
-    // nvm->ops.release(hw);
-
-    // return E1000_SUCCESS;
     incomplete_return!();
 }
 
@@ -4289,161 +3056,6 @@ pub fn write_nvm_ich8lan(adapter: &mut Adapter, offset: u16, words: u16, data: &
 /// future writes.
 pub fn update_nvm_checksum_spt(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
-
-    // 	struct e1000_nvm_info *nvm = &hw->nvm;
-    // 	struct e1000_dev_spec_ich8lan *dev_spec = &hw->dev_spec.ich8lan;
-    // 	u32 i, act_offset, new_bank_offset, old_bank_offset, bank;
-    // 	s32 ret_val;
-    // 	u32 dword = 0;
-
-    // 	DEBUGFUNC("e1000_update_nvm_checksum_spt");
-
-    // 	ret_val = e1000_update_nvm_checksum_generic(hw);
-    // 	if (ret_val)
-    // 		goto out;
-
-    // 	if (nvm->type != e1000_nvm_flash_sw)
-    // 		goto out;
-
-    // 	nvm->ops.acquire(hw);
-
-    // 	/* We're writing to the opposite bank so if we're on bank 1,
-    //  * write to bank 0 etc.  We also need to erase the segment that
-    //  * is going to be written
-    // 	 */
-    // 	ret_val =  e1000_valid_nvm_bank_detect_ich8lan(hw, &bank);
-    // 	if (ret_val != E1000_SUCCESS) {
-    // 		DEBUGOUT("Could not detect valid bank, assuming bank 0\n");
-    // 		bank = 0;
-    // 	}
-
-    // 	if (bank == 0) {
-    // 		new_bank_offset = nvm->flash_bank_size;
-    // 		old_bank_offset = 0;
-    // 		ret_val = e1000_erase_flash_bank_ich8lan(hw, 1);
-    // 		if (ret_val)
-    // 			goto release;
-    // 	} else {
-    // 		old_bank_offset = nvm->flash_bank_size;
-    // 		new_bank_offset = 0;
-    // 		ret_val = e1000_erase_flash_bank_ich8lan(hw, 0);
-    // 		if (ret_val)
-    // 			goto release;
-    // 	}
-    // 	for (i = 0; i < E1000_SHADOW_RAM_WORDS; i += 2) {
-    // 		/* Determine whether to write the value stored
-    //  * in the other NVM bank or a modified value stored
-    //  * in the shadow RAM
-    // 		 */
-    // 		ret_val = e1000_read_flash_dword_ich8lan(hw,
-    // 							 i + old_bank_offset,
-    // 							 &dword);
-
-    // 		if (dev_spec->shadow_ram[i].modified) {
-    // 			dword &= 0xffff0000;
-    // 			dword |= (dev_spec->shadow_ram[i].value & 0xffff);
-    // 		}
-    // 		if (dev_spec->shadow_ram[i + 1].modified) {
-    // 			dword &= 0x0000ffff;
-    // 			dword |= ((dev_spec->shadow_ram[i + 1].value & 0xffff)
-    // 				  << 16);
-    // 		}
-    // 		if (ret_val)
-    // 			break;
-
-    // 		/* If the word is 0x13, then make sure the signature bits
-    //  * (15:14) are 11b until the commit has completed.
-    //  * This will allow us to write 10b which indicates the
-    //  * signature is valid.  We want to do this after the write
-    //  * has completed so that we don't mark the segment valid
-    //  * while the write is still in progress
-    // 		 */
-    // 		if (i == E1000_ICH_NVM_SIG_WORD - 1)
-    // 			dword |= E1000_ICH_NVM_SIG_MASK << 16;
-
-    // 		/* Convert offset to bytes. */
-    // 		act_offset = (i + new_bank_offset) << 1;
-
-    // 		usec_delay(100);
-
-    // 		/* Write the data to the new bank. Offset in words*/
-    // 		act_offset = i + new_bank_offset;
-    // 		ret_val = e1000_retry_write_flash_dword_ich8lan(hw, act_offset,
-    // 								dword);
-    // 		if (ret_val)
-    // 			break;
-    // 	 }
-
-    // 	/* Don't bother writing the segment valid bits if sector
-    //  * programming failed.
-    // 	 */
-    // 	if (ret_val) {
-    // 		DEBUGOUT("Flash commit failed.\n");
-    // 		goto release;
-    // 	}
-
-    // 	/* Finally validate the new segment by setting bit 15:14
-    //  * to 10b in word 0x13 , this can be done without an
-    //  * erase as well since these bits are 11 to start with
-    //  * and we need to change bit 14 to 0b
-    // 	 */
-    // 	act_offset = new_bank_offset + E1000_ICH_NVM_SIG_WORD;
-
-    // 	/*offset in words but we read dword*/
-    // 	--act_offset;
-    // 	ret_val = e1000_read_flash_dword_ich8lan(hw, act_offset, &dword);
-
-    // 	if (ret_val)
-    // 		goto release;
-
-    // 	dword &= 0xBFFFFFFF;
-    // 	ret_val = e1000_retry_write_flash_dword_ich8lan(hw, act_offset, dword);
-
-    // 	if (ret_val)
-    // 		goto release;
-
-    // 	/* And invalidate the previously valid segment by setting
-    //  * its signature word (0x13) high_byte to 0b. This can be
-    //  * done without an erase because flash erase sets all bits
-    //  * to 1's. We can write 1's to 0's without an erase
-    // 	 */
-    // 	act_offset = (old_bank_offset + E1000_ICH_NVM_SIG_WORD)/// 2 + 1;
-
-    // 	/* offset in words but we read dword*/
-    // 	act_offset = old_bank_offset + E1000_ICH_NVM_SIG_WORD - 1;
-    // 	ret_val = e1000_read_flash_dword_ich8lan(hw, act_offset, &dword);
-
-    // 	if (ret_val)
-    // 		goto release;
-
-    // 	dword &= 0x00FFFFFF;
-    // 	ret_val = e1000_retry_write_flash_dword_ich8lan(hw, act_offset, dword);
-
-    // 	if (ret_val)
-    // 		goto release;
-
-    // 	/* Great!  Everything worked, we can now clear the cached entries. */
-    // 	for (i = 0; i < E1000_SHADOW_RAM_WORDS; i++) {
-    // 		dev_spec->shadow_ram[i].modified = FALSE;
-    // 		dev_spec->shadow_ram[i].value = 0xFFFF;
-    // 	}
-
-    // release:
-    // 	nvm->ops.release(hw);
-
-    // 	/* Reload the EEPROM, or else modifications will not appear
-    //  * until after the next adapter reset.
-    // 	 */
-    // 	if (!ret_val) {
-    // 		nvm->ops.reload(hw);
-    // 		msec_delay(10);
-    // 	}
-
-    // out:
-    // 	if (ret_val)
-    // 		DEBUGOUT1("NVM update error: %d\n", ret_val);
-
-    // 	return ret_val;
     incomplete_return!();
 }
 
@@ -4459,145 +3071,6 @@ pub fn update_nvm_checksum_spt(adapter: &mut Adapter) -> AdResult {
 pub fn update_nvm_checksum_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
     incomplete_return!();
-
-    // 	struct e1000_nvm_info *nvm = &hw->nvm;
-    // 	struct e1000_dev_spec_ich8lan *dev_spec = &hw->dev_spec.ich8lan;
-    // 	u32 i, act_offset, new_bank_offset, old_bank_offset, bank;
-    // 	s32 ret_val;
-    // 	u16 data = 0;
-
-    // 	DEBUGFUNC("e1000_update_nvm_checksum_ich8lan");
-
-    // 	ret_val = e1000_update_nvm_checksum_generic(hw);
-    // 	if (ret_val)
-    // 		goto out;
-
-    // 	if (nvm->type != e1000_nvm_flash_sw)
-    // 		goto out;
-
-    // 	nvm->ops.acquire(hw);
-
-    // 	/* We're writing to the opposite bank so if we're on bank 1,
-    //  * write to bank 0 etc.  We also need to erase the segment that
-    //  * is going to be written
-    // 	 */
-    // 	ret_val =  e1000_valid_nvm_bank_detect_ich8lan(hw, &bank);
-    // 	if (ret_val != E1000_SUCCESS) {
-    // 		DEBUGOUT("Could not detect valid bank, assuming bank 0\n");
-    // 		bank = 0;
-    // 	}
-
-    // 	if (bank == 0) {
-    // 		new_bank_offset = nvm->flash_bank_size;
-    // 		old_bank_offset = 0;
-    // 		ret_val = e1000_erase_flash_bank_ich8lan(hw, 1);
-    // 		if (ret_val)
-    // 			goto release;
-    // 	} else {
-    // 		old_bank_offset = nvm->flash_bank_size;
-    // 		new_bank_offset = 0;
-    // 		ret_val = e1000_erase_flash_bank_ich8lan(hw, 0);
-    // 		if (ret_val)
-    // 			goto release;
-    // 	}
-    // 	for (i = 0; i < E1000_SHADOW_RAM_WORDS; i++) {
-    // 		if (dev_spec->shadow_ram[i].modified) {
-    // 			data = dev_spec->shadow_ram[i].value;
-    // 		} else {
-    // 			ret_val = e1000_read_flash_word_ich8lan(hw, i +
-    // 								old_bank_offset,
-    // 								&data);
-    // 			if (ret_val)
-    // 				break;
-    // 		}
-    // 		/* If the word is 0x13, then make sure the signature bits
-    //  * (15:14) are 11b until the commit has completed.
-    //  * This will allow us to write 10b which indicates the
-    //  * signature is valid.  We want to do this after the write
-    //  * has completed so that we don't mark the segment valid
-    //  * while the write is still in progress
-    // 		 */
-    // 		if (i == E1000_ICH_NVM_SIG_WORD)
-    // 			data |= E1000_ICH_NVM_SIG_MASK;
-
-    // 		/* Convert offset to bytes. */
-    // 		act_offset = (i + new_bank_offset) << 1;
-
-    // 		usec_delay(100);
-
-    // 		/* Write the bytes to the new bank. */
-    // 		ret_val = e1000_retry_write_flash_byte_ich8lan(hw,
-    // 							       act_offset,
-    // 							       (u8)data);
-    // 		if (ret_val)
-    // 			break;
-
-    // 		usec_delay(100);
-    // 		ret_val = e1000_retry_write_flash_byte_ich8lan(hw,
-    // 							  act_offset + 1,
-    // 							  (u8)(data >> 8));
-    // 		if (ret_val)
-    // 			break;
-    // 	 }
-
-    // 	/* Don't bother writing the segment valid bits if sector
-    //  * programming failed.
-    // 	 */
-    // 	if (ret_val) {
-    // 		DEBUGOUT("Flash commit failed.\n");
-    // 		goto release;
-    // 	}
-
-    // 	/* Finally validate the new segment by setting bit 15:14
-    //  * to 10b in word 0x13 , this can be done without an
-    //  * erase as well since these bits are 11 to start with
-    //  * and we need to change bit 14 to 0b
-    // 	 */
-    // 	act_offset = new_bank_offset + E1000_ICH_NVM_SIG_WORD;
-    // 	ret_val = e1000_read_flash_word_ich8lan(hw, act_offset, &data);
-    // 	if (ret_val)
-    // 		goto release;
-
-    // 	data &= 0xBFFF;
-    // 	ret_val = e1000_retry_write_flash_byte_ich8lan(hw, act_offset/// 2 + 1,
-    // 						       (u8)(data >> 8));
-    // 	if (ret_val)
-    // 		goto release;
-
-    // 	/* And invalidate the previously valid segment by setting
-    //  * its signature word (0x13) high_byte to 0b. This can be
-    //  * done without an erase because flash erase sets all bits
-    //  * to 1's. We can write 1's to 0's without an erase
-    // 	 */
-    // 	act_offset = (old_bank_offset + E1000_ICH_NVM_SIG_WORD)/// 2 + 1;
-
-    // 	ret_val = e1000_retry_write_flash_byte_ich8lan(hw, act_offset, 0);
-
-    // 	if (ret_val)
-    // 		goto release;
-
-    // 	/* Great!  Everything worked, we can now clear the cached entries. */
-    // 	for (i = 0; i < E1000_SHADOW_RAM_WORDS; i++) {
-    // 		dev_spec->shadow_ram[i].modified = FALSE;
-    // 		dev_spec->shadow_ram[i].value = 0xFFFF;
-    // 	}
-
-    // release:
-    // 	nvm->ops.release(hw);
-
-    // 	/* Reload the EEPROM, or else modifications will not appear
-    //  * until after the next adapter reset.
-    // 	 */
-    // 	if (!ret_val) {
-    // 		nvm->ops.reload(hw);
-    // 		msec_delay(10);
-    // 	}
-
-    // out:
-    // 	if (ret_val)
-    // 		DEBUGOUT1("NVM update error: %d\n", ret_val);
-
-    // 	return ret_val;
 }
 
 /// e1000_validate_nvm_checksum_ich8lan - Validate EEPROM checksum
@@ -4609,33 +3082,15 @@ pub fn update_nvm_checksum_ich8lan(adapter: &mut Adapter) -> AdResult {
 pub fn validate_nvm_checksum_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
 
-    // s32 ret_val;
-    // u16 data;
-    // u16 word;
-    // u16 valid_csum_mask;
     let mut data: [u16; 1] = [0];
     let mut word: u16;
     let mut valid_csum_mask: u16;
-
-    // DEBUGFUNC("e1000_validate_nvm_checksum_ich8lan");
 
     /* Read NVM and check Invalid Image CSUM bit.  If this bit is 0,
      * the checksum needs to be fixed.  This bit is an indication that
      * the NVM was prepared by OEM software and did not calculate
      * the checksum...a likely scenario.
      */
-    // switch (hw->mac.type) {
-    // case e1000_pch_lpt:
-    // case e1000_pch_spt:
-    // case e1000_pch_cnp:
-    // 	word = NVM_COMPAT;
-    // 	valid_csum_mask = NVM_COMPAT_VALID_CSUM;
-    // 	break;
-    // default:
-    // 	word = NVM_FUTURE_INIT_WORD1;
-    // 	valid_csum_mask = NVM_FUTURE_INIT_WORD1_VALID_CSUM;
-    // 	break;
-    // }
     if adapter.is_macs(&[
         MacType::Mac_pch_lpt,
         MacType::Mac_pch_spt,
@@ -4648,20 +3103,8 @@ pub fn validate_nvm_checksum_ich8lan(adapter: &mut Adapter) -> AdResult {
         valid_csum_mask = NVM_FUTURE_INIT_WORD1_VALID_CSUM as u16;
     }
 
-    // ret_val = hw->nvm.ops.read(hw, word, 1, &data);
-    // if (ret_val)
-    // 	return ret_val;
     try!(adapter.nvm_read(word, 1, &mut data));
 
-    // if (!(data & valid_csum_mask)) {
-    // 	data |= valid_csum_mask;
-    // 	ret_val = hw->nvm.ops.write(hw, word, 1, &data);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // 	ret_val = hw->nvm.ops.update(hw);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // }
     if !btst!(data[0], valid_csum_mask) {
         data[0] |= valid_csum_mask;
         try!(adapter.nvm_write(word, 1, &mut data));
@@ -4675,7 +3118,6 @@ pub fn validate_nvm_checksum_ich8lan(adapter: &mut Adapter) -> AdResult {
                 .and_then(|f| f(adapter))
         );
     }
-    // return e1000_validate_nvm_checksum_generic(hw);
     e1000_nvm::validate_nvm_checksum_generic(adapter)
 }
 
@@ -4694,91 +3136,6 @@ pub fn write_flash_data_ich8lan(
 ) -> AdResult {
     e1000_println!();
     incomplete_return!();
-
-    // union ich8_hws_flash_status hsfsts;
-    // union ich8_hws_flash_ctrl hsflctl;
-    // u32 flash_linear_addr;
-    // u32 flash_data = 0;
-    // s32 ret_val;
-    // u8 count = 0;
-
-    // DEBUGFUNC("e1000_write_ich8_data");
-
-    // if (hw->mac.type >= e1000_pch_spt) {
-    // 	if (size != 4 || offset > ICH_FLASH_LINEAR_ADDR_MASK)
-    // 		return -E1000_ERR_NVM;
-    // } else {
-    // 	if (size < 1 || size > 2 || offset > ICH_FLASH_LINEAR_ADDR_MASK)
-    // 		return -E1000_ERR_NVM;
-    // }
-
-    // flash_linear_addr = ((ICH_FLASH_LINEAR_ADDR_MASK & offset) +
-    // 		     hw->nvm.flash_base_addr);
-
-    // do {
-    // 	usec_delay(1);
-    // 	/* Steps */
-    // 	ret_val = e1000_flash_cycle_init_ich8lan(hw);
-    // 	if (ret_val != E1000_SUCCESS)
-    // 		break;
-    // 	/* In SPT, This register is in Lan memory space, not
-    //  * flash.  Therefore, only 32 bit access is supported
-    // 	 */
-    // 	if (hw->mac.type >= e1000_pch_spt)
-    // 		hsflctl.regval =
-    // 		    E1000_READ_FLASH_REG(hw, ICH_FLASH_HSFSTS)>>16;
-    // 	else
-    // 		hsflctl.regval =
-    // 		    E1000_READ_FLASH_REG16(hw, ICH_FLASH_HSFCTL);
-
-    // 	/* 0b/1b corresponds to 1 or 2 byte size, respectively. */
-    // 	hsflctl.hsf_ctrl.fldbcount = size - 1;
-    // 	hsflctl.hsf_ctrl.flcycle = ICH_CYCLE_WRITE;
-    // 	/* In SPT, This register is in Lan memory space,
-    //  * not flash.  Therefore, only 32 bit access is
-    //  * supported
-    // 	 */
-    // 	if (hw->mac.type >= e1000_pch_spt)
-    // 		E1000_WRITE_FLASH_REG(hw, ICH_FLASH_HSFSTS,
-    // 				      hsflctl.regval << 16);
-    // 	else
-    // 		E1000_WRITE_FLASH_REG16(hw, ICH_FLASH_HSFCTL,
-    // 					hsflctl.regval);
-
-    // 	E1000_WRITE_FLASH_REG(hw, ICH_FLASH_FADDR, flash_linear_addr);
-
-    // 	if (size == 1)
-    // 		flash_data = (u32)data & 0x00FF;
-    // 	else
-    // 		flash_data = (u32)data;
-
-    // 	E1000_WRITE_FLASH_REG(hw, ICH_FLASH_FDATA0, flash_data);
-
-    // 	/* check if FCERR is set to 1 , if set to 1, clear it
-    //  * and try the whole sequence a few more times else done
-    // 	 */
-    // 	ret_val =
-    // 	    e1000_flash_cycle_ich8lan(hw,
-    // 				      ICH_FLASH_WRITE_COMMAND_TIMEOUT);
-    // 	if (ret_val == E1000_SUCCESS)
-    // 		break;
-
-    // 	/* If we're here, then things are most likely
-    //  * completely hosed, but if the error condition
-    //  * is detected, it won't hurt to give it another
-    //  * try...ICH_FLASH_CYCLE_REPEAT_COUNT times.
-    // 	 */
-    // 	hsfsts.regval = E1000_READ_FLASH_REG16(hw, ICH_FLASH_HSFSTS);
-    // 	if (hsfsts.hsf_status.flcerr)
-    // 		/* Repeat for some time before giving up. */
-    // 		continue;
-    // 	if (!hsfsts.hsf_status.flcdone) {
-    // 		DEBUGOUT("Timeout error - flash cycle did not complete.\n");
-    // 		break;
-    // 	}
-    // } while (count++ < ICH_FLASH_CYCLE_REPEAT_COUNT);
-
-    // return ret_val;
 }
 
 /// e1000_write_flash_data32_ich8lan - Writes 4 bytes to the NVM
@@ -4790,41 +3147,23 @@ pub fn write_flash_data_ich8lan(
 pub fn write_flash_data32_ich8lan(adapter: &mut Adapter, offset: u32, data: u32) -> AdResult {
     e1000_println!();
 
-    // union ich8_hws_flash_status hsfsts;
-    // union ich8_hws_flash_ctrl hsflctl;
-    // u32 flash_linear_addr;
-    // s32 ret_val;
-    // u8 count = 0;
     let mut hsfsts: Ich8HwsFlashStatus = Default::default(); // Need to initialize!
     let mut hsflctl: Ich8HwsFlashCtrl = Default::default();
     let mut flash_linear_addr: u32;
     let mut count: u8 = 0;
 
-    // DEBUGFUNC("e1000_write_flash_data32_ich8lan");
-
-    // if (hw->mac.type >= e1000_pch_spt) {
-    // 	if (offset > ICH_FLASH_LINEAR_ADDR_MASK)
-    // 		return -E1000_ERR_NVM;
-    // }
     if adapter.hw.mac.mac_type >= MacType::Mac_pch_spt {
         if offset > ICH_FLASH_LINEAR_ADDR_MASK {
             return Err("offset > ICH_FLASH_LINEAR_ADDR_MASK".to_string());
         }
     }
 
-    // flash_linear_addr = ((ICH_FLASH_LINEAR_ADDR_MASK & offset) +
-    // 		     hw->nvm.flash_base_addr);
     flash_linear_addr = (ICH_FLASH_LINEAR_ADDR_MASK & offset) + adapter.hw.nvm.flash_base_addr;
 
-    // do {
     loop {
-        // 	usec_delay(1);
         do_usec_delay(1);
 
         /* Steps */
-        // ret_val = e1000_flash_cycle_init_ich8lan(hw);
-        // if (ret_val != E1000_SUCCESS)
-        //     break;
         if flash_cycle_init_ich8lan(adapter).is_err() {
             break;
         }
@@ -4832,21 +3171,11 @@ pub fn write_flash_data32_ich8lan(adapter: &mut Adapter, offset: u32, data: u32)
         /* In SPT, This register is in Lan memory space, not
          *  flash.  Therefore, only 32 bit access is supported
          */
-        // if (hw->mac.type >= e1000_pch_spt)
-        //     hsflctl.regval = E1000_READ_FLASH_REG(hw,
-        // 					  ICH_FLASH_HSFSTS)
-        //     >> 16;
-        // else
-        //     hsflctl.regval = E1000_READ_FLASH_REG16(hw,
-        // 					    ICH_FLASH_HSFCTL);
         if adapter.hw.mac.mac_type >= MacType::Mac_pch_spt {
             hsflctl.regval = (adapter.read_flash_register(ICH_FLASH_HSFSTS) >> 16) as u16;
         } else {
             hsflctl.regval = adapter.read_flash_register16(ICH_FLASH_HSFCTL);
         }
-
-        // hsflctl.hsf_ctrl.fldbcount = sizeof(u32) - 1;
-        // hsflctl.hsf_ctrl.flcycle = ICH_CYCLE_WRITE;
 
         unsafe {
             hsflctl
@@ -4859,12 +3188,6 @@ pub fn write_flash_data32_ich8lan(adapter: &mut Adapter, offset: u32, data: u32)
          *  not flash.  Therefore, only 32 bit access is
          *  supported
          */
-        // if (hw->mac.type >= e1000_pch_spt)
-        //     E1000_WRITE_FLASH_REG(hw, ICH_FLASH_HSFSTS,
-        // 			  hsflctl.regval << 16);
-        // else
-        //     E1000_WRITE_FLASH_REG16(hw, ICH_FLASH_HSFCTL,
-        // 			    hsflctl.regval);
         if adapter.hw.mac.mac_type >= MacType::Mac_pch_spt {
             adapter
                 .write_flash_register(ICH_FLASH_HSFSTS, (unsafe { hsflctl.regval } as u32) << 16);
@@ -4872,17 +3195,12 @@ pub fn write_flash_data32_ich8lan(adapter: &mut Adapter, offset: u32, data: u32)
             adapter.write_flash_register16(ICH_FLASH_HSFCTL, unsafe { hsflctl.regval });
         }
 
-        // E1000_WRITE_FLASH_REG(hw, ICH_FLASH_FADDR, flash_linear_addr);
-        // E1000_WRITE_FLASH_REG(hw, ICH_FLASH_FDATA0, data);
         adapter.write_flash_register(ICH_FLASH_FADDR, flash_linear_addr);
         adapter.write_flash_register(ICH_FLASH_FDATA0, data);
 
         /* check if FCERR is set to 1 , if set to 1, clear it
          *  and try the whole sequence a few more times else done
          */
-        // ret_val = e1000_flash_cycle_ich8lan(hw, ICH_FLASH_WRITE_COMMAND_TIMEOUT);
-        // if (ret_val == E1000_SUCCESS)
-        //     break;
         if flash_cycle_ich8lan(adapter, ICH_FLASH_WRITE_COMMAND_TIMEOUT).is_ok() {
             break;
         }
@@ -4892,18 +3210,10 @@ pub fn write_flash_data32_ich8lan(adapter: &mut Adapter, offset: u32, data: u32)
          *  is detected, it won't hurt to give it another
          *  try...ICH_FLASH_CYCLE_REPEAT_COUNT times.
          */
-        // hsfsts.regval = E1000_READ_FLASH_REG16(hw, ICH_FLASH_HSFSTS);
         hsfsts.regval = adapter.read_flash_register16(ICH_FLASH_HSFSTS);
 
-        // if (hsfsts.hsf_status.flcerr)
-        // /* Repeat for some time before giving up. */
-        //     continue;
-        // if (!hsfsts.hsf_status.flcdone) {
-        //     DEBUGOUT("Timeout error - flash cycle did not complete.\n");
-        //     break;
-        // }
-        // } while (count++ < ICH_FLASH_CYCLE_REPEAT_COUNT);
         if unsafe { hsfsts.hsf_status.flcerr() } != 0 {
+            /* Repeat for some time before giving up. */
             continue;
         }
         if unsafe { hsfsts.hsf_status.flcdone() } == 0 {
@@ -4916,7 +3226,6 @@ pub fn write_flash_data32_ich8lan(adapter: &mut Adapter, offset: u32, data: u32)
         count += 1;
     }
 
-    // return ret_val;
     Ok(())
 }
 
@@ -4929,12 +3238,6 @@ pub fn write_flash_data32_ich8lan(adapter: &mut Adapter, offset: u32, data: u32)
 pub fn write_flash_byte_ich8lan(adapter: &mut Adapter, offset: u32, data: u8) -> AdResult {
     e1000_println!();
     incomplete_return!();
-
-    // u16 word = (u16)data;
-
-    // DEBUGFUNC("e1000_write_flash_byte_ich8lan");
-
-    // return e1000_write_flash_data_ich8lan(hw, offset, 1, word);
 }
 
 /// e1000_retry_write_flash_dword_ich8lan - Writes a dword to NVM
@@ -4947,30 +3250,6 @@ pub fn write_flash_byte_ich8lan(adapter: &mut Adapter, offset: u32, data: u8) ->
 pub fn retry_write_flash_dword_ich8lan(adapter: &mut Adapter, offset: u32, dword: u32) -> AdResult {
     e1000_println!();
     incomplete_return!();
-
-    // s32 ret_val;
-    // u16 program_retries;
-
-    // DEBUGFUNC("e1000_retry_write_flash_dword_ich8lan");
-
-    // /* Must convert word offset into bytes. */
-    // offset <<= 1;
-
-    // ret_val = e1000_write_flash_data32_ich8lan(hw, offset, dword);
-
-    // if (!ret_val)
-    // 	return ret_val;
-    // for (program_retries = 0; program_retries < 100; program_retries++) {
-    // 	DEBUGOUT2("Retrying Byte %8.8X at offset %u\n", dword, offset);
-    // 	usec_delay(100);
-    // 	ret_val = e1000_write_flash_data32_ich8lan(hw, offset, dword);
-    // 	if (ret_val == E1000_SUCCESS)
-    // 		break;
-    // }
-    // if (program_retries == 100)
-    // 	return -E1000_ERR_NVM;
-
-    // return E1000_SUCCESS;
 }
 
 /// e1000_retry_write_flash_byte_ich8lan - Writes a single byte to NVM
@@ -4983,27 +3262,6 @@ pub fn retry_write_flash_dword_ich8lan(adapter: &mut Adapter, offset: u32, dword
 pub fn retry_write_flash_byte_ich8lan(adapter: &mut Adapter, offset: u32, byte: u8) -> AdResult {
     e1000_println!();
     incomplete_return!();
-
-    // s32 ret_val;
-    // u16 program_retries;
-
-    // DEBUGFUNC("e1000_retry_write_flash_byte_ich8lan");
-
-    // ret_val = e1000_write_flash_byte_ich8lan(hw, offset, byte);
-    // if (!ret_val)
-    // 	return ret_val;
-
-    // for (program_retries = 0; program_retries < 100; program_retries++) {
-    // 	DEBUGOUT2("Retrying Byte %2.2X at offset %u\n", byte, offset);
-    // 	usec_delay(100);
-    // 	ret_val = e1000_write_flash_byte_ich8lan(hw, offset, byte);
-    // 	if (ret_val == E1000_SUCCESS)
-    // 		break;
-    // }
-    // if (program_retries == 100)
-    // 	return -E1000_ERR_NVM;
-
-    // return E1000_SUCCESS;
 }
 
 /// e1000_erase_flash_bank_ich8lan - Erase a bank (4k) from NVM
@@ -5015,115 +3273,6 @@ pub fn retry_write_flash_byte_ich8lan(adapter: &mut Adapter, offset: u32, byte: 
 pub fn erase_flash_bank_ich8lan(adapter: &mut Adapter, bank: u32) -> AdResult {
     e1000_println!();
     incomplete_return!();
-
-    // struct e1000_nvm_info *nvm = &hw->nvm;
-    // union ich8_hws_flash_status hsfsts;
-    // union ich8_hws_flash_ctrl hsflctl;
-    // u32 flash_linear_addr;
-    // /* bank size is in 16bit words - adjust to bytes */
-    // u32 flash_bank_size = nvm->flash_bank_size/// 2;
-    // s32 ret_val;
-    // s32 count = 0;
-    // s32 j, iteration, sector_size;
-
-    // DEBUGFUNC("e1000_erase_flash_bank_ich8lan");
-
-    // hsfsts.regval = E1000_READ_FLASH_REG16(hw, ICH_FLASH_HSFSTS);
-
-    // /* Determine HW Sector size: Read BERASE bits of hw flash status
-    //  * register
-    //  * 00: The Hw sector is 256 bytes, hence we need to erase 16
-    //  * consecutive sectors.  The start index for the nth Hw sector
-    //  * can be calculated as = bank/// 4096 + n/// 256
-    //  * 01: The Hw sector is 4K bytes, hence we need to erase 1 sector.
-    //  * The start index for the nth Hw sector can be calculated
-    //  * as = bank/// 4096
-    //  * 10: The Hw sector is 8K bytes, nth sector = bank/// 8192
-    //  * (ich9 only, otherwise error condition)
-    //  * 11: The Hw sector is 64K bytes, nth sector = bank/// 65536
-    //  */
-    // switch (hsfsts.hsf_status.berasesz) {
-    // case 0:
-    // 	/* Hw sector size 256 */
-    // 	sector_size = ICH_FLASH_SEG_SIZE_256;
-    // 	iteration = flash_bank_size / ICH_FLASH_SEG_SIZE_256;
-    // 	break;
-    // case 1:
-    // 	sector_size = ICH_FLASH_SEG_SIZE_4K;
-    // 	iteration = 1;
-    // 	break;
-    // case 2:
-    // 	sector_size = ICH_FLASH_SEG_SIZE_8K;
-    // 	iteration = 1;
-    // 	break;
-    // case 3:
-    // 	sector_size = ICH_FLASH_SEG_SIZE_64K;
-    // 	iteration = 1;
-    // 	break;
-    // default:
-    // 	return -E1000_ERR_NVM;
-    // }
-
-    // /* Start with the base address, then add the sector offset. */
-    // flash_linear_addr = hw->nvm.flash_base_addr;
-    // flash_linear_addr += (bank) ? flash_bank_size : 0;
-
-    // for (j = 0; j < iteration; j++) {
-    // 	do {
-    // 		u32 timeout = ICH_FLASH_ERASE_COMMAND_TIMEOUT;
-
-    // 		/* Steps */
-    // 		ret_val = e1000_flash_cycle_init_ich8lan(hw);
-    // 		if (ret_val)
-    // 			return ret_val;
-
-    // 		/* Write a value 11 (block Erase) in Flash
-    //  * Cycle field in hw flash control
-    // 		 */
-    // 		if (hw->mac.type >= e1000_pch_spt)
-    // 			hsflctl.regval =
-    // 			    E1000_READ_FLASH_REG(hw,
-    // 						 ICH_FLASH_HSFSTS)>>16;
-    // 		else
-    // 			hsflctl.regval =
-    // 			    E1000_READ_FLASH_REG16(hw,
-    // 						   ICH_FLASH_HSFCTL);
-
-    // 		hsflctl.hsf_ctrl.flcycle = ICH_CYCLE_ERASE;
-    // 		if (hw->mac.type >= e1000_pch_spt)
-    // 			E1000_WRITE_FLASH_REG(hw, ICH_FLASH_HSFSTS,
-    // 					      hsflctl.regval << 16);
-    // 		else
-    // 			E1000_WRITE_FLASH_REG16(hw, ICH_FLASH_HSFCTL,
-    // 						hsflctl.regval);
-
-    // 		/* Write the last 24 bits of an index within the
-    //  * block into Flash Linear address field in Flash
-    //  * Address.
-    // 		 */
-    // 		flash_linear_addr += (j/// sector_size);
-    // 		E1000_WRITE_FLASH_REG(hw, ICH_FLASH_FADDR,
-    // 				      flash_linear_addr);
-
-    // 		ret_val = e1000_flash_cycle_ich8lan(hw, timeout);
-    // 		if (ret_val == E1000_SUCCESS)
-    // 			break;
-
-    // 		/* Check if FCERR is set to 1.  If 1,
-    //  * clear it and try the whole sequence
-    //  * a few more times else Done
-    // 		 */
-    // 		hsfsts.regval = E1000_READ_FLASH_REG16(hw,
-    // 					      ICH_FLASH_HSFSTS);
-    // 		if (hsfsts.hsf_status.flcerr)
-    // 			/* repeat for some time before giving up */
-    // 			continue;
-    // 		else if (!hsfsts.hsf_status.flcdone)
-    // 			return ret_val;
-    // 	} while (++count < ICH_FLASH_CYCLE_REPEAT_COUNT);
-    // }
-
-    // return E1000_SUCCESS;
 }
 
 /// e1000_valid_led_default_ich8lan - Set the default LED settings
@@ -5136,22 +3285,11 @@ pub fn erase_flash_bank_ich8lan(adapter: &mut Adapter, bank: u32) -> AdResult {
 pub fn valid_led_default_ich8lan(adapter: &mut Adapter, data: &mut [u16]) -> AdResult {
     e1000_println!();
 
-    // s32 ret_val;
-    // DEBUGFUNC("e1000_valid_led_default_ich8lan");
-    // ret_val = hw->nvm.ops.read(hw, NVM_ID_LED_SETTINGS, 1, data);
-    // if (ret_val) {
-    // 	DEBUGOUT("NVM Read Error\n");
-    // 	return ret_val;
-    // }
     try!(adapter.nvm_read(NVM_ID_LED_SETTINGS, 1, data));
-
-    // if (*data == ID_LED_RESERVED_0000 || *data == ID_LED_RESERVED_FFFF)
-    // 	*data = ID_LED_DEFAULT_ICH8LAN;
 
     if data[0] == ID_LED_RESERVED_0000 || data[0] == ID_LED_RESERVED_FFFF {
         data[0] = ID_LED_DEFAULT_ICH8LAN;
     }
-    // return E1000_SUCCESS;
     Ok(())
 }
 
@@ -5169,23 +3307,13 @@ pub fn valid_led_default_ich8lan(adapter: &mut Adapter, data: &mut [u16]) -> AdR
 pub fn id_led_init_pchlan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
 
-    // struct e1000_mac_info *mac = &hw->mac;
-    // s32 ret_val;
-    // const u32 ledctl_on = E1000_LEDCTL_MODE_LINK_UP;
-    // const u32 ledctl_off = E1000_LEDCTL_MODE_LINK_UP | E1000_PHY_LED0_IVRT;
-    // u16 data, i, temp, shift;
     let ledctl_on = E1000_LEDCTL_MODE_LINK_UP;
     let ledctl_off = E1000_LEDCTL_MODE_LINK_UP | E1000_PHY_LED0_IVRT;
     let mut data: [u16; 1] = [0];
     let mut temp: u16;
     let mut shift: u16;
 
-    // DEBUGFUNC("e1000_id_led_init_pchlan");
-
     /* Get default ID LED modes */
-    // ret_val = hw->nvm.ops.valid_led_default(hw, &data);
-    // if (ret_val)
-    // 	return ret_val;
     try!(
         adapter
             .hw
@@ -5196,33 +3324,10 @@ pub fn id_led_init_pchlan(adapter: &mut Adapter) -> AdResult {
             .and_then(|f| f(adapter, &mut data))
     );
 
-    // mac->ledctl_default = E1000_READ_REG(hw, E1000_LEDCTL);
-    // mac->ledctl_mode1 = mac->ledctl_default;
-    // mac->ledctl_mode2 = mac->ledctl_default;
     adapter.hw.mac.ledctl_default = adapter.read_register(E1000_LEDCTL);
     adapter.hw.mac.ledctl_mode1 = adapter.hw.mac.ledctl_default;
     adapter.hw.mac.ledctl_mode2 = adapter.hw.mac.ledctl_default;
 
-    // for (i = 0; i < 4; i++) {
-    // 	temp = (data >> (i << 2)) & E1000_LEDCTL_LED0_MODE_MASK;
-    // 	shift = (i * 5);
-    // 	switch (temp) {
-    // 	case ID_LED_ON1_DEF2:
-    // 	case ID_LED_ON1_ON2:
-    // 	case ID_LED_ON1_OFF2:
-    // 		mac->ledctl_mode1 &= ~(E1000_PHY_LED0_MASK << shift);
-    // 		mac->ledctl_mode1 |= (ledctl_on << shift);
-    // 		break;
-    // 	case ID_LED_OFF1_DEF2:
-    // 	case ID_LED_OFF1_ON2:
-    // 	case ID_LED_OFF1_OFF2:
-    // 		mac->ledctl_mode1 &= ~(E1000_PHY_LED0_MASK << shift);
-    // 		mac->ledctl_mode1 |= (ledctl_off << shift);
-    // 		break;
-    // 	default:
-    // 		/* Do nothing */
-    // 		break;
-    // 	}
     for i in 0..4 {
         temp = (data[0] >> (i << 2)) & E1000_LEDCTL_LED0_MODE_MASK as u16;
         shift = i * 5;
@@ -5234,24 +3339,6 @@ pub fn id_led_init_pchlan(adapter: &mut Adapter) -> AdResult {
             adapter.hw.mac.ledctl_mode1 &= !(E1000_PHY_LED0_MASK << shift);
             adapter.hw.mac.ledctl_mode1 |= ledctl_off << shift;
         }
-        // 	switch (temp) {
-        // 	case ID_LED_DEF1_ON2:
-        // 	case ID_LED_ON1_ON2:
-        // 	case ID_LED_OFF1_ON2:
-        // 		mac->ledctl_mode2 &= ~(E1000_PHY_LED0_MASK << shift);
-        // 		mac->ledctl_mode2 |= (ledctl_on << shift);
-        // 		break;
-        // 	case ID_LED_DEF1_OFF2:
-        // 	case ID_LED_ON1_OFF2:
-        // 	case ID_LED_OFF1_OFF2:
-        // 		mac->ledctl_mode2 &= ~(E1000_PHY_LED0_MASK << shift);
-        // 		mac->ledctl_mode2 |= (ledctl_off << shift);
-        // 		break;
-        // 	default:
-        // 		/* Do nothing */
-        // 		break;
-        // 	}
-        // }
         if [ID_LED_DEF1_ON2, ID_LED_ON1_ON2, ID_LED_OFF1_ON2].contains(&temp) {
             adapter.hw.mac.ledctl_mode2 &= !(E1000_PHY_LED0_MASK << shift);
             adapter.hw.mac.ledctl_mode2 |= ledctl_on << shift;
@@ -5261,8 +3348,6 @@ pub fn id_led_init_pchlan(adapter: &mut Adapter) -> AdResult {
             adapter.hw.mac.ledctl_mode2 |= ledctl_off << shift;
         }
     }
-
-    // return E1000_SUCCESS;
     Ok(())
 }
 
@@ -5274,12 +3359,6 @@ pub fn id_led_init_pchlan(adapter: &mut Adapter) -> AdResult {
 pub fn get_bus_info_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
 
-    // struct e1000_bus_info *bus = &hw->bus;
-    // s32 ret_val;
-
-    // DEBUGFUNC("e1000_get_bus_info_ich8lan");
-
-    // ret_val = e1000_get_bus_info_pcie_generic(hw);
     let res = e1000_mac::get_bus_info_pcie_generic(adapter);
 
     /* ICH devices are "PCI Express"-ish.  They have
@@ -5287,12 +3366,9 @@ pub fn get_bus_info_ich8lan(adapter: &mut Adapter) -> AdResult {
      * PCI Express Capability registers, so bus width
      * must be hardcoded.
      */
-    // if (bus->width == e1000_bus_width_unknown)
-    // 	bus->width = e1000_bus_width_pcie_x1;
     if adapter.hw.bus.width == BusWidth::Unknown {
         adapter.hw.bus.width = BusWidth::Width_pcie_x1;
     }
-    // return ret_val;
     res
 }
 
@@ -5304,68 +3380,39 @@ pub fn get_bus_info_ich8lan(adapter: &mut Adapter) -> AdResult {
 pub fn reset_hw_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
 
-    // struct e1000_dev_spec_ich8lan *dev_spec = &hw->dev_spec.ich8lan;
-    // u16 kum_cfg;
-    // u32 ctrl, reg;
-    // s32 ret_val;
     let mut kum_cfg: [u16; 1] = [0];
     let mut ctrl: u32;
     let mut reg: u32;
 
-    // DEBUGFUNC("e1000_reset_hw_ich8lan");
-
     /* Prevent the PCI-E bus from sticking if there is no TLP connection
      * on the last TLP read/write transaction when MAC is reset.
      */
-    // ret_val = e1000_disable_pcie_master_generic(hw);
-    // if (ret_val)
-    // 	DEBUGOUT("PCI-E Master disable polling has failed.\n");
     if let Err(e) = e1000_mac::disable_pcie_master_generic(adapter) {
         e1000_println!("{:?}", e);
     }
 
-    // DEBUGOUT("Masking off all interrupts\n");
-    // E1000_WRITE_REG(hw, E1000_IMC, 0xffffffff);
     adapter.write_register(E1000_IMC, 0xFFFFFFFF);
 
     /* Disable the Transmit and Receive units.  Then delay to allow
      * any pending transactions to complete before we hit the MAC
      * with the global reset.
      */
-    // E1000_WRITE_REG(hw, E1000_RCTL, 0);
-    // E1000_WRITE_REG(hw, E1000_TCTL, E1000_TCTL_PSP);
-    // E1000_WRITE_FLUSH(hw);
     adapter.write_register(E1000_RCTL, 0);
     adapter.write_register(E1000_TCTL, E1000_TCTL_PSP);
     adapter.write_flush();
 
-    // msec_delay(10);
     do_msec_delay(10);
 
     /* Workaround for ICH8 bit corruption issue in FIFO memory */
-    // if (hw->mac.type == e1000_ich8lan) {
-    // 	/* Set Tx and Rx buffer allocation to 8k apiece. */
-    // 	E1000_WRITE_REG(hw, E1000_PBA, E1000_PBA_8K);
-    // 	/* Set Packet Buffer Size to 16k. */
-    // 	E1000_WRITE_REG(hw, E1000_PBS, E1000_PBS_16K);
-    // }
     if adapter.hw.mac.mac_type == MacType::Mac_ich8lan {
+    	/* Set Tx and Rx buffer allocation to 8k apiece. */
         adapter.write_register(E1000_PBA, E1000_PBA_8K);
+    	/* Set Packet Buffer Size to 16k. */
         adapter.write_register(E1000_PBS, E1000_PBS_16K);
     }
 
-    // if (hw->mac.type == e1000_pchlan) {
-    // 	/* Save the NVM K1 bit setting*/
-    // 	ret_val = e1000_read_nvm(hw, E1000_NVM_K1_CONFIG, 1, &kum_cfg);
-    // 	if (ret_val)
-    // 		return ret_val;
-
-    // 	if (kum_cfg & E1000_NVM_K1_ENABLE)
-    // 		dev_spec->nvm_k1_enabled = TRUE;
-    // 	else
-    // 		dev_spec->nvm_k1_enabled = FALSE;
-    // }
     if adapter.hw.mac.mac_type == MacType::Mac_pchlan {
+    	/* Save the NVM K1 bit setting*/
         try!(adapter.nvm_read(E1000_NVM_K1_CONFIG as u16, 1, &mut kum_cfg,));
         if btst!(kum_cfg[0], E1000_NVM_K1_ENABLE as u16) {
             unsafe {
@@ -5378,26 +3425,19 @@ pub fn reset_hw_ich8lan(adapter: &mut Adapter) -> AdResult {
         }
     }
 
-    // ctrl = E1000_READ_REG(hw, E1000_CTRL);
     ctrl = adapter.read_register(E1000_CTRL);
 
-    // if (!hw->phy.ops.check_reset_block(hw)) {
-    // 	/* Full-chip reset requires MAC and PHY reset at the same
-    //   * time to make sure the interface between MAC and the
-    //   * external PHY is reset.
-    // 	 */
-    // 	ctrl |= E1000_CTRL_PHY_RST;
-    // 	/* Gate automatic PHY configuration by hardware on
-    //   * non-managed 82579
-    // 	 */
-    // 	if ((hw->mac.type == e1000_pch2lan) &&
-    // 	    !(E1000_READ_REG(hw, E1000_FWSM) & E1000_ICH_FWSM_FW_VALID))
-    // 		e1000_gate_hw_phy_config_ich8lan(hw, TRUE);
-    // }
     match adapter.check_reset_block() {
         Ok(true) => (),
         Ok(false) => {
+    	    /* Full-chip reset requires MAC and PHY reset at the same
+             * time to make sure the interface between MAC and the
+             * external PHY is reset.
+    	     */
             ctrl |= E1000_CTRL_PHY_RST;
+    	    /* Gate automatic PHY configuration by hardware on
+             * non-managed 82579
+    	     */
             if adapter.hw.mac.mac_type == MacType::Mac_pch2lan
                 && !btst!(adapter.read_register(E1000_FWSM), E1000_ICH_FWSM_FW_VALID)
             {
@@ -5409,23 +3449,13 @@ pub fn reset_hw_ich8lan(adapter: &mut Adapter) -> AdResult {
         }
     }
 
-    // ret_val = e1000_acquire_swflag_ich8lan(hw);
-    // DEBUGOUT("Issuing a global reset to ich8lan\n");
-    // E1000_WRITE_REG(hw, E1000_CTRL, (ctrl | E1000_CTRL_RST));
-    // /* cannot issue a flush here because it hangs the hardware */
-    // msec_delay(20);
     let swflag = acquire_swflag_ich8lan(adapter);
     e1000_println!("Issuing a global reset to ich8lan");
     adapter.write_register(E1000_CTRL, ctrl | E1000_CTRL_RST);
+    /* cannot issue a flush here because it hangs the hardware */
     do_msec_delay(20);
 
-    // /* Set Phy Config Counter to 50msec */
-    // if (hw->mac.type == e1000_pch2lan) {
-    // 	reg = E1000_READ_REG(hw, E1000_FEXTNVM3);
-    // 	reg &= ~E1000_FEXTNVM3_PHY_CFG_COUNTER_MASK;
-    // 	reg |= E1000_FEXTNVM3_PHY_CFG_COUNTER_50MSEC;
-    // 	E1000_WRITE_REG(hw, E1000_FEXTNVM3, reg);
-    // }
+    /* Set Phy Config Counter to 50msec */
     if adapter.hw.mac.mac_type == MacType::Mac_pch2lan {
         reg = adapter.read_register(E1000_FEXTNVM3);
         reg &= !E1000_FEXTNVM3_PHY_CFG_COUNTER_MASK;
@@ -5433,18 +3463,6 @@ pub fn reset_hw_ich8lan(adapter: &mut Adapter) -> AdResult {
         adapter.write_register(E1000_FEXTNVM3, reg);
     }
 
-    // if (!ret_val)
-    // 	E1000_MUTEX_UNLOCK(&hw->dev_spec.ich8lan.swflag_mutex);
-    // if swflag.is_ok() {
-    //     e1000_mutex_unlock!((adapter.hw.dev_spec.ich8lan.swflag_mutex));
-    // } else {
-    //     e1000_println!("{:?}", swflag.err().unwrap());
-    // }
-
-    // if (ctrl & E1000_CTRL_PHY_RST) {
-    // 	ret_val = hw->phy.ops.get_cfg_done(hw);
-    // 	if (ret_val)
-    // 		return ret_val;
     if btst!(ctrl, E1000_CTRL_PHY_RST) {
         try!(
             adapter
@@ -5457,32 +3475,20 @@ pub fn reset_hw_ich8lan(adapter: &mut Adapter) -> AdResult {
         );
         try!(post_phy_reset_ich8lan(adapter));
     }
-    // 	ret_val = e1000_post_phy_reset_ich8lan(hw);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // }
 
     /* For PCH, this write will make sure that any noise
      * will be detected as a CRC error and be dropped rather than show up
      * as a bad packet to the DMA engine.
      */
-    // if (hw->mac.type == e1000_pchlan)
-    // 	E1000_WRITE_REG(hw, E1000_CRC_OFFSET, 0x65656565);
     if adapter.hw.mac.mac_type == MacType::Mac_pchlan {
         adapter.write_register(E1000_CRC_OFFSET, 0x65656565);
     }
-    // E1000_WRITE_REG(hw, E1000_IMC, 0xffffffff);
-    // E1000_READ_REG(hw, E1000_ICR);
 
     adapter.write_register(E1000_IMC, 0xFFFFFFFF);
     adapter.read_register(E1000_ICR);
 
-    // reg = E1000_READ_REG(hw, E1000_KABGTXD);
-    // reg |= E1000_KABGTXD_BGSQLBIAS;
-    // E1000_WRITE_REG(hw, E1000_KABGTXD, reg);
     adapter.set_register_bit(E1000_KABGTXD, E1000_KABGTXD_BGSQLBIAS);
 
-    // return E1000_SUCCESS;
     Ok(())
 }
 
@@ -5499,24 +3505,13 @@ pub fn reset_hw_ich8lan(adapter: &mut Adapter) -> AdResult {
 pub fn init_hw_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
 
-    // struct e1000_mac_info *mac = &hw->mac;
-    // u32 ctrl_ext, txdctl, snoop;
-    // s32 ret_val;
-    // u16 i;
     let mut ctrl_ext: u32;
     let mut txdctl: u32;
     let mut snoop: u32;
 
-    // DEBUGFUNC("e1000_init_hw_ich8lan");
-
-    // e1000_initialize_hw_bits_ich8lan(hw);
     initialize_hw_bits_ich8lan(adapter);
 
     /* Initialize identification LED */
-    // ret_val = mac->ops.id_led_init(hw);
-    // /* An error is not fatal and we should not stop init due to this */
-    // if (ret_val)
-    // 	DEBUGOUT("Error initializing identification LED\n");
     if let Err(e) = adapter
         .hw
         .mac
@@ -5529,7 +3524,6 @@ pub fn init_hw_ich8lan(adapter: &mut Adapter) -> AdResult {
     }
 
     /* Setup the receive address. */
-    // e1000_init_rx_addrs_generic(hw, mac->rar_entry_count);
     if let Err(e) =
         e1000_mac::init_rx_addrs_generic(adapter, adapter.hw.mac.rar_entry_count as usize)
     {
@@ -5537,9 +3531,6 @@ pub fn init_hw_ich8lan(adapter: &mut Adapter) -> AdResult {
     }
 
     /* Zero out the Multicast HASH table */
-    // DEBUGOUT("Zeroing the MTA\n");
-    // for (i = 0; i < mac->mta_reg_count; i++)
-    // 	E1000_WRITE_REG_ARRAY(hw, E1000_MTA, i, 0);
     for i in 0..adapter.hw.mac.mta_reg_count as u32 {
         do_write_register_array(adapter, E1000_MTA, i, 0);
     }
@@ -5548,20 +3539,11 @@ pub fn init_hw_ich8lan(adapter: &mut Adapter) -> AdResult {
      * the ME.  Disable wakeup by clearing the host wakeup bit.
      * Reset the phy after disabling host wakeup to reset the Rx buffer.
      */
-    // if (hw->phy.type == e1000_phy_82578) {
-    // 	hw->phy.ops.read_reg(hw, BM_PORT_GEN_CFG, &i);
-    // 	i &= ~BM_WUC_HOST_WU_BIT;
-    // 	hw->phy.ops.write_reg(hw, BM_PORT_GEN_CFG, i);
-    // 	ret_val = e1000_phy_hw_reset_ich8lan(hw);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // }
     if adapter.hw.phy.phy_type == PhyType::Type_82578 {
         unsupported!();
     }
 
     /* Setup link and flow control */
-    // ret_val = mac->ops.setup_link(hw);
     let setup_link_result = adapter
         .hw
         .mac
@@ -5571,23 +3553,11 @@ pub fn init_hw_ich8lan(adapter: &mut Adapter) -> AdResult {
         .and_then(|f| f(adapter));
 
     /* Set the transmit descriptor write-back policy for both queues */
-    // txdctl = E1000_READ_REG(hw, E1000_TXDCTL(0));
-    // txdctl = ((txdctl & ~E1000_TXDCTL_WTHRESH) |
-    // 	  E1000_TXDCTL_FULL_TX_DESC_WB);
-    // txdctl = ((txdctl & ~E1000_TXDCTL_PTHRESH) |
-    // 	  E1000_TXDCTL_MAX_TX_DESC_PREFETCH);
-    // E1000_WRITE_REG(hw, E1000_TXDCTL(0), txdctl);
     txdctl = adapter.read_register(E1000_TXDCTL(0));
     txdctl = (txdctl & !E1000_TXDCTL_WTHRESH) | E1000_TXDCTL_FULL_TX_DESC_WB;
     txdctl = (txdctl & !E1000_TXDCTL_PTHRESH) | E1000_TXDCTL_MAX_TX_DESC_PREFETCH;
     adapter.write_register(E1000_TXDCTL(0), txdctl);
 
-    // txdctl = E1000_READ_REG(hw, E1000_TXDCTL(1));
-    // txdctl = ((txdctl & ~E1000_TXDCTL_WTHRESH) |
-    // 	  E1000_TXDCTL_FULL_TX_DESC_WB);
-    // txdctl = ((txdctl & ~E1000_TXDCTL_PTHRESH) |
-    // 	  E1000_TXDCTL_MAX_TX_DESC_PREFETCH);
-    // E1000_WRITE_REG(hw, E1000_TXDCTL(1), txdctl);
     txdctl = adapter.read_register(E1000_TXDCTL(1));
     txdctl = (txdctl & !E1000_TXDCTL_WTHRESH) | E1000_TXDCTL_FULL_TX_DESC_WB;
     txdctl = (txdctl & !E1000_TXDCTL_PTHRESH) | E1000_TXDCTL_MAX_TX_DESC_PREFETCH;
@@ -5596,22 +3566,14 @@ pub fn init_hw_ich8lan(adapter: &mut Adapter) -> AdResult {
     /* ICH8 has opposite polarity of no_snoop bits.
      * By default, we should use snoop behavior.
      */
-    // if (mac->type == e1000_ich8lan)
-    // 	snoop = PCIE_ICH8_SNOOP_ALL;
-    // else
-    // 	snoop = (u32) ~(PCIE_NO_SNOOP_ALL);
     if adapter.hw.mac.mac_type == MacType::Mac_ich8lan {
         snoop = PCIE_ICH8_SNOOP_ALL;
     } else {
         snoop = (!PCIE_NO_SNOOP_ALL) as u32;
     }
 
-    // e1000_set_pcie_no_snoop_generic(hw, snoop);
     e1000_mac::set_pcie_no_snoop_generic(adapter, snoop);
 
-    // ctrl_ext = E1000_READ_REG(hw, E1000_CTRL_EXT);
-    // ctrl_ext |= E1000_CTRL_EXT_RO_DIS;
-    // E1000_WRITE_REG(hw, E1000_CTRL_EXT, ctrl_ext);
     adapter.set_register_bit(E1000_CTRL_EXT, E1000_CTRL_EXT_RO_DIS);
 
     /* Clear all of the statistics registers (clear on read).  It is
@@ -5619,10 +3581,8 @@ pub fn init_hw_ich8lan(adapter: &mut Adapter) -> AdResult {
      * because the symbol error count will increment wildly if there
      * is no link.
      */
-    // e1000_clear_hw_cntrs_ich8lan(hw);
     try!(clear_hw_cntrs_ich8lan(adapter));
 
-    // return ret_val;
     setup_link_result
 }
 
@@ -5632,44 +3592,26 @@ pub fn init_hw_ich8lan(adapter: &mut Adapter) -> AdResult {
 /// Sets/Clears required hardware bits necessary for correctly setting up the
 /// hardware for transmit and receive.
 pub fn initialize_hw_bits_ich8lan(adapter: &mut Adapter) {
-    // DEBUGFUNC("e1000_initialize_hw_bits_ich8lan");
     e1000_println!();
 
-    // u32 reg;
     let mut reg: u32;
 
     /* Extended Device Control */
-    // reg = E1000_READ_REG(hw, E1000_CTRL_EXT);
-    // reg |= (1 << 22);
-    // /* Enable PHY low-power state when MAC is at D3 w/o WoL */
-    // if (hw->mac.type >= e1000_pchlan)
-    // 	reg |= E1000_CTRL_EXT_PHYPDEN;
-    // E1000_WRITE_REG(hw, E1000_CTRL_EXT, reg);
     reg = adapter.read_register(E1000_CTRL_EXT);
     reg |= (1 << 22);
+    /* Enable PHY low-power state when MAC is at D3 w/o WoL */
     if adapter.is_mac(MacType::Mac_pchlan) {
         reg |= E1000_CTRL_EXT_PHYPDEN;
     }
     adapter.write_register(E1000_CTRL_EXT, reg);
 
     /* Transmit Descriptor Control 0 */
-    // reg = E1000_READ_REG(hw, E1000_TXDCTL(0));
-    // reg |= (1 << 22);
-    // E1000_WRITE_REG(hw, E1000_TXDCTL(0), reg);
     adapter.set_register_bit(E1000_TXDCTL(0), 1 << 22);
 
     /* Transmit Descriptor Control 1 */
-    // reg = E1000_READ_REG(hw, E1000_TXDCTL(1));
-    // reg |= (1 << 22);
-    // E1000_WRITE_REG(hw, E1000_TXDCTL(1), reg);
     adapter.set_register_bit(E1000_TXDCTL(1), 1 << 22);
 
     /* Transmit Arbitration Control 0 */
-    // reg = E1000_READ_REG(hw, E1000_TARC(0));
-    // if (hw->mac.type == e1000_ich8lan)
-    // 	reg |= (1 << 28) | (1 << 29);
-    // reg |= (1 << 23) | (1 << 24) | (1 << 26) | (1 << 27);
-    // E1000_WRITE_REG(hw, E1000_TARC(0), reg);
     reg = adapter.read_register(E1000_TARC(0));
     if adapter.is_mac(MacType::Mac_ich8lan) {
         reg |= (1 << 28) | (1 << 29);
@@ -5678,13 +3620,6 @@ pub fn initialize_hw_bits_ich8lan(adapter: &mut Adapter) {
     adapter.write_register(E1000_TARC(0), reg);
 
     /* Transmit Arbitration Control 1 */
-    // reg = E1000_READ_REG(hw, E1000_TARC(1));
-    // if (E1000_READ_REG(hw, E1000_TCTL) & E1000_TCTL_MULR)
-    // 	reg &= ~(1 << 28);
-    // else
-    // 	reg |= (1 << 28);
-    // reg |= (1 << 24) | (1 << 26) | (1 << 30);
-    // E1000_WRITE_REG(hw, E1000_TARC(1), reg);
     reg = adapter.read_register(E1000_TARC(1));
     if btst!(adapter.read_register(E1000_TCTL), E1000_TCTL_MULR) {
         reg &= !(1 << 28);
@@ -5695,11 +3630,6 @@ pub fn initialize_hw_bits_ich8lan(adapter: &mut Adapter) {
     adapter.write_register(E1000_TARC(1), reg);
 
     /* Device Status */
-    // if (hw->mac.type == e1000_ich8lan) {
-    // 	reg = E1000_READ_REG(hw, E1000_STATUS);
-    // 	reg &= ~(1U << 31);
-    // 	E1000_WRITE_REG(hw, E1000_STATUS, reg);
-    // }
     if adapter.is_mac(MacType::Mac_ich8lan) {
         adapter.clear_register_bit(E1000_STATUS, 1u32 << 31);
     }
@@ -5707,38 +3637,23 @@ pub fn initialize_hw_bits_ich8lan(adapter: &mut Adapter) {
     /* work-around descriptor data corruption issue during nfs v2 udp
      * traffic, just disable the nfs filtering capability
      */
-    // reg = E1000_READ_REG(hw, E1000_RFCTL);
-    // reg |= (E1000_RFCTL_NFSW_DIS | E1000_RFCTL_NFSR_DIS);
     reg = adapter.read_register(E1000_RFCTL);
     reg |= E1000_RFCTL_NFSW_DIS | E1000_RFCTL_NFSR_DIS;
 
     /* Disable IPv6 extension header parsing because some malformed
      * IPv6 headers can hang the Rx.
      */
-    // if (hw->mac.type == e1000_ich8lan)
-    // 	reg |= (E1000_RFCTL_IPV6_EX_DIS | E1000_RFCTL_NEW_IPV6_EXT_DIS);
     if adapter.is_mac(MacType::Mac_ich8lan) {
         reg |= E1000_RFCTL_IPV6_EX_DIS | E1000_RFCTL_NEW_IPV6_EXT_DIS;
     }
 
-    // E1000_WRITE_REG(hw, E1000_RFCTL, reg);
     adapter.write_register(E1000_RFCTL, reg);
 
     /* Enable ECC on Lynxpoint */
-    // if (hw->mac.type >= e1000_pch_lpt) {
-    // 	reg = E1000_READ_REG(hw, E1000_PBECCSTS);
-    // 	reg |= E1000_PBECCSTS_ECC_ENABLE;
-    // 	E1000_WRITE_REG(hw, E1000_PBECCSTS, reg);
-    // 	reg = E1000_READ_REG(hw, E1000_CTRL);
-    // 	reg |= E1000_CTRL_MEHE;
-    // 	E1000_WRITE_REG(hw, E1000_CTRL, reg);
-    // }
     if adapter.hw.mac.mac_type >= MacType::Mac_pch_lpt {
         adapter.set_register_bit(E1000_PBECCSTS, E1000_PBECCSTS_ECC_ENABLE);
         adapter.set_register_bit(E1000_CTRL, E1000_CTRL_MEHE);
     }
-
-    // return;
 }
 
 /// e1000_setup_link_ich8lan - Setup flow control and link settings
@@ -5751,11 +3666,7 @@ pub fn initialize_hw_bits_ich8lan(adapter: &mut Adapter) {
 /// and the transmitter and receiver are not enabled.
 pub fn setup_link_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
-    // s32 ret_val;
-    // DEBUGFUNC("e1000_setup_link_ich8lan");
 
-    // if (hw->phy.ops.check_reset_block(hw))
-    // 	return E1000_SUCCESS;
     match adapter.check_reset_block() {
         Ok(true) => return Ok(()),
         Ok(false) => (),
@@ -5766,8 +3677,6 @@ pub fn setup_link_ich8lan(adapter: &mut Adapter) -> AdResult {
      * the default flow control setting, so we explicitly
      * set it to full.
      */
-    // if (hw->fc.requested_mode == e1000_fc_default)
-    // 	hw->fc.requested_mode = e1000_fc_full;
     if adapter.hw.fc.requested_mode == FcMode::Default {
         adapter.hw.fc.requested_mode = FcMode::Full;
     }
@@ -5775,20 +3684,14 @@ pub fn setup_link_ich8lan(adapter: &mut Adapter) -> AdResult {
     /* Save off the requested flow control mode for use later.  Depending
      * on the link partner's capabilities, we may or may not use this mode.
      */
-    // hw->fc.current_mode = hw->fc.requested_mode;
     adapter.hw.fc.current_mode = adapter.hw.fc.requested_mode;
 
-    // DEBUGOUT1("After fix-ups FlowControl is now = %x\n",
-    // 	hw->fc.current_mode);
     e1000_println!(
         "After fix-ups FlowControl is now {:?}",
         adapter.hw.fc.current_mode
     );
 
     /* Continue to configure the copper link. */
-    // ret_val = hw->mac.ops.setup_physical_interface(hw);
-    // if (ret_val)
-    // 	return ret_val;
     try!(
         adapter
             .hw
@@ -5799,20 +3702,8 @@ pub fn setup_link_ich8lan(adapter: &mut Adapter) -> AdResult {
             .and_then(|f| f(adapter))
     );
 
-    // E1000_WRITE_REG(hw, E1000_FCTTV, hw->fc.pause_time);
     adapter.write_register(E1000_FCTTV, adapter.hw.fc.pause_time as u32);
 
-    // if ((hw->phy.type == e1000_phy_82578) ||
-    //     (hw->phy.type == e1000_phy_82579) ||
-    //     (hw->phy.type == e1000_phy_i217) ||
-    //     (hw->phy.type == e1000_phy_82577)) {
-    // 	E1000_WRITE_REG(hw, E1000_FCRTV_PCH, hw->fc.refresh_time);
-    // 	ret_val = hw->phy.ops.write_reg(hw,
-    // 				     PHY_REG(BM_PORT_CTRL_PAGE, 27),
-    // 				     hw->fc.pause_time);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // }
     if [
         PhyType::Type_82578,
         PhyType::Type_82579,
@@ -5823,7 +3714,6 @@ pub fn setup_link_ich8lan(adapter: &mut Adapter) -> AdResult {
         adapter.write_register(E1000_FCRTV_PCH, adapter.hw.fc.refresh_time as u32);
         try!(adapter.phy_write_reg(fn_phy_reg(BM_PORT_CTRL_PAGE, 27), adapter.hw.fc.pause_time,));
     }
-    // return e1000_set_fc_watermarks_generic(hw);
     e1000_mac::set_fc_watermarks_generic(adapter);
     Ok(())
 }
@@ -5837,86 +3727,6 @@ pub fn setup_link_ich8lan(adapter: &mut Adapter) -> AdResult {
 pub fn setup_copper_link_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
     incomplete_return!();
-
-    // u32 ctrl;
-    // s32 ret_val;
-    // u16 reg_data;
-
-    // DEBUGFUNC("e1000_setup_copper_link_ich8lan");
-
-    // ctrl = E1000_READ_REG(hw, E1000_CTRL);
-    // ctrl |= E1000_CTRL_SLU;
-    // ctrl &= ~(E1000_CTRL_FRCSPD | E1000_CTRL_FRCDPX);
-    // E1000_WRITE_REG(hw, E1000_CTRL, ctrl);
-
-    // /* Set the mac to wait the maximum time between each iteration
-    //  * and increase the max iterations when polling the phy;
-    //  * this fixes erroneous timeouts at 10Mbps.
-    //  */
-    // ret_val = e1000_write_kmrn_reg_generic(hw, E1000_KMRNCTRLSTA_TIMEOUTS,
-    // 				       0xFFFF);
-    // if (ret_val)
-    // 	return ret_val;
-    // ret_val = e1000_read_kmrn_reg_generic(hw,
-    // 				      E1000_KMRNCTRLSTA_INBAND_PARAM,
-    // 				      &reg_data);
-    // if (ret_val)
-    // 	return ret_val;
-    // reg_data |= 0x3F;
-    // ret_val = e1000_write_kmrn_reg_generic(hw,
-    // 				       E1000_KMRNCTRLSTA_INBAND_PARAM,
-    // 				       reg_data);
-    // if (ret_val)
-    // 	return ret_val;
-
-    // switch (hw->phy.type) {
-    // case e1000_phy_igp_3:
-    // 	ret_val = e1000_copper_link_setup_igp(hw);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // 	break;
-    // case e1000_phy_bm:
-    // case e1000_phy_82578:
-    // 	ret_val = e1000_copper_link_setup_m88(hw);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // 	break;
-    // case e1000_phy_82577:
-    // case e1000_phy_82579:
-    // 	ret_val = e1000_copper_link_setup_82577(hw);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // 	break;
-    // case e1000_phy_ife:
-    // 	ret_val = hw->phy.ops.read_reg(hw, IFE_PHY_MDIX_CONTROL,
-    // 				       &reg_data);
-    // 	if (ret_val)
-    // 		return ret_val;
-
-    // 	reg_data &= ~IFE_PMC_AUTO_MDIX;
-
-    // 	switch (hw->phy.mdix) {
-    // 	case 1:
-    // 		reg_data &= ~IFE_PMC_FORCE_MDIX;
-    // 		break;
-    // 	case 2:
-    // 		reg_data |= IFE_PMC_FORCE_MDIX;
-    // 		break;
-    // 	case 0:
-    // 	default:
-    // 		reg_data |= IFE_PMC_AUTO_MDIX;
-    // 		break;
-    // 	}
-    // 	ret_val = hw->phy.ops.write_reg(hw, IFE_PHY_MDIX_CONTROL,
-    // 					reg_data);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // 	break;
-    // default:
-    // 	break;
-    // }
-
-    // return e1000_setup_copper_link_generic(hw);
 }
 
 /// e1000_setup_copper_link_pch_lpt - Configure MAC/PHY interface
@@ -5928,26 +3738,15 @@ pub fn setup_copper_link_ich8lan(adapter: &mut Adapter) -> AdResult {
 pub fn setup_copper_link_pch_lpt(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
 
-    // u32 ctrl;
-    // s32 ret_val;
-    // DEBUGFUNC("e1000_setup_copper_link_pch_lpt");
     let mut ctrl: u32;
 
-    // ctrl = E1000_READ_REG(hw, E1000_CTRL);
-    // ctrl |= E1000_CTRL_SLU;
-    // ctrl &= ~(E1000_CTRL_FRCSPD | E1000_CTRL_FRCDPX);
-    // E1000_WRITE_REG(hw, E1000_CTRL, ctrl);
     ctrl = adapter.read_register(E1000_CTRL);
     ctrl |= E1000_CTRL_SLU;
     ctrl &= !(E1000_CTRL_FRCSPD | E1000_CTRL_FRCDPX);
     adapter.write_register(E1000_CTRL, ctrl);
 
-    // ret_val = e1000_copper_link_setup_82577(hw);
-    // if (ret_val)
-    // 	return ret_val;
     try!(e1000_phy::copper_link_setup_82577(adapter));
 
-    // return e1000_setup_copper_link_generic(hw);
     e1000_phy::setup_copper_link_generic(adapter)
 }
 
@@ -5966,24 +3765,12 @@ pub fn get_link_up_info_ich8lan(
 ) -> AdResult {
     e1000_println!();
 
-    // s32 ret_val;
-
-    // DEBUGFUNC("e1000_get_link_up_info_ich8lan");
-
-    // ret_val = e1000_get_speed_and_duplex_copper_generic(hw, speed, duplex);
-    // if (ret_val)
-    // 	return ret_val;
     try!(e1000_mac::get_speed_and_duplex_copper_generic(
         adapter,
         speed,
         duplex,
     ));
 
-    // if ((hw->mac.type == e1000_ich8lan) &&
-    //     (hw->phy.type == e1000_phy_igp_3) &&
-    //     (*speed == SPEED_1000)) {
-    // 	ret_val = e1000_kmrn_lock_loss_workaround_ich8lan(hw);
-    // }
     if adapter.hw.mac.mac_type == MacType::Mac_ich8lan
         && adapter.hw.phy.phy_type == PhyType::Type_igp_3
     {
@@ -6009,57 +3796,6 @@ pub fn get_link_up_info_ich8lan(
 pub fn kmrn_lock_loss_workaround_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
     incomplete_return!();
-
-    // struct e1000_dev_spec_ich8lan *dev_spec = &hw->dev_spec.ich8lan;
-    // u32 phy_ctrl;
-    // s32 ret_val;
-    // u16 i, data;
-    // bool link;
-
-    // DEBUGFUNC("e1000_kmrn_lock_loss_workaround_ich8lan");
-
-    // if (!dev_spec->kmrn_lock_loss_workaround_enabled)
-    // 	return E1000_SUCCESS;
-
-    // /* Make sure link is up before proceeding.  If not just return.
-    //  * Attempting this while link is negotiating fouled up link
-    //  * stability
-    //  */
-    // ret_val = e1000_phy_has_link_generic(hw, 1, 0, &link);
-    // if (!link)
-    // 	return E1000_SUCCESS;
-
-    // for (i = 0; i < 10; i++) {
-    // 	/* read once to clear */
-    // 	ret_val = hw->phy.ops.read_reg(hw, IGP3_KMRN_DIAG, &data);
-    // 	if (ret_val)
-    // 		return ret_val;
-    // 	/* and again to get new status */
-    // 	ret_val = hw->phy.ops.read_reg(hw, IGP3_KMRN_DIAG, &data);
-    // 	if (ret_val)
-    // 		return ret_val;
-
-    // 	/* check for PCS lock */
-    // 	if (!(data & IGP3_KMRN_DIAG_PCS_LOCK_LOSS))
-    // 		return E1000_SUCCESS;
-
-    // 	/* Issue PHY reset */
-    // 	hw->phy.ops.reset(hw);
-    // 	msec_delay_irq(5);
-    // }
-    // /* Disable GigE link negotiation */
-    // phy_ctrl = E1000_READ_REG(hw, E1000_PHY_CTRL);
-    // phy_ctrl |= (E1000_PHY_CTRL_GBE_DISABLE |
-    // 	     E1000_PHY_CTRL_NOND0A_GBE_DISABLE);
-    // E1000_WRITE_REG(hw, E1000_PHY_CTRL, phy_ctrl);
-
-    // /* Call gig speed drop workaround on Gig disable before accessing
-    //  * any PHY registers
-    //  */
-    // e1000_gig_downshift_workaround_ich8lan(hw);
-
-    // /* unable to acquire PCS lock */
-    // return -E1000_ERR_PHY;
 }
 
 /// e1000_set_kmrn_lock_loss_workaround_ich8lan - Set Kumeran workaround state
@@ -6071,19 +3807,6 @@ pub fn kmrn_lock_loss_workaround_ich8lan(adapter: &mut Adapter) -> AdResult {
 pub fn set_kmrn_lock_loss_workaround_ich8lan(adapter: &mut Adapter, state: bool) {
     e1000_println!();
     incomplete!();
-
-    // struct e1000_dev_spec_ich8lan *dev_spec = &hw->dev_spec.ich8lan;
-
-    // DEBUGFUNC("e1000_set_kmrn_lock_loss_workaround_ich8lan");
-
-    // if (hw->mac.type != e1000_ich8lan) {
-    // 	DEBUGOUT("Workaround applies to ICH8 only.\n");
-    // 	return;
-    // }
-
-    // dev_spec->kmrn_lock_loss_workaround_enabled = state;
-
-    // return;
 }
 
 /// e1000_ipg3_phy_powerdown_workaround_ich8lan - Power down workaround on D3
@@ -6097,47 +3820,6 @@ pub fn set_kmrn_lock_loss_workaround_ich8lan(adapter: &mut Adapter, state: bool)
 pub fn igp3_phy_powerdown_workaround_ich8lan(adapter: &mut Adapter) {
     e1000_println!();
     incomplete!();
-
-    // u32 reg;
-    // u16 data;
-    // u8  retry = 0;
-
-    // DEBUGFUNC("e1000_igp3_phy_powerdown_workaround_ich8lan");
-
-    // if (hw->phy.type != e1000_phy_igp_3)
-    // 	return;
-
-    // /* Try the workaround twice (if needed) */
-    // do {
-    // 	/* Disable link */
-    // 	reg = E1000_READ_REG(hw, E1000_PHY_CTRL);
-    // 	reg |= (E1000_PHY_CTRL_GBE_DISABLE |
-    // 		E1000_PHY_CTRL_NOND0A_GBE_DISABLE);
-    // 	E1000_WRITE_REG(hw, E1000_PHY_CTRL, reg);
-
-    // 	/* Call gig speed drop workaround on Gig disable before
-    //  * accessing any PHY registers
-    // 	 */
-    // 	if (hw->mac.type == e1000_ich8lan)
-    // 		e1000_gig_downshift_workaround_ich8lan(hw);
-
-    // 	/* Write VR power-down enable */
-    // 	hw->phy.ops.read_reg(hw, IGP3_VR_CTRL, &data);
-    // 	data &= ~IGP3_VR_CTRL_DEV_POWERDOWN_MODE_MASK;
-    // 	hw->phy.ops.write_reg(hw, IGP3_VR_CTRL,
-    // 			      data | IGP3_VR_CTRL_MODE_SHUTDOWN);
-
-    // 	/* Read it back and test */
-    // 	hw->phy.ops.read_reg(hw, IGP3_VR_CTRL, &data);
-    // 	data &= IGP3_VR_CTRL_DEV_POWERDOWN_MODE_MASK;
-    // 	if ((data == IGP3_VR_CTRL_MODE_SHUTDOWN) || retry)
-    // 		break;
-
-    // 	/* Issue PHY reset and repeat at most one more time */
-    // 	reg = E1000_READ_REG(hw, E1000_CTRL);
-    // 	E1000_WRITE_REG(hw, E1000_CTRL, reg | E1000_CTRL_PHY_RST);
-    // 	retry++;
-    // } while (retry);
 }
 
 /// e1000_gig_downshift_workaround_ich8lan - WoL from S5 stops working
@@ -6151,29 +3833,6 @@ pub fn igp3_phy_powerdown_workaround_ich8lan(adapter: &mut Adapter) {
 pub fn gig_downshift_workaround_ich8lan(adapter: &mut Adapter) {
     e1000_println!();
     incomplete!();
-
-    // s32 ret_val;
-    // u16 reg_data;
-
-    // DEBUGFUNC("e1000_gig_downshift_workaround_ich8lan");
-
-    // if ((hw->mac.type != e1000_ich8lan) ||
-    //     (hw->phy.type == e1000_phy_ife))
-    // 	return;
-
-    // ret_val = e1000_read_kmrn_reg_generic(hw, E1000_KMRNCTRLSTA_DIAG_OFFSET,
-    // 				      &reg_data);
-    // if (ret_val)
-    // 	return;
-    // reg_data |= E1000_KMRNCTRLSTA_DIAG_NELPBK;
-    // ret_val = e1000_write_kmrn_reg_generic(hw,
-    // 				       E1000_KMRNCTRLSTA_DIAG_OFFSET,
-    // 				       reg_data);
-    // if (ret_val)
-    // 	return;
-    // reg_data &= ~E1000_KMRNCTRLSTA_DIAG_NELPBK;
-    // e1000_write_kmrn_reg_generic(hw, E1000_KMRNCTRLSTA_DIAG_OFFSET,
-    // 			     reg_data);
 }
 
 /// e1000_suspend_workarounds_ich8lan - workarounds needed during S0->Sx
@@ -6191,127 +3850,6 @@ pub fn gig_downshift_workaround_ich8lan(adapter: &mut Adapter) {
 pub fn suspend_workarounds_ich8lan(adapter: &mut Adapter) {
     e1000_println!();
     incomplete!();
-
-    // 	struct e1000_dev_spec_ich8lan *dev_spec = &hw->dev_spec.ich8lan;
-    // 	u32 phy_ctrl;
-    // 	s32 ret_val;
-
-    // 	DEBUGFUNC("e1000_suspend_workarounds_ich8lan");
-
-    // 	phy_ctrl = E1000_READ_REG(hw, E1000_PHY_CTRL);
-    // 	phy_ctrl |= E1000_PHY_CTRL_GBE_DISABLE;
-
-    // 	if (hw->phy.type == e1000_phy_i217) {
-    // 		u16 phy_reg, device_id = hw->device_id;
-
-    // 		if ((device_id == E1000_DEV_ID_PCH_LPTLP_I218_LM) ||
-    // 		    (device_id == E1000_DEV_ID_PCH_LPTLP_I218_V) ||
-    // 		    (device_id == E1000_DEV_ID_PCH_I218_LM3) ||
-    // 		    (device_id == E1000_DEV_ID_PCH_I218_V3) ||
-    // 		    (hw->mac.type >= e1000_pch_spt)) {
-    // 			u32 fextnvm6 = E1000_READ_REG(hw, E1000_FEXTNVM6);
-
-    // 			E1000_WRITE_REG(hw, E1000_FEXTNVM6,
-    // 					fextnvm6 & ~E1000_FEXTNVM6_REQ_PLL_CLK);
-    // 		}
-
-    // 		ret_val = hw->phy.ops.acquire(hw);
-    // 		if (ret_val)
-    // 			goto out;
-
-    // 		if (!dev_spec->eee_disable) {
-    // 			u16 eee_advert;
-
-    // 			ret_val =
-    // 			    e1000_read_emi_reg_locked(hw,
-    // 						      I217_EEE_ADVERTISEMENT,
-    // 						      &eee_advert);
-    // 			if (ret_val)
-    // 				goto release;
-
-    // 			/* Disable LPLU if both link partners support 100BaseT
-    //  * EEE and 100Full is advertised on both ends of the
-    //  * link, and enable Auto Enable LPI since there will
-    //  * be no driver to enable LPI while in Sx.
-    // 			 */
-    // 			if ((eee_advert & I82579_EEE_100_SUPPORTED) &&
-    // 			    (dev_spec->eee_lp_ability &
-    // 			     I82579_EEE_100_SUPPORTED) &&
-    // 			    (hw->phy.autoneg_advertised & ADVERTISE_100_FULL)) {
-    // 				phy_ctrl &= ~(E1000_PHY_CTRL_D0A_LPLU |
-    // 					      E1000_PHY_CTRL_NOND0A_LPLU);
-
-    // 				/* Set Auto Enable LPI after link up */
-    // 				hw->phy.ops.read_reg_locked(hw,
-    // 							    I217_LPI_GPIO_CTRL,
-    // 							    &phy_reg);
-    // 				phy_reg |= I217_LPI_GPIO_CTRL_AUTO_EN_LPI;
-    // 				hw->phy.ops.write_reg_locked(hw,
-    // 							     I217_LPI_GPIO_CTRL,
-    // 							     phy_reg);
-    // 			}
-    // 		}
-
-    // 		/* For i217 Intel Rapid Start Technology support,
-    //  * when the system is going into Sx and no manageability engine
-    //  * is present, the driver must configure proxy to reset only on
-    //  * power good.  LPI (Low Power Idle) state must also reset only
-    //  * on power good, as well as the MTA (Multicast table array).
-    //  * The SMBus release must also be disabled on LCD reset.
-    // 		 */
-    // 		if (!(E1000_READ_REG(hw, E1000_FWSM) &
-    // 		      E1000_ICH_FWSM_FW_VALID)) {
-    // 			/* Enable proxy to reset only on power good. */
-    // 			hw->phy.ops.read_reg_locked(hw, I217_PROXY_CTRL,
-    // 						    &phy_reg);
-    // 			phy_reg |= I217_PROXY_CTRL_AUTO_DISABLE;
-    // 			hw->phy.ops.write_reg_locked(hw, I217_PROXY_CTRL,
-    // 						     phy_reg);
-
-    // 			/* Set bit enable LPI (EEE) to reset only on
-    //  * power good.
-    // 			*/
-    // 			hw->phy.ops.read_reg_locked(hw, I217_SxCTRL, &phy_reg);
-    // 			phy_reg |= I217_SxCTRL_ENABLE_LPI_RESET;
-    // 			hw->phy.ops.write_reg_locked(hw, I217_SxCTRL, phy_reg);
-
-    // 			/* Disable the SMB release on LCD reset. */
-    // 			hw->phy.ops.read_reg_locked(hw, I217_MEMPWR, &phy_reg);
-    // 			phy_reg &= ~I217_MEMPWR_DISABLE_SMB_RELEASE;
-    // 			hw->phy.ops.write_reg_locked(hw, I217_MEMPWR, phy_reg);
-    // 		}
-
-    // 		/* Enable MTA to reset for Intel Rapid Start Technology
-    //  * Support
-    // 		 */
-    // 		hw->phy.ops.read_reg_locked(hw, I217_CGFREG, &phy_reg);
-    // 		phy_reg |= I217_CGFREG_ENABLE_MTA_RESET;
-    // 		hw->phy.ops.write_reg_locked(hw, I217_CGFREG, phy_reg);
-
-    // release:
-    // 		hw->phy.ops.release(hw);
-    // 	}
-    // out:
-    // 	E1000_WRITE_REG(hw, E1000_PHY_CTRL, phy_ctrl);
-
-    // 	if (hw->mac.type == e1000_ich8lan)
-    // 		e1000_gig_downshift_workaround_ich8lan(hw);
-
-    // 	if (hw->mac.type >= e1000_pchlan) {
-    // 		e1000_oem_bits_config_ich8lan(hw, FALSE);
-
-    // 		/* Reset PHY to activate OEM bits on 82577/8 */
-    // 		if (hw->mac.type == e1000_pchlan)
-    // 			e1000_phy_hw_reset_generic(hw);
-
-    // 		ret_val = hw->phy.ops.acquire(hw);
-    // 		if (ret_val)
-    // 			return;
-    // 		e1000_write_smbus_addr(hw);
-    // 		hw->phy.ops.release(hw);
-    // 	}
-
-    // 	return;
 }
 
 /// e1000_resume_workarounds_pchlan - workarounds needed during Sx->S0
@@ -6326,66 +3864,6 @@ pub fn resume_workarounds_pchlan(adapter: &mut Adapter) -> u32 {
     e1000_println!();
     incomplete!();
     0
-    // 	s32 ret_val;
-
-    // 	DEBUGFUNC("e1000_resume_workarounds_pchlan");
-    // 	if (hw->mac.type < e1000_pch2lan)
-    // 		return E1000_SUCCESS;
-
-    // 	ret_val = e1000_init_phy_workarounds_pchlan(hw);
-    // 	if (ret_val) {
-    // 		DEBUGOUT1("Failed to init PHY flow ret_val=%d\n", ret_val);
-    // 		return ret_val;
-    // 	}
-
-    // 	/* For i217 Intel Rapid Start Technology support when the system
-    //  * is transitioning from Sx and no manageability engine is present
-    //  * configure SMBus to restore on reset, disable proxy, and enable
-    //  * the reset on MTA (Multicast table array).
-    // 	 */
-    // 	if (hw->phy.type == e1000_phy_i217) {
-    // 		u16 phy_reg;
-
-    // 		ret_val = hw->phy.ops.acquire(hw);
-    // 		if (ret_val) {
-    // 			DEBUGOUT("Failed to setup iRST\n");
-    // 			return ret_val;
-    // 		}
-
-    // 		/* Clear Auto Enable LPI after link up */
-    // 		hw->phy.ops.read_reg_locked(hw, I217_LPI_GPIO_CTRL, &phy_reg);
-    // 		phy_reg &= ~I217_LPI_GPIO_CTRL_AUTO_EN_LPI;
-    // 		hw->phy.ops.write_reg_locked(hw, I217_LPI_GPIO_CTRL, phy_reg);
-
-    // 		if (!(E1000_READ_REG(hw, E1000_FWSM) &
-    // 		    E1000_ICH_FWSM_FW_VALID)) {
-    // 			/* Restore clear on SMB if no manageability engine
-    //  * is present
-    // 			 */
-    // 			ret_val = hw->phy.ops.read_reg_locked(hw, I217_MEMPWR,
-    // 							      &phy_reg);
-    // 			if (ret_val)
-    // 				goto release;
-    // 			phy_reg |= I217_MEMPWR_DISABLE_SMB_RELEASE;
-    // 			hw->phy.ops.write_reg_locked(hw, I217_MEMPWR, phy_reg);
-
-    // 			/* Disable Proxy */
-    // 			hw->phy.ops.write_reg_locked(hw, I217_PROXY_CTRL, 0);
-    // 		}
-    // 		/* Enable reset on MTA */
-    // 		ret_val = hw->phy.ops.read_reg_locked(hw, I217_CGFREG,
-    // 						      &phy_reg);
-    // 		if (ret_val)
-    // 			goto release;
-    // 		phy_reg &= ~I217_CGFREG_ENABLE_MTA_RESET;
-    // 		hw->phy.ops.write_reg_locked(hw, I217_CGFREG, phy_reg);
-    // release:
-    // 		if (ret_val)
-    // 			DEBUGOUT1("Error %d in resume workarounds\n", ret_val);
-    // 		hw->phy.ops.release(hw);
-    // 		return ret_val;
-    // 	}
-    // 	return E1000_SUCCESS;
 }
 
 /// e1000_cleanup_led_ich8lan - Restore the default LED operation
@@ -6395,16 +3873,9 @@ pub fn resume_workarounds_pchlan(adapter: &mut Adapter) -> u32 {
 pub fn cleanup_led_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
 
-    // DEBUGFUNC("e1000_cleanup_led_ich8lan");
-
-    // if (hw->phy.type == e1000_phy_ife)
-    // 	return hw->phy.ops.write_reg(hw, IFE_PHY_SPECIAL_CONTROL_LED,
-    // 				     0);
     if adapter.hw.phy.phy_type == PhyType::Type_ife {
         return adapter.phy_write_reg(IFE_PHY_SPECIAL_CONTROL_LED, 0);
     }
-    // E1000_WRITE_REG(hw, E1000_LEDCTL, hw->mac.ledctl_default);
-    // return E1000_SUCCESS;
     adapter.write_register(E1000_LEDCTL, adapter.hw.mac.ledctl_default);
     Ok(())
 }
@@ -6416,11 +3887,6 @@ pub fn cleanup_led_ich8lan(adapter: &mut Adapter) -> AdResult {
 pub fn led_on_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
 
-    // DEBUGFUNC("e1000_led_on_ich8lan");
-
-    // if (hw->phy.type == e1000_phy_ife)
-    // 	return hw->phy.ops.write_reg(hw, IFE_PHY_SPECIAL_CONTROL_LED,
-    // 			(IFE_PSCL_PROBE_MODE | IFE_PSCL_PROBE_LEDS_ON));
     if adapter.hw.phy.phy_type == PhyType::Type_ife {
         return adapter.phy_write_reg(
             IFE_PHY_SPECIAL_CONTROL_LED,
@@ -6428,8 +3894,6 @@ pub fn led_on_ich8lan(adapter: &mut Adapter) -> AdResult {
         );
     }
 
-    // E1000_WRITE_REG(hw, E1000_LEDCTL, hw->mac.ledctl_mode2);
-    // return E1000_SUCCESS;
     adapter.write_register(E1000_LEDCTL, adapter.hw.mac.ledctl_mode2);
     Ok(())
 }
@@ -6439,12 +3903,9 @@ pub fn led_on_ich8lan(adapter: &mut Adapter) -> AdResult {
 ///
 /// Turn off the LEDs.
 pub fn led_off_ich8lan(adapter: &mut Adapter) -> AdResult {
-    // DEBUGFUNC("e1000_led_off_ich8lan");
+
     e1000_println!();
 
-    // if (hw->phy.type == e1000_phy_ife)
-    // 	return hw->phy.ops.write_reg(hw, IFE_PHY_SPECIAL_CONTROL_LED,
-    // 		       (IFE_PSCL_PROBE_MODE | IFE_PSCL_PROBE_LEDS_OFF));
     if adapter.hw.phy.phy_type == PhyType::Type_ife {
         return adapter.phy_write_reg(
             IFE_PHY_SPECIAL_CONTROL_LED,
@@ -6452,8 +3913,6 @@ pub fn led_off_ich8lan(adapter: &mut Adapter) -> AdResult {
         );
     }
 
-    // E1000_WRITE_REG(hw, E1000_LEDCTL, hw->mac.ledctl_mode1);
-    // return E1000_SUCCESS;
     adapter.write_register(E1000_LEDCTL, adapter.hw.mac.ledctl_mode1);
     Ok(())
 }
@@ -6465,10 +3924,6 @@ pub fn led_off_ich8lan(adapter: &mut Adapter) -> AdResult {
 pub fn setup_led_pchlan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
 
-    // DEBUGFUNC("e1000_setup_led_pchlan");
-
-    // return hw->phy.ops.write_reg(hw, HV_LED_CONFIG,
-    // 			     (u16)hw->mac.ledctl_mode1);
     adapter.phy_write_reg(HV_LED_CONFIG, adapter.hw.mac.ledctl_mode1 as u16)
 }
 
@@ -6479,10 +3934,6 @@ pub fn setup_led_pchlan(adapter: &mut Adapter) -> AdResult {
 pub fn cleanup_led_pchlan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
 
-    // DEBUGFUNC("e1000_cleanup_led_pchlan");
-
-    // return hw->phy.ops.write_reg(hw, HV_LED_CONFIG,
-    // 			     (u16)hw->mac.ledctl_default);
     adapter.phy_write_reg(HV_LED_CONFIG, adapter.hw.mac.ledctl_default as u16)
 }
 
@@ -6491,28 +3942,14 @@ pub fn cleanup_led_pchlan(adapter: &mut Adapter) -> AdResult {
 ///
 /// Turn on the LEDs.
 pub fn led_on_pchlan(adapter: &mut Adapter) -> AdResult {
-    // DEBUGFUNC("e1000_led_on_pchlan");
+
     e1000_println!();
 
-    // u16 data = (u16)hw->mac.ledctl_mode2;
-    // u32 i, led;
     let mut data: u16 = adapter.hw.mac.ledctl_mode2 as u16;
     let mut led: u32;
     /* If no link, then turn LED on by setting the invert bit
      * for each LED that's mode is "link_up" in ledctl_mode2.
      */
-    // if (!(E1000_READ_REG(hw, E1000_STATUS) & E1000_STATUS_LU)) {
-    // 	for (i = 0; i < 3; i++) {
-    // 		led = (data >> (i *  5)) & E1000_PHY_LED0_MASK;
-    // 		if ((led & E1000_PHY_LED0_MODE_MASK) !=
-    // 		    E1000_LEDCTL_MODE_LINK_UP)
-    // 			continue;
-    // 		if (led & E1000_PHY_LED0_IVRT)
-    // 			data &= ~(E1000_PHY_LED0_IVRT << (i *  5));
-    // 		else
-    // 			data |= (E1000_PHY_LED0_IVRT << (i *  5));
-    // 	}
-    // }
     if !btst!(adapter.read_register(E1000_STATUS), E1000_STATUS_LU) {
         for i in 0..3 {
             led = (data as u32) >> (i * 5);
@@ -6526,7 +3963,6 @@ pub fn led_on_pchlan(adapter: &mut Adapter) -> AdResult {
             }
         }
     }
-    // return hw->phy.ops.write_reg(hw, HV_LED_CONFIG, data);
     adapter.phy_write_reg(HV_LED_CONFIG, data)
 }
 
@@ -6537,28 +3973,12 @@ pub fn led_on_pchlan(adapter: &mut Adapter) -> AdResult {
 pub fn led_off_pchlan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
 
-    // u16 data = (u16)hw->mac.ledctl_mode1;
-    // u32 i, led;
     let mut data: u16 = adapter.hw.mac.ledctl_mode1 as u16;
     let mut led: u32;
-
-    // DEBUGFUNC("e1000_led_off_pchlan");
 
     /* If no link, then turn LED off by clearing the invert bit
      * for each LED that's mode is "link_up" in ledctl_mode1.
      */
-    // if (!(E1000_READ_REG(hw, E1000_STATUS) & E1000_STATUS_LU)) {
-    // 	for (i = 0; i < 3; i++) {
-    // 		led = (data >> (i *  5)) & E1000_PHY_LED0_MASK;
-    // 		if ((led & E1000_PHY_LED0_MODE_MASK) !=
-    // 		    E1000_LEDCTL_MODE_LINK_UP)
-    // 			continue;
-    // 		if (led & E1000_PHY_LED0_IVRT)
-    // 			data &= ~(E1000_PHY_LED0_IVRT << (i *  5));
-    // 		else
-    // 			data |= (E1000_PHY_LED0_IVRT << (i *  5));
-    // 	}
-    // }
     if !btst!(adapter.read_register(E1000_STATUS), E1000_STATUS_LU) {
         for i in 0..3 {
             led = (data as u32 >> (i * 5)) & E1000_PHY_LED0_MASK;
@@ -6572,7 +3992,6 @@ pub fn led_off_pchlan(adapter: &mut Adapter) -> AdResult {
             }
         }
     }
-    // return hw->phy.ops.write_reg(hw, HV_LED_CONFIG, data);
     adapter.phy_write_reg(HV_LED_CONFIG, data)
 }
 
@@ -6589,35 +4008,19 @@ pub fn led_off_pchlan(adapter: &mut Adapter) -> AdResult {
 pub fn get_cfg_done_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_verbose_println!();
 
-    // s32 ret_val = E1000_SUCCESS;
-    // u32 bank = 0;
-    // u32 status;
-
-    // DEBUGFUNC("e1000_get_cfg_done_ich8lan");
-
-    // e1000_get_cfg_done_generic(hw);
     if let Err(e) = e1000_phy::get_cfg_done_generic(adapter) {
         eprintln!("(IGNORE) {:?}", e);
     }
 
     /* Wait for indication from h/w that it has completed basic config */
-    // if (hw->mac.type >= e1000_ich10lan) {
-    // 	e1000_lan_init_done_ich8lan(hw);
-    // } else {
-    // 	ret_val = e1000_get_auto_rd_done_generic(hw);
-    // 	if (ret_val) {
-    // 		/* When auto config read does not complete, do not
-    //		 *  return with an error. This can happen in situations
-    //		 * where there is no eeprom and prevents getting link.
-    // 		 */
-    // 		DEBUGOUT("Auto Read Done did not complete\n");
-    // 		ret_val = E1000_SUCCESS;
-    // 	}
-    // }
     if adapter.hw.mac.mac_type >= MacType::Mac_ich10lan {
         lan_init_done_ich8lan(adapter);
     } else {
         match e1000_mac::get_auto_rd_done_generic(adapter) {
+    	    /* When auto config read does not complete, do not
+    	     * return with an error. This can happen in situations
+    	     * where there is no eeprom and prevents getting link.
+    	     */
             Ok(_) => (),
             Err(e) => {
                 eprintln!("{:?}", e);
@@ -6627,12 +4030,7 @@ pub fn get_cfg_done_ich8lan(adapter: &mut Adapter) -> AdResult {
         }
     }
 
-    // /* Clear PHY Reset Asserted bit */
-    // status = E1000_READ_REG(hw, E1000_STATUS);
-    // if (status & E1000_STATUS_PHYRA)
-    // 	E1000_WRITE_REG(hw, E1000_STATUS, status & ~E1000_STATUS_PHYRA);
-    // else
-    // 	DEBUGOUT("PHY Reset Asserted not set - needs delay\n");
+    /* Clear PHY Reset Asserted bit */
     let status = adapter.read_register(E1000_STATUS);
     if btst!(status, E1000_STATUS_PHYRA) {
         adapter.write_register(E1000_STATUS, status & !E1000_STATUS_PHYRA);
@@ -6640,19 +4038,7 @@ pub fn get_cfg_done_ich8lan(adapter: &mut Adapter) -> AdResult {
         e1000_println!("PHY Reset Asserted not set - needs delay");
     }
 
-    // /* If EEPROM is not marked present, init the IGP 3 PHY manually */
-    // if (hw->mac.type <= e1000_ich9lan) {
-    // 	if (!(E1000_READ_REG(hw, E1000_EECD) & E1000_EECD_PRES) &&
-    // 	    (hw->phy.type == e1000_phy_igp_3)) {
-    // 		e1000_phy_init_script_igp3(hw);
-    // 	}
-    // } else {
-    // 	if (e1000_valid_nvm_bank_detect_ich8lan(hw, &bank)) {
-    // 		/* Maybe we should do a basic PHY config */
-    // 		DEBUGOUT("EEPROM not present\n");
-    // 		ret_val = -E1000_ERR_CONFIG;
-    // 	}
-    // }
+    /* If EEPROM is not marked present, init the IGP 3 PHY manually */
     let mut bank: u32 = 0;
     if adapter.hw.mac.mac_type <= MacType::Mac_ich9lan {
         if !btst!(adapter.read_register(E1000_EECD), E1000_EECD_PRES)
@@ -6663,9 +4049,9 @@ pub fn get_cfg_done_ich8lan(adapter: &mut Adapter) -> AdResult {
         }
     } else {
         try!(valid_nvm_bank_detect_ich8lan(adapter, &mut bank));
+    	/* Maybe we should do a basic PHY config */
     }
 
-    // return ret_val;
     Ok(())
 }
 
@@ -6677,13 +4063,6 @@ pub fn get_cfg_done_ich8lan(adapter: &mut Adapter) -> AdResult {
 pub fn power_down_phy_copper_ich8lan(adapter: &mut Adapter) {
     e1000_println!();
     incomplete!();
-
-    // /* If the management interface is not enabled, then power down */
-    // if (!(hw->mac.ops.check_mng_mode(hw) ||
-    //       hw->phy.ops.check_reset_block(hw)))
-    // 	e1000_power_down_phy_copper(hw);
-
-    // return;
 }
 
 /// e1000_clear_hw_cntrs_ich8lan - Clear statistical counters
@@ -6694,25 +4073,9 @@ pub fn power_down_phy_copper_ich8lan(adapter: &mut Adapter) {
 pub fn clear_hw_cntrs_ich8lan(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
 
-    // u16 phy_data;
-    // s32 ret_val;
-    // DEBUGFUNC("e1000_clear_hw_cntrs_ich8lan");
     let mut phy_data: u16 = 0;
 
-    // e1000_clear_hw_cntrs_base_generic(hw);
     e1000_mac::clear_hw_cntrs_base_generic(adapter);
-
-    //     E1000_READ_REG(hw, E1000_ALGNERRC);
-    //     E1000_READ_REG(hw, E1000_RXERRC);
-    //     E1000_READ_REG(hw, E1000_TNCRS);
-    //     E1000_READ_REG(hw, E1000_CEXTERR);
-    //     E1000_READ_REG(hw, E1000_TSCTC);
-    //     E1000_READ_REG(hw, E1000_TSCTFC);
-    //     E1000_READ_REG(hw, E1000_MGTPRC);
-    //     E1000_READ_REG(hw, E1000_MGTPDC);
-    //     E1000_READ_REG(hw, E1000_MGTPTC);
-    //     E1000_READ_REG(hw, E1000_IAC);
-    //     E1000_READ_REG(hw, E1000_ICRXOC);
 
     adapter.read_register(E1000_ALGNERRC);
     adapter.read_register(E1000_RXERRC);
@@ -6727,35 +4090,6 @@ pub fn clear_hw_cntrs_ich8lan(adapter: &mut Adapter) -> AdResult {
     adapter.read_register(E1000_ICRXOC);
 
     /* Clear PHY statistics registers */
-    // if ((hw->phy.type == e1000_phy_82578) ||
-    // 	(hw->phy.type == e1000_phy_82579) ||
-    // 	(hw->phy.type == e1000_phy_i217) ||
-    // 	(hw->phy.type == e1000_phy_82577)) {
-    // 	ret_val = hw->phy.ops.acquire(hw);
-    // 	if (ret_val)
-    // 	    return;
-    // 	ret_val = hw->phy.ops.set_page(hw,
-    // 				       HV_STATS_PAGE << IGP_PAGE_SHIFT);
-    // 	if (ret_val)
-    // 	    goto release;
-    // hw->phy.ops.read_reg_page(hw, HV_SCC_UPPER, &phy_data);
-    // hw->phy.ops.read_reg_page(hw, HV_SCC_LOWER, &phy_data);
-    // hw->phy.ops.read_reg_page(hw, HV_ECOL_UPPER, &phy_data);
-    // hw->phy.ops.read_reg_page(hw, HV_ECOL_LOWER, &phy_data);
-    // hw->phy.ops.read_reg_page(hw, HV_MCC_UPPER, &phy_data);
-    // hw->phy.ops.read_reg_page(hw, HV_MCC_LOWER, &phy_data);
-    // hw->phy.ops.read_reg_page(hw, HV_LATECOL_UPPER, &phy_data);
-    // hw->phy.ops.read_reg_page(hw, HV_LATECOL_LOWER, &phy_data);
-    // hw->phy.ops.read_reg_page(hw, HV_COLC_UPPER, &phy_data);
-    // hw->phy.ops.read_reg_page(hw, HV_COLC_LOWER, &phy_data);
-    // hw->phy.ops.read_reg_page(hw, HV_DC_UPPER, &phy_data);
-    // hw->phy.ops.read_reg_page(hw, HV_DC_LOWER, &phy_data);
-    // hw->phy.ops.read_reg_page(hw, HV_TNCRS_UPPER, &phy_data);
-    // hw->phy.ops.read_reg_page(hw, HV_TNCRS_LOWER, &phy_data);
-    // release:
-    // 		hw->phy.ops.release(hw);
-    // 	}
-
     if [
         PhyType::Type_82578,
         PhyType::Type_82579,
