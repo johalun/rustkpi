@@ -15,9 +15,6 @@ extern crate kernel;
 #[macro_use]
 mod macros;
 
-#[macro_use]
-mod macros_freebsd;
-
 mod consts;
 pub use consts::*;
 

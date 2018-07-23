@@ -13,8 +13,7 @@ SYSROOTFLAG?=
 OBJDIR?=/tmp/rkpi/objs
 LIBDIR?=/tmp/rkpi/rlibs
 MODULE_SRCS!=find ${CWD}/src -name "*.rs"
-COMPILERFLAGS?=-C opt-level=3 -C debuginfo=2 -C panic=abort \
-		-C link-dead-code -C llvm-args=-ffunction-sections
+COMPILERFLAGS?=-C opt-level=3 -C debuginfo=2 -C panic=abort -C link-dead-code
 
 
 ######## KMOD VARIABLES

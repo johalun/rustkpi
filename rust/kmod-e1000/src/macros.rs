@@ -179,3 +179,14 @@ macro_rules! divide_round_up {
         ((($a) + ($b) - 1) / ($b))
     }
 }
+
+// #ifdef INVARIANTS
+// #define ASSERT_CTX_LOCK_HELD(hw) (sx_assert(iflib_ctx_lock_get(((struct e1000_osdep *)hw->back)->ctx), SX_XLOCKED))
+// #else
+// #define ASSERT_CTX_LOCK_HELD(hw)
+// #endif
+#[macro_export]
+macro_rules! assert_ctx_lock_held {
+    ($a:expr) => {
+    }
+}
