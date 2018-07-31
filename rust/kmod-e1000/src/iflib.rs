@@ -1,4 +1,3 @@
-
 use kernel;
 use kernel::ptr::NonNull;
 use kernel::sys::raw::*;
@@ -40,13 +39,13 @@ use kernel::sys::iflib_sys::ifmedia_add;
 use kernel::sys::iflib_sys::ifmedia_set;
 use kernel::sys::iflib_sys::ether_vlan_header;
 use kernel::sys::iflib_sys::ETHER_ADDR_LEN;
-use kernel::sys::iflib_sys::{IFCAP_TSO4, IFCAP_TXCSUM, IFCAP_LRO, IFCAP_RXCSUM,
-                             IFCAP_VLAN_HWFILTER, IFCAP_WOL_MAGIC, IFCAP_WOL_MCAST, IFCAP_WOL,
-                             IFCAP_VLAN_HWTSO, IFCAP_HWCSUM, IFCAP_VLAN_HWTAGGING,
-                             IFCAP_VLAN_HWCSUM, IFCAP_VLAN_MTU};
-use kernel::sys::mbuf_sys::{CSUM_TCP, CSUM_UDP, CSUM_IP_TSO};
+use kernel::sys::iflib_sys::{IFCAP_TSO4, IFCAP_HWCSUM, IFCAP_LRO, IFCAP_RXCSUM, IFCAP_TXCSUM,
+                             IFCAP_VLAN_HWCSUM, IFCAP_VLAN_HWFILTER, IFCAP_VLAN_HWTAGGING,
+                             IFCAP_VLAN_HWTSO, IFCAP_VLAN_MTU, IFCAP_WOL, IFCAP_WOL_MAGIC,
+                             IFCAP_WOL_MCAST};
+use kernel::sys::mbuf_sys::{CSUM_IP_TSO, CSUM_TCP, CSUM_UDP};
 
-use sys::e1000::{EM_MSIX_BAR, EM_MAX_SCATTER, EM_TSO_SEG_SIZE, EM_DBA_ALIGN};
+use sys::e1000::{EM_DBA_ALIGN, EM_MAX_SCATTER, EM_MSIX_BAR, EM_TSO_SEG_SIZE};
 use sys::e1000::*;
 use sys::e1000_consts::*;
 use sys::e1000::e1000_tx_desc;
@@ -68,15 +67,16 @@ pub const fn pcir_bar(x: u32) -> u32 {
     (PCIR_BARS + (x * 4))
 }
 
-pub const EM_CAPS: u32 = IFCAP_TSO4 | IFCAP_TXCSUM | IFCAP_LRO | IFCAP_RXCSUM |
-    IFCAP_VLAN_HWFILTER | IFCAP_WOL_MAGIC | IFCAP_WOL_MCAST |
-    IFCAP_WOL | IFCAP_VLAN_HWTSO | IFCAP_HWCSUM | IFCAP_VLAN_HWTAGGING |
-    IFCAP_VLAN_HWCSUM | IFCAP_VLAN_MTU;
+pub const LEM_CAPS: u32 = IFCAP_HWCSUM | IFCAP_VLAN_MTU | IFCAP_VLAN_HWTAGGING | IFCAP_VLAN_HWCSUM
+    | IFCAP_WOL | IFCAP_VLAN_HWFILTER;
 
-pub const EM_TSO_SIZE: u32 = (65535 + kernel::mem::size_of::<ether_vlan_header>() as u32);
+pub const EM_CAPS: u32 = IFCAP_HWCSUM | IFCAP_VLAN_MTU | IFCAP_VLAN_HWTAGGING | IFCAP_VLAN_HWCSUM
+    | IFCAP_WOL | IFCAP_VLAN_HWFILTER | IFCAP_TSO4 | IFCAP_LRO
+    | IFCAP_VLAN_HWTSO;
 
+pub const EM_TSO_SIZE: u32 = 65535;
 
-#[derive(Debug)]
+// #[derive(Debug)]
 pub struct IfLib {
     pub inner: NonNull<iflib_ctx>, // iflib internal struct
 }
@@ -100,7 +100,13 @@ impl IfLib {
         }
     }
 }
-
+impl kernel::fmt::Debug for IfLib {
+    fn fmt(&self, f: &mut kernel::fmt::Formatter) -> kernel::fmt::Result {
+        write!(f, "IfLib {{ inner: {:?} }}", unsafe {
+            *self.inner.as_ptr()
+        })
+    }
+}
 
 pub struct IfNet {
     pub inner: NonNull<ifnet>, // if internal struct
@@ -207,14 +213,11 @@ impl kernel::ops::DerefMut for IfNet {
 }
 impl kernel::fmt::Debug for IfNet {
     fn fmt(&self, f: &mut kernel::fmt::Formatter) -> kernel::fmt::Result {
-        write!(
-            f,
-            "IfNet {{ inner: {:?} }}",
-            unsafe { *self.inner.as_ptr() }
-        )
+        write!(f, "IfNet {{ inner: {:?} }}", unsafe {
+            *self.inner.as_ptr()
+        })
     }
 }
-
 
 pub struct IfLibShared {
     pub inner: NonNull<if_softc_ctx>,
@@ -226,14 +229,10 @@ impl IfLibShared {
         // Common
         self.isc_msix_bar = pcir_bar(EM_MSIX_BAR) as i32;
         self.isc_tx_nsegments = EM_MAX_SCATTER as i32;
-        self.isc_tx_tso_segments_max = self.isc_tx_nsegments;
-        self.isc_tx_tso_size_max = EM_TSO_SIZE as i32;
-        self.isc_tx_tso_segsize_max = EM_TSO_SEG_SIZE as i32;
         let nqs = self.num_queues(mactype);
         self.isc_nrxqsets_max = nqs;
         self.isc_ntxqsets_max = nqs;
         e1000_println!("capping queues at {}", self.isc_ntxqsets_max);
-        self.isc_tx_csum_flags = (CSUM_TCP | CSUM_UDP | CSUM_IP_TSO) as i32;
 
         if mactype >= MacType::IGB_MAC_MIN {
             unsupported!();
@@ -241,41 +240,61 @@ impl IfLibShared {
         } else if mactype >= MacType::EM_MAC_MIN {
             // I218/219 is here
             self.isc_txqsizes[0] = roundup2!(
-                ((self.isc_ntxd[0] + 1) as u32 *
-                     kernel::mem::size_of::<e1000_tx_desc>() as u32),
+                ((self.isc_ntxd[0] + 1) as u32 * kernel::mem::size_of::<e1000_tx_desc>() as u32),
                 EM_DBA_ALIGN as u32
             );
             self.isc_rxqsizes[0] = roundup2!(
-                ((self.isc_nrxd[0] + 1) as u32 *
-                     kernel::mem::size_of::<e1000_rx_desc_extended>() as u32),
+                ((self.isc_nrxd[0] + 1) as u32
+                    * kernel::mem::size_of::<e1000_rx_desc_extended>() as u32),
                 EM_DBA_ALIGN as u32
             );
             self.isc_txd_size[0] = kernel::mem::size_of::<e1000_tx_desc>() as u8;
             self.isc_rxd_size[0] = kernel::mem::size_of::<e1000_rx_desc_extended>() as u8;
+            self.isc_capabilities = EM_CAPS as i32;
             self.isc_capenable = EM_CAPS as i32;
+            self.isc_tx_tso_segments_max = EM_MAX_SCATTER as i32;
+            self.isc_tx_tso_size_max = EM_TSO_SIZE as i32;
+            self.isc_tx_tso_segsize_max = EM_TSO_SEG_SIZE as i32;
+            /*
+             * For EM-class devices, don't enable IFCAP_{TSO4,VLAN_HWTSO}
+             * by default as we don't have workarounds for all associated
+             * silicon errata.  E. g., with several MACs such as 82573E,
+             * TSO only works at Gigabit speed and otherwise can cause the
+             * hardware to hang (which also would be next to impossible to
+             * work around given that already queued TSO-using descriptors
+             * would need to be flushed and vlan(4) reconfigured at runtime
+             * in case of a link speed change).  Moreover, MACs like 82579
+             * still can hang at Gigabit even with all publicly documented
+             * TSO workarounds implemented.  Generally, the penality of
+             * these workarounds is rather high and may involve copying
+             * mbuf data around so advantages of TSO lapse.  Still, TSO may
+             * work for a few MACs of this class - at least when sticking
+             * with Gigabit - in which case users may enable TSO manually.
+             */
+            self.isc_capenable &= !(IFCAP_TSO4 | IFCAP_VLAN_HWTSO) as i32;
+
             self.isc_tx_csum_flags = (CSUM_TCP | CSUM_UDP | CSUM_IP_TSO) as i32;
             // A struct with iflib callback functions
             self.isc_txrx = &EM_TXRX as *const if_txrx;
         } else {
             // emulated device in bhyve (82545 only)
             self.isc_txqsizes[0] = roundup2!(
-                ((self.isc_ntxd[0] + 1) as u32 *
-                     kernel::mem::size_of::<e1000_tx_desc>() as u32),
+                ((self.isc_ntxd[0] + 1) as u32 * kernel::mem::size_of::<e1000_tx_desc>() as u32),
                 EM_DBA_ALIGN as u32
             );
             self.isc_rxqsizes[0] = roundup2!(
-                ((self.isc_nrxd[0] + 1) as u32 *
-                     kernel::mem::size_of::<e1000_rx_desc>() as u32),
+                ((self.isc_nrxd[0] + 1) as u32 * kernel::mem::size_of::<e1000_rx_desc>() as u32),
                 EM_DBA_ALIGN as u32
             );
             self.isc_txd_size[0] = kernel::mem::size_of::<e1000_tx_desc>() as u8;
             self.isc_rxd_size[0] = kernel::mem::size_of::<e1000_rx_desc>() as u8;
-            self.isc_capenable = EM_CAPS as i32;
+            self.isc_capenable = LEM_CAPS as i32;
+            self.isc_capabilities = LEM_CAPS as i32;
             if mactype < MacType::Mac_82543 {
                 unsupported!();
                 incomplete_return!();
             }
-            self.isc_tx_csum_flags = (CSUM_TCP | CSUM_UDP | CSUM_IP_TSO) as i32;
+            self.isc_tx_csum_flags = (CSUM_TCP | CSUM_UDP) as i32;
             self.isc_msix_bar = 0;
 
             // A struct with iflib callback functions
@@ -323,7 +342,6 @@ impl kernel::fmt::Debug for IfLibShared {
         })
     }
 }
-
 
 #[derive(Debug)]
 pub struct IfMedia {

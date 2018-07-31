@@ -157,6 +157,7 @@ pub const SO_ACCEPTFILTER: ::kernel::sys::raw::c_uint = 4096;
 pub const SO_BINTIME: ::kernel::sys::raw::c_uint = 8192;
 pub const SO_NO_OFFLOAD: ::kernel::sys::raw::c_uint = 16384;
 pub const SO_NO_DDP: ::kernel::sys::raw::c_uint = 32768;
+pub const SO_REUSEPORT_LB: ::kernel::sys::raw::c_uint = 65536;
 pub const SO_SNDBUF: ::kernel::sys::raw::c_uint = 4097;
 pub const SO_RCVBUF: ::kernel::sys::raw::c_uint = 4098;
 pub const SO_SNDLOWAT: ::kernel::sys::raw::c_uint = 4099;
@@ -443,6 +444,8 @@ pub const RSS_TYPE_UDP_IPV6: ::kernel::sys::raw::c_uint = 128;
 pub const RSS_TYPE_UDP_IPV6_EX: ::kernel::sys::raw::c_uint = 256;
 pub const RSS_KEYLEN: ::kernel::sys::raw::c_uint = 128;
 pub const IFNET_PCP_NONE: ::kernel::sys::raw::c_uint = 255;
+pub const MPLOCKED: &'static [u8; 8usize] = b"lock ; \x00";
+pub const OFFSETOF_MONITORBUF: ::kernel::sys::raw::c_uint = 256;
 pub const CR4_PGE: ::kernel::sys::raw::c_uint = 128;
 pub const INVPCID_ADDR: ::kernel::sys::raw::c_uint = 0;
 pub const INVPCID_CTX: ::kernel::sys::raw::c_uint = 1;
@@ -527,31 +530,10 @@ pub const __WORDSIZE: ::kernel::sys::raw::c_uint = 64;
 pub const WCHAR_MIN: ::kernel::sys::raw::c_int = -2147483648;
 pub const WCHAR_MAX: ::kernel::sys::raw::c_uint = 2147483647;
 pub const RSIZE_MAX: ::kernel::sys::raw::c_int = -1;
-pub const HASH_NOWAIT: ::kernel::sys::raw::c_uint = 1;
-pub const HASH_WAITOK: ::kernel::sys::raw::c_uint = 2;
-pub const HD_COLUMN_MASK: ::kernel::sys::raw::c_uint = 255;
-pub const HD_DELIM_MASK: ::kernel::sys::raw::c_uint = 65280;
-pub const HD_OMIT_COUNT: ::kernel::sys::raw::c_uint = 65536;
-pub const HD_OMIT_HEX: ::kernel::sys::raw::c_uint = 131072;
-pub const HD_OMIT_CHARS: ::kernel::sys::raw::c_uint = 262144;
-pub const LIBKERN_LEN_BCD2BIN: ::kernel::sys::raw::c_uint = 154;
-pub const LIBKERN_LEN_BIN2BCD: ::kernel::sys::raw::c_uint = 100;
-pub const LIBKERN_LEN_HEX2ASCII: ::kernel::sys::raw::c_uint = 36;
-pub const ARC4_ENTR_NONE: ::kernel::sys::raw::c_uint = 0;
-pub const ARC4_ENTR_HAVE: ::kernel::sys::raw::c_uint = 1;
-pub const ARC4_ENTR_SEED: ::kernel::sys::raw::c_uint = 2;
-pub const FNM_NOMATCH: ::kernel::sys::raw::c_uint = 1;
-pub const FNM_NOESCAPE: ::kernel::sys::raw::c_uint = 1;
-pub const FNM_PATHNAME: ::kernel::sys::raw::c_uint = 2;
-pub const FNM_PERIOD: ::kernel::sys::raw::c_uint = 4;
-pub const FNM_LEADING_DIR: ::kernel::sys::raw::c_uint = 8;
-pub const FNM_CASEFOLD: ::kernel::sys::raw::c_uint = 16;
-pub const FNM_IGNORECASE: ::kernel::sys::raw::c_uint = 16;
-pub const FNM_FILE_NAME: ::kernel::sys::raw::c_uint = 2;
 pub const BSD: ::kernel::sys::raw::c_uint = 199506;
 pub const BSD4_3: ::kernel::sys::raw::c_uint = 1;
 pub const BSD4_4: ::kernel::sys::raw::c_uint = 1;
-pub const __FreeBSD_version: ::kernel::sys::raw::c_uint = 1200064;
+pub const __FreeBSD_version: ::kernel::sys::raw::c_uint = 1200074;
 pub const P_OSREL_SIGWAIT: ::kernel::sys::raw::c_uint = 700000;
 pub const P_OSREL_SIGSEGV: ::kernel::sys::raw::c_uint = 700004;
 pub const P_OSREL_MAP_ANON: ::kernel::sys::raw::c_uint = 800104;
@@ -805,6 +787,71 @@ pub const MAXPATHLEN: ::kernel::sys::raw::c_uint = 1024;
 pub const MAXSYMLINKS: ::kernel::sys::raw::c_uint = 32;
 pub const FSHIFT: ::kernel::sys::raw::c_uint = 11;
 pub const FSCALE: ::kernel::sys::raw::c_uint = 2048;
+pub const CPU_SETSIZE: ::kernel::sys::raw::c_uint = 256;
+pub const CPU_MAXSIZE: ::kernel::sys::raw::c_uint = 256;
+pub const PRIO_MIN: ::kernel::sys::raw::c_int = -20;
+pub const PRIO_MAX: ::kernel::sys::raw::c_uint = 20;
+pub const PRIO_PROCESS: ::kernel::sys::raw::c_uint = 0;
+pub const PRIO_PGRP: ::kernel::sys::raw::c_uint = 1;
+pub const PRIO_USER: ::kernel::sys::raw::c_uint = 2;
+pub const RUSAGE_SELF: ::kernel::sys::raw::c_uint = 0;
+pub const RUSAGE_CHILDREN: ::kernel::sys::raw::c_int = -1;
+pub const RUSAGE_THREAD: ::kernel::sys::raw::c_uint = 1;
+pub const RLIMIT_CPU: ::kernel::sys::raw::c_uint = 0;
+pub const RLIMIT_FSIZE: ::kernel::sys::raw::c_uint = 1;
+pub const RLIMIT_DATA: ::kernel::sys::raw::c_uint = 2;
+pub const RLIMIT_STACK: ::kernel::sys::raw::c_uint = 3;
+pub const RLIMIT_CORE: ::kernel::sys::raw::c_uint = 4;
+pub const RLIMIT_RSS: ::kernel::sys::raw::c_uint = 5;
+pub const RLIMIT_MEMLOCK: ::kernel::sys::raw::c_uint = 6;
+pub const RLIMIT_NPROC: ::kernel::sys::raw::c_uint = 7;
+pub const RLIMIT_NOFILE: ::kernel::sys::raw::c_uint = 8;
+pub const RLIMIT_SBSIZE: ::kernel::sys::raw::c_uint = 9;
+pub const RLIMIT_VMEM: ::kernel::sys::raw::c_uint = 10;
+pub const RLIMIT_AS: ::kernel::sys::raw::c_uint = 10;
+pub const RLIMIT_NPTS: ::kernel::sys::raw::c_uint = 11;
+pub const RLIMIT_SWAP: ::kernel::sys::raw::c_uint = 12;
+pub const RLIMIT_KQUEUES: ::kernel::sys::raw::c_uint = 13;
+pub const RLIMIT_UMTXP: ::kernel::sys::raw::c_uint = 14;
+pub const RLIM_NLIMITS: ::kernel::sys::raw::c_uint = 15;
+pub const CP_USER: ::kernel::sys::raw::c_uint = 0;
+pub const CP_NICE: ::kernel::sys::raw::c_uint = 1;
+pub const CP_SYS: ::kernel::sys::raw::c_uint = 2;
+pub const CP_INTR: ::kernel::sys::raw::c_uint = 3;
+pub const CP_IDLE: ::kernel::sys::raw::c_uint = 4;
+pub const CPUSTATES: ::kernel::sys::raw::c_uint = 5;
+pub const PC_PTI_STACK_SZ: ::kernel::sys::raw::c_uint = 16;
+pub const PC_DBREG_CMD_NONE: ::kernel::sys::raw::c_uint = 0;
+pub const PC_DBREG_CMD_LOAD: ::kernel::sys::raw::c_uint = 1;
+pub const OFFSETOF_CURTHREAD: ::kernel::sys::raw::c_uint = 0;
+pub const OFFSETOF_CURPCB: ::kernel::sys::raw::c_uint = 32;
+pub const DPCPU_SETNAME: &'static [u8; 9usize] = b"set_pcpu\x00";
+pub const DPCPU_SYMPREFIX: &'static [u8; 12usize] = b"pcpu_entry_\x00";
+pub const DPCPU_MODMIN: ::kernel::sys::raw::c_uint = 2048;
+pub const UMA_PCPU_ALLOC_SIZE: ::kernel::sys::raw::c_uint = 4096;
+pub const HASH_NOWAIT: ::kernel::sys::raw::c_uint = 1;
+pub const HASH_WAITOK: ::kernel::sys::raw::c_uint = 2;
+pub const HD_COLUMN_MASK: ::kernel::sys::raw::c_uint = 255;
+pub const HD_DELIM_MASK: ::kernel::sys::raw::c_uint = 65280;
+pub const HD_OMIT_COUNT: ::kernel::sys::raw::c_uint = 65536;
+pub const HD_OMIT_HEX: ::kernel::sys::raw::c_uint = 131072;
+pub const HD_OMIT_CHARS: ::kernel::sys::raw::c_uint = 262144;
+pub const GETENV_UNSIGNED: ::kernel::sys::raw::c_uint = 0;
+pub const GETENV_SIGNED: ::kernel::sys::raw::c_uint = 1;
+pub const LIBKERN_LEN_BCD2BIN: ::kernel::sys::raw::c_uint = 154;
+pub const LIBKERN_LEN_BIN2BCD: ::kernel::sys::raw::c_uint = 100;
+pub const LIBKERN_LEN_HEX2ASCII: ::kernel::sys::raw::c_uint = 36;
+pub const ARC4_ENTR_NONE: ::kernel::sys::raw::c_uint = 0;
+pub const ARC4_ENTR_HAVE: ::kernel::sys::raw::c_uint = 1;
+pub const ARC4_ENTR_SEED: ::kernel::sys::raw::c_uint = 2;
+pub const FNM_NOMATCH: ::kernel::sys::raw::c_uint = 1;
+pub const FNM_NOESCAPE: ::kernel::sys::raw::c_uint = 1;
+pub const FNM_PATHNAME: ::kernel::sys::raw::c_uint = 2;
+pub const FNM_PERIOD: ::kernel::sys::raw::c_uint = 4;
+pub const FNM_LEADING_DIR: ::kernel::sys::raw::c_uint = 8;
+pub const FNM_CASEFOLD: ::kernel::sys::raw::c_uint = 16;
+pub const FNM_IGNORECASE: ::kernel::sys::raw::c_uint = 16;
+pub const FNM_FILE_NAME: ::kernel::sys::raw::c_uint = 2;
 pub const M_NOWAIT: ::kernel::sys::raw::c_uint = 1;
 pub const M_WAITOK: ::kernel::sys::raw::c_uint = 2;
 pub const M_ZERO: ::kernel::sys::raw::c_uint = 256;
@@ -813,8 +860,8 @@ pub const M_USE_RESERVE: ::kernel::sys::raw::c_uint = 1024;
 pub const M_NODUMP: ::kernel::sys::raw::c_uint = 2048;
 pub const M_FIRSTFIT: ::kernel::sys::raw::c_uint = 4096;
 pub const M_BESTFIT: ::kernel::sys::raw::c_uint = 8192;
+pub const M_EXEC: ::kernel::sys::raw::c_uint = 16384;
 pub const M_MAGIC: ::kernel::sys::raw::c_uint = 877983977;
-pub const M_ZERO_INVARIANTS: ::kernel::sys::raw::c_uint = 0;
 pub const DTMALLOC_PROBE_MALLOC: ::kernel::sys::raw::c_uint = 0;
 pub const DTMALLOC_PROBE_FREE: ::kernel::sys::raw::c_uint = 1;
 pub const DTMALLOC_PROBE_MAX: ::kernel::sys::raw::c_uint = 2;
@@ -842,6 +889,7 @@ pub const UMA_ZONE_NOBUCKETCACHE: ::kernel::sys::raw::c_uint = 131072;
 pub const UMA_ZONE_INHERIT: ::kernel::sys::raw::c_uint = 41272;
 pub const UMA_ALIGN_CACHE: ::kernel::sys::raw::c_int = -1;
 pub const UMA_SLAB_BOOT: ::kernel::sys::raw::c_uint = 1;
+pub const UMA_SLAB_KRWX: ::kernel::sys::raw::c_uint = 2;
 pub const UMA_SLAB_KERNEL: ::kernel::sys::raw::c_uint = 4;
 pub const UMA_SLAB_PRIV: ::kernel::sys::raw::c_uint = 8;
 pub const UMA_SLAB_OFFP: ::kernel::sys::raw::c_uint = 16;
@@ -857,7 +905,7 @@ pub const M_BCAST: ::kernel::sys::raw::c_uint = 16;
 pub const M_MCAST: ::kernel::sys::raw::c_uint = 32;
 pub const M_PROMISC: ::kernel::sys::raw::c_uint = 64;
 pub const M_VLANTAG: ::kernel::sys::raw::c_uint = 128;
-pub const M_UNUSED_8: ::kernel::sys::raw::c_uint = 256;
+pub const M_NOMAP: ::kernel::sys::raw::c_uint = 256;
 pub const M_NOFREE: ::kernel::sys::raw::c_uint = 512;
 pub const M_TSTMP: ::kernel::sys::raw::c_uint = 1024;
 pub const M_TSTMP_HPREC: ::kernel::sys::raw::c_uint = 2048;
@@ -1177,47 +1225,6 @@ pub const WORD_BIT: ::kernel::sys::raw::c_uint = 32;
 pub const MQ_PRIO_MAX: ::kernel::sys::raw::c_uint = 64;
 pub const CK_EPOCH_LENGTH: ::kernel::sys::raw::c_uint = 4;
 pub const CK_EPOCH_SENSE: ::kernel::sys::raw::c_uint = 2;
-pub const CPU_SETSIZE: ::kernel::sys::raw::c_uint = 256;
-pub const CPU_MAXSIZE: ::kernel::sys::raw::c_uint = 256;
-pub const PRIO_MIN: ::kernel::sys::raw::c_int = -20;
-pub const PRIO_MAX: ::kernel::sys::raw::c_uint = 20;
-pub const PRIO_PROCESS: ::kernel::sys::raw::c_uint = 0;
-pub const PRIO_PGRP: ::kernel::sys::raw::c_uint = 1;
-pub const PRIO_USER: ::kernel::sys::raw::c_uint = 2;
-pub const RUSAGE_SELF: ::kernel::sys::raw::c_uint = 0;
-pub const RUSAGE_CHILDREN: ::kernel::sys::raw::c_int = -1;
-pub const RUSAGE_THREAD: ::kernel::sys::raw::c_uint = 1;
-pub const RLIMIT_CPU: ::kernel::sys::raw::c_uint = 0;
-pub const RLIMIT_FSIZE: ::kernel::sys::raw::c_uint = 1;
-pub const RLIMIT_DATA: ::kernel::sys::raw::c_uint = 2;
-pub const RLIMIT_STACK: ::kernel::sys::raw::c_uint = 3;
-pub const RLIMIT_CORE: ::kernel::sys::raw::c_uint = 4;
-pub const RLIMIT_RSS: ::kernel::sys::raw::c_uint = 5;
-pub const RLIMIT_MEMLOCK: ::kernel::sys::raw::c_uint = 6;
-pub const RLIMIT_NPROC: ::kernel::sys::raw::c_uint = 7;
-pub const RLIMIT_NOFILE: ::kernel::sys::raw::c_uint = 8;
-pub const RLIMIT_SBSIZE: ::kernel::sys::raw::c_uint = 9;
-pub const RLIMIT_VMEM: ::kernel::sys::raw::c_uint = 10;
-pub const RLIMIT_AS: ::kernel::sys::raw::c_uint = 10;
-pub const RLIMIT_NPTS: ::kernel::sys::raw::c_uint = 11;
-pub const RLIMIT_SWAP: ::kernel::sys::raw::c_uint = 12;
-pub const RLIMIT_KQUEUES: ::kernel::sys::raw::c_uint = 13;
-pub const RLIMIT_UMTXP: ::kernel::sys::raw::c_uint = 14;
-pub const RLIM_NLIMITS: ::kernel::sys::raw::c_uint = 15;
-pub const CP_USER: ::kernel::sys::raw::c_uint = 0;
-pub const CP_NICE: ::kernel::sys::raw::c_uint = 1;
-pub const CP_SYS: ::kernel::sys::raw::c_uint = 2;
-pub const CP_INTR: ::kernel::sys::raw::c_uint = 3;
-pub const CP_IDLE: ::kernel::sys::raw::c_uint = 4;
-pub const CPUSTATES: ::kernel::sys::raw::c_uint = 5;
-pub const PC_PTI_STACK_SZ: ::kernel::sys::raw::c_uint = 16;
-pub const PC_DBREG_CMD_NONE: ::kernel::sys::raw::c_uint = 0;
-pub const PC_DBREG_CMD_LOAD: ::kernel::sys::raw::c_uint = 1;
-pub const OFFSETOF_CURTHREAD: ::kernel::sys::raw::c_uint = 0;
-pub const OFFSETOF_CURPCB: ::kernel::sys::raw::c_uint = 32;
-pub const DPCPU_SETNAME: &'static [u8; 9usize] = b"set_pcpu\x00";
-pub const DPCPU_SYMPREFIX: &'static [u8; 12usize] = b"pcpu_entry_\x00";
-pub const DPCPU_MODMIN: ::kernel::sys::raw::c_uint = 2048;
 pub const KTR_GEN: ::kernel::sys::raw::c_uint = 1;
 pub const KTR_NET: ::kernel::sys::raw::c_uint = 2;
 pub const KTR_DEV: ::kernel::sys::raw::c_uint = 4;
@@ -1284,6 +1291,62 @@ pub const LA_XLOCKED: ::kernel::sys::raw::c_uint = 4;
 pub const LA_RECURSED: ::kernel::sys::raw::c_uint = 8;
 pub const LA_NOTRECURSED: ::kernel::sys::raw::c_uint = 16;
 pub const LOCK_DEBUG: ::kernel::sys::raw::c_uint = 1;
+pub const EPOCH_PREEMPT: ::kernel::sys::raw::c_uint = 1;
+pub const EPOCH_LOCKED: ::kernel::sys::raw::c_uint = 2;
+pub const EPOCH_MAGIC0: ::kernel::sys::raw::c_longlong = -369634923099860979;
+pub const EPOCH_MAGIC1: ::kernel::sys::raw::c_longlong = -4981620283855208723;
+pub const LOCKSTAT_WRITER: ::kernel::sys::raw::c_uint = 0;
+pub const LOCKSTAT_READER: ::kernel::sys::raw::c_uint = 1;
+pub const MTX_DEF: ::kernel::sys::raw::c_uint = 0;
+pub const MTX_SPIN: ::kernel::sys::raw::c_uint = 1;
+pub const MTX_RECURSE: ::kernel::sys::raw::c_uint = 4;
+pub const MTX_NOWITNESS: ::kernel::sys::raw::c_uint = 8;
+pub const MTX_NOPROFILE: ::kernel::sys::raw::c_uint = 32;
+pub const MTX_NEW: ::kernel::sys::raw::c_uint = 64;
+pub const MTX_QUIET: ::kernel::sys::raw::c_uint = 2;
+pub const MTX_DUPOK: ::kernel::sys::raw::c_uint = 16;
+pub const MTX_UNOWNED: ::kernel::sys::raw::c_uint = 0;
+pub const MTX_RECURSED: ::kernel::sys::raw::c_uint = 1;
+pub const MTX_CONTESTED: ::kernel::sys::raw::c_uint = 2;
+pub const MTX_DESTROYED: ::kernel::sys::raw::c_uint = 4;
+pub const MTX_FLAGMASK: ::kernel::sys::raw::c_uint = 7;
+pub const MTX_NETWORK_LOCK: &'static [u8; 15usize] = b"network driver\x00";
+pub const RW_LOCK_READ: ::kernel::sys::raw::c_uint = 1;
+pub const RW_LOCK_READ_WAITERS: ::kernel::sys::raw::c_uint = 2;
+pub const RW_LOCK_WRITE_WAITERS: ::kernel::sys::raw::c_uint = 4;
+pub const RW_LOCK_WRITE_SPINNER: ::kernel::sys::raw::c_uint = 8;
+pub const RW_LOCK_WRITER_RECURSED: ::kernel::sys::raw::c_uint = 16;
+pub const RW_LOCK_FLAGMASK: ::kernel::sys::raw::c_uint = 31;
+pub const RW_LOCK_WAITERS: ::kernel::sys::raw::c_uint = 6;
+pub const RW_READERS_SHIFT: ::kernel::sys::raw::c_uint = 5;
+pub const RW_ONE_READER: ::kernel::sys::raw::c_uint = 32;
+pub const RW_DESTROYED: ::kernel::sys::raw::c_uint = 6;
+pub const RW_DUPOK: ::kernel::sys::raw::c_uint = 1;
+pub const RW_NOPROFILE: ::kernel::sys::raw::c_uint = 2;
+pub const RW_NOWITNESS: ::kernel::sys::raw::c_uint = 4;
+pub const RW_QUIET: ::kernel::sys::raw::c_uint = 8;
+pub const RW_RECURSE: ::kernel::sys::raw::c_uint = 16;
+pub const RW_NEW: ::kernel::sys::raw::c_uint = 32;
+pub const SX_LOCK_SHARED: ::kernel::sys::raw::c_uint = 1;
+pub const SX_LOCK_SHARED_WAITERS: ::kernel::sys::raw::c_uint = 2;
+pub const SX_LOCK_EXCLUSIVE_WAITERS: ::kernel::sys::raw::c_uint = 4;
+pub const SX_LOCK_WRITE_SPINNER: ::kernel::sys::raw::c_uint = 8;
+pub const SX_LOCK_RECURSED: ::kernel::sys::raw::c_uint = 16;
+pub const SX_LOCK_FLAGMASK: ::kernel::sys::raw::c_uint = 31;
+pub const SX_LOCK_WAITERS: ::kernel::sys::raw::c_uint = 6;
+pub const SX_SHARERS_SHIFT: ::kernel::sys::raw::c_uint = 5;
+pub const SX_ONE_SHARER: ::kernel::sys::raw::c_uint = 32;
+pub const SX_LOCK_DESTROYED: ::kernel::sys::raw::c_uint = 6;
+pub const SX_DUPOK: ::kernel::sys::raw::c_uint = 1;
+pub const SX_NOPROFILE: ::kernel::sys::raw::c_uint = 2;
+pub const SX_NOWITNESS: ::kernel::sys::raw::c_uint = 4;
+pub const SX_QUIET: ::kernel::sys::raw::c_uint = 8;
+pub const SX_NOADAPTIVE: ::kernel::sys::raw::c_uint = 16;
+pub const SX_RECURSE: ::kernel::sys::raw::c_uint = 32;
+pub const SX_NEW: ::kernel::sys::raw::c_uint = 64;
+pub const SX_INTERRUPTIBLE: ::kernel::sys::raw::c_uint = 64;
+pub const GROUPTASK_NAMELEN: ::kernel::sys::raw::c_uint = 32;
+pub const IF_DUNIT_NONE: ::kernel::sys::raw::c_int = -1;
 pub const EVFILT_READ: ::kernel::sys::raw::c_int = -1;
 pub const EVFILT_WRITE: ::kernel::sys::raw::c_int = -2;
 pub const EVFILT_AIO: ::kernel::sys::raw::c_int = -3;
@@ -1359,472 +1422,6 @@ pub const KN_MARKER: ::kernel::sys::raw::c_uint = 32;
 pub const KN_KQUEUE: ::kernel::sys::raw::c_uint = 64;
 pub const KN_HASKQLOCK: ::kernel::sys::raw::c_uint = 128;
 pub const KN_SCAN: ::kernel::sys::raw::c_uint = 256;
-pub const OSD_THREAD: ::kernel::sys::raw::c_uint = 0;
-pub const OSD_JAIL: ::kernel::sys::raw::c_uint = 1;
-pub const OSD_KHELP: ::kernel::sys::raw::c_uint = 2;
-pub const OSD_FIRST: ::kernel::sys::raw::c_uint = 0;
-pub const OSD_LAST: ::kernel::sys::raw::c_uint = 2;
-pub const RTP_PRIO_REALTIME: ::kernel::sys::raw::c_uint = 2;
-pub const RTP_PRIO_NORMAL: ::kernel::sys::raw::c_uint = 3;
-pub const RTP_PRIO_IDLE: ::kernel::sys::raw::c_uint = 4;
-pub const RTP_PRIO_FIFO_BIT: ::kernel::sys::raw::c_uint = 8;
-pub const RTP_PRIO_FIFO: ::kernel::sys::raw::c_uint = 10;
-pub const RTP_PRIO_MIN: ::kernel::sys::raw::c_uint = 0;
-pub const RTP_PRIO_MAX: ::kernel::sys::raw::c_uint = 31;
-pub const RTP_LOOKUP: ::kernel::sys::raw::c_uint = 0;
-pub const RTP_SET: ::kernel::sys::raw::c_uint = 1;
-pub const RQB_LEN: ::kernel::sys::raw::c_uint = 1;
-pub const RQB_L2BPW: ::kernel::sys::raw::c_uint = 6;
-pub const RQB_BPW: ::kernel::sys::raw::c_uint = 64;
-pub const RQ_NQS: ::kernel::sys::raw::c_uint = 64;
-pub const RQ_PPQ: ::kernel::sys::raw::c_uint = 4;
-pub const _X86_SIGNAL_H: ::kernel::sys::raw::c_uint = 1;
-pub const SIGHUP: ::kernel::sys::raw::c_uint = 1;
-pub const SIGINT: ::kernel::sys::raw::c_uint = 2;
-pub const SIGQUIT: ::kernel::sys::raw::c_uint = 3;
-pub const SIGILL: ::kernel::sys::raw::c_uint = 4;
-pub const SIGTRAP: ::kernel::sys::raw::c_uint = 5;
-pub const SIGABRT: ::kernel::sys::raw::c_uint = 6;
-pub const SIGIOT: ::kernel::sys::raw::c_uint = 6;
-pub const SIGEMT: ::kernel::sys::raw::c_uint = 7;
-pub const SIGFPE: ::kernel::sys::raw::c_uint = 8;
-pub const SIGKILL: ::kernel::sys::raw::c_uint = 9;
-pub const SIGBUS: ::kernel::sys::raw::c_uint = 10;
-pub const SIGSEGV: ::kernel::sys::raw::c_uint = 11;
-pub const SIGSYS: ::kernel::sys::raw::c_uint = 12;
-pub const SIGPIPE: ::kernel::sys::raw::c_uint = 13;
-pub const SIGALRM: ::kernel::sys::raw::c_uint = 14;
-pub const SIGTERM: ::kernel::sys::raw::c_uint = 15;
-pub const SIGURG: ::kernel::sys::raw::c_uint = 16;
-pub const SIGSTOP: ::kernel::sys::raw::c_uint = 17;
-pub const SIGTSTP: ::kernel::sys::raw::c_uint = 18;
-pub const SIGCONT: ::kernel::sys::raw::c_uint = 19;
-pub const SIGCHLD: ::kernel::sys::raw::c_uint = 20;
-pub const SIGTTIN: ::kernel::sys::raw::c_uint = 21;
-pub const SIGTTOU: ::kernel::sys::raw::c_uint = 22;
-pub const SIGIO: ::kernel::sys::raw::c_uint = 23;
-pub const SIGXCPU: ::kernel::sys::raw::c_uint = 24;
-pub const SIGXFSZ: ::kernel::sys::raw::c_uint = 25;
-pub const SIGVTALRM: ::kernel::sys::raw::c_uint = 26;
-pub const SIGPROF: ::kernel::sys::raw::c_uint = 27;
-pub const SIGWINCH: ::kernel::sys::raw::c_uint = 28;
-pub const SIGINFO: ::kernel::sys::raw::c_uint = 29;
-pub const SIGUSR1: ::kernel::sys::raw::c_uint = 30;
-pub const SIGUSR2: ::kernel::sys::raw::c_uint = 31;
-pub const SIGTHR: ::kernel::sys::raw::c_uint = 32;
-pub const SIGLWP: ::kernel::sys::raw::c_uint = 32;
-pub const SIGLIBRT: ::kernel::sys::raw::c_uint = 33;
-pub const SIGRTMIN: ::kernel::sys::raw::c_uint = 65;
-pub const SIGRTMAX: ::kernel::sys::raw::c_uint = 126;
-pub const SIGEV_NONE: ::kernel::sys::raw::c_uint = 0;
-pub const SIGEV_SIGNAL: ::kernel::sys::raw::c_uint = 1;
-pub const SIGEV_THREAD: ::kernel::sys::raw::c_uint = 2;
-pub const SIGEV_KEVENT: ::kernel::sys::raw::c_uint = 3;
-pub const SIGEV_THREAD_ID: ::kernel::sys::raw::c_uint = 4;
-pub const ILL_ILLOPC: ::kernel::sys::raw::c_uint = 1;
-pub const ILL_ILLOPN: ::kernel::sys::raw::c_uint = 2;
-pub const ILL_ILLADR: ::kernel::sys::raw::c_uint = 3;
-pub const ILL_ILLTRP: ::kernel::sys::raw::c_uint = 4;
-pub const ILL_PRVOPC: ::kernel::sys::raw::c_uint = 5;
-pub const ILL_PRVREG: ::kernel::sys::raw::c_uint = 6;
-pub const ILL_COPROC: ::kernel::sys::raw::c_uint = 7;
-pub const ILL_BADSTK: ::kernel::sys::raw::c_uint = 8;
-pub const BUS_ADRALN: ::kernel::sys::raw::c_uint = 1;
-pub const BUS_ADRERR: ::kernel::sys::raw::c_uint = 2;
-pub const BUS_OBJERR: ::kernel::sys::raw::c_uint = 3;
-pub const SEGV_MAPERR: ::kernel::sys::raw::c_uint = 1;
-pub const SEGV_ACCERR: ::kernel::sys::raw::c_uint = 2;
-pub const FPE_INTOVF: ::kernel::sys::raw::c_uint = 1;
-pub const FPE_INTDIV: ::kernel::sys::raw::c_uint = 2;
-pub const FPE_FLTDIV: ::kernel::sys::raw::c_uint = 3;
-pub const FPE_FLTOVF: ::kernel::sys::raw::c_uint = 4;
-pub const FPE_FLTUND: ::kernel::sys::raw::c_uint = 5;
-pub const FPE_FLTRES: ::kernel::sys::raw::c_uint = 6;
-pub const FPE_FLTINV: ::kernel::sys::raw::c_uint = 7;
-pub const FPE_FLTSUB: ::kernel::sys::raw::c_uint = 8;
-pub const TRAP_BRKPT: ::kernel::sys::raw::c_uint = 1;
-pub const TRAP_TRACE: ::kernel::sys::raw::c_uint = 2;
-pub const TRAP_DTRACE: ::kernel::sys::raw::c_uint = 3;
-pub const TRAP_CAP: ::kernel::sys::raw::c_uint = 4;
-pub const CLD_EXITED: ::kernel::sys::raw::c_uint = 1;
-pub const CLD_KILLED: ::kernel::sys::raw::c_uint = 2;
-pub const CLD_DUMPED: ::kernel::sys::raw::c_uint = 3;
-pub const CLD_TRAPPED: ::kernel::sys::raw::c_uint = 4;
-pub const CLD_STOPPED: ::kernel::sys::raw::c_uint = 5;
-pub const CLD_CONTINUED: ::kernel::sys::raw::c_uint = 6;
-pub const POLL_IN: ::kernel::sys::raw::c_uint = 1;
-pub const POLL_OUT: ::kernel::sys::raw::c_uint = 2;
-pub const POLL_MSG: ::kernel::sys::raw::c_uint = 3;
-pub const POLL_ERR: ::kernel::sys::raw::c_uint = 4;
-pub const POLL_PRI: ::kernel::sys::raw::c_uint = 5;
-pub const POLL_HUP: ::kernel::sys::raw::c_uint = 6;
-pub const SA_NOCLDSTOP: ::kernel::sys::raw::c_uint = 8;
-pub const SA_ONSTACK: ::kernel::sys::raw::c_uint = 1;
-pub const SA_RESTART: ::kernel::sys::raw::c_uint = 2;
-pub const SA_RESETHAND: ::kernel::sys::raw::c_uint = 4;
-pub const SA_NODEFER: ::kernel::sys::raw::c_uint = 16;
-pub const SA_NOCLDWAIT: ::kernel::sys::raw::c_uint = 32;
-pub const SA_SIGINFO: ::kernel::sys::raw::c_uint = 64;
-pub const NSIG: ::kernel::sys::raw::c_uint = 32;
-pub const SI_NOINFO: ::kernel::sys::raw::c_uint = 0;
-pub const SI_USER: ::kernel::sys::raw::c_uint = 65537;
-pub const SI_QUEUE: ::kernel::sys::raw::c_uint = 65538;
-pub const SI_TIMER: ::kernel::sys::raw::c_uint = 65539;
-pub const SI_ASYNCIO: ::kernel::sys::raw::c_uint = 65540;
-pub const SI_MESGQ: ::kernel::sys::raw::c_uint = 65541;
-pub const SI_KERNEL: ::kernel::sys::raw::c_uint = 65542;
-pub const SI_LWP: ::kernel::sys::raw::c_uint = 65543;
-pub const SI_UNDEFINED: ::kernel::sys::raw::c_uint = 0;
-pub const SS_ONSTACK: ::kernel::sys::raw::c_uint = 1;
-pub const SS_DISABLE: ::kernel::sys::raw::c_uint = 4;
-pub const MINSIGSTKSZ: ::kernel::sys::raw::c_uint = 2048;
-pub const SIGSTKSZ: ::kernel::sys::raw::c_uint = 34816;
-pub const SV_ONSTACK: ::kernel::sys::raw::c_uint = 1;
-pub const SV_INTERRUPT: ::kernel::sys::raw::c_uint = 2;
-pub const SV_RESETHAND: ::kernel::sys::raw::c_uint = 4;
-pub const SV_NODEFER: ::kernel::sys::raw::c_uint = 16;
-pub const SV_NOCLDSTOP: ::kernel::sys::raw::c_uint = 8;
-pub const SV_SIGINFO: ::kernel::sys::raw::c_uint = 64;
-pub const SIG_BLOCK: ::kernel::sys::raw::c_uint = 1;
-pub const SIG_UNBLOCK: ::kernel::sys::raw::c_uint = 2;
-pub const SIG_SETMASK: ::kernel::sys::raw::c_uint = 3;
-pub const PS_NOCLDWAIT: ::kernel::sys::raw::c_uint = 1;
-pub const PS_NOCLDSTOP: ::kernel::sys::raw::c_uint = 2;
-pub const PS_CLDSIGIGN: ::kernel::sys::raw::c_uint = 4;
-pub const KSI_TRAP: ::kernel::sys::raw::c_uint = 1;
-pub const KSI_EXT: ::kernel::sys::raw::c_uint = 2;
-pub const KSI_INS: ::kernel::sys::raw::c_uint = 4;
-pub const KSI_SIGQ: ::kernel::sys::raw::c_uint = 8;
-pub const KSI_HEAD: ::kernel::sys::raw::c_uint = 16;
-pub const KSI_PTRACE: ::kernel::sys::raw::c_uint = 32;
-pub const KSI_COPYMASK: ::kernel::sys::raw::c_uint = 41;
-pub const SQ_INIT: ::kernel::sys::raw::c_uint = 1;
-pub const SIGPROCMASK_OLD: ::kernel::sys::raw::c_uint = 1;
-pub const SIGPROCMASK_PROC_LOCKED: ::kernel::sys::raw::c_uint = 2;
-pub const SIGPROCMASK_PS_LOCKED: ::kernel::sys::raw::c_uint = 4;
-pub const SIGDEFERSTOP_NOP: ::kernel::sys::raw::c_uint = 0;
-pub const SIGDEFERSTOP_OFF: ::kernel::sys::raw::c_uint = 1;
-pub const SIGDEFERSTOP_SILENT: ::kernel::sys::raw::c_uint = 2;
-pub const SIGDEFERSTOP_EINTR: ::kernel::sys::raw::c_uint = 3;
-pub const SIGDEFERSTOP_ERESTART: ::kernel::sys::raw::c_uint = 4;
-pub const SIGDEFERSTOP_VAL_NCHG: ::kernel::sys::raw::c_int = -1;
-pub const _MC_HASSEGS: ::kernel::sys::raw::c_uint = 1;
-pub const _MC_HASBASES: ::kernel::sys::raw::c_uint = 2;
-pub const _MC_HASFPXSTATE: ::kernel::sys::raw::c_uint = 4;
-pub const _MC_FLAG_MASK: ::kernel::sys::raw::c_uint = 7;
-pub const _MC_FPFMT_NODEV: ::kernel::sys::raw::c_uint = 65536;
-pub const _MC_FPFMT_XMM: ::kernel::sys::raw::c_uint = 65538;
-pub const _MC_FPOWNED_NONE: ::kernel::sys::raw::c_uint = 131072;
-pub const _MC_FPOWNED_FPU: ::kernel::sys::raw::c_uint = 131073;
-pub const _MC_FPOWNED_PCB: ::kernel::sys::raw::c_uint = 131074;
-pub const UCF_SWAPPED: ::kernel::sys::raw::c_uint = 1;
-pub const GET_MC_CLEAR_RET: ::kernel::sys::raw::c_uint = 1;
-pub const AUDIT_RECORD_MAGIC: ::kernel::sys::raw::c_uint = 2190085915;
-pub const MAX_AUDIT_RECORDS: ::kernel::sys::raw::c_uint = 20;
-pub const MAXAUDITDATA: ::kernel::sys::raw::c_uint = 32767;
-pub const MAX_AUDIT_RECORD_SIZE: ::kernel::sys::raw::c_uint = 32767;
-pub const MIN_AUDIT_FILE_SIZE: ::kernel::sys::raw::c_uint = 524288;
-pub const AUDIT_HARD_LIMIT_FREE_BLOCKS: ::kernel::sys::raw::c_uint = 4;
-pub const AUDIT_TRIGGER_MIN: ::kernel::sys::raw::c_uint = 1;
-pub const AUDIT_TRIGGER_LOW_SPACE: ::kernel::sys::raw::c_uint = 1;
-pub const AUDIT_TRIGGER_ROTATE_KERNEL: ::kernel::sys::raw::c_uint = 2;
-pub const AUDIT_TRIGGER_READ_FILE: ::kernel::sys::raw::c_uint = 3;
-pub const AUDIT_TRIGGER_CLOSE_AND_DIE: ::kernel::sys::raw::c_uint = 4;
-pub const AUDIT_TRIGGER_NO_SPACE: ::kernel::sys::raw::c_uint = 5;
-pub const AUDIT_TRIGGER_ROTATE_USER: ::kernel::sys::raw::c_uint = 6;
-pub const AUDIT_TRIGGER_INITIALIZE: ::kernel::sys::raw::c_uint = 7;
-pub const AUDIT_TRIGGER_EXPIRE_TRAILS: ::kernel::sys::raw::c_uint = 8;
-pub const AUDIT_TRIGGER_MAX: ::kernel::sys::raw::c_uint = 8;
-pub const AUDITDEV_FILENAME: &'static [u8; 6usize] = b"audit\x00";
-pub const AUDIT_TRIGGER_FILE: &'static [u8; 11usize] = b"/dev/audit\x00";
-pub const AU_DEFAUDITSID: ::kernel::sys::raw::c_uint = 0;
-pub const AU_ASSIGN_ASID: ::kernel::sys::raw::c_int = -1;
-pub const AUC_UNSET: ::kernel::sys::raw::c_uint = 0;
-pub const AUC_AUDITING: ::kernel::sys::raw::c_uint = 1;
-pub const AUC_NOAUDIT: ::kernel::sys::raw::c_uint = 2;
-pub const AUC_DISABLED: ::kernel::sys::raw::c_int = -1;
-pub const A_OLDGETPOLICY: ::kernel::sys::raw::c_uint = 2;
-pub const A_OLDSETPOLICY: ::kernel::sys::raw::c_uint = 3;
-pub const A_GETKMASK: ::kernel::sys::raw::c_uint = 4;
-pub const A_SETKMASK: ::kernel::sys::raw::c_uint = 5;
-pub const A_OLDGETQCTRL: ::kernel::sys::raw::c_uint = 6;
-pub const A_OLDSETQCTRL: ::kernel::sys::raw::c_uint = 7;
-pub const A_GETCWD: ::kernel::sys::raw::c_uint = 8;
-pub const A_GETCAR: ::kernel::sys::raw::c_uint = 9;
-pub const A_GETSTAT: ::kernel::sys::raw::c_uint = 12;
-pub const A_SETSTAT: ::kernel::sys::raw::c_uint = 13;
-pub const A_SETUMASK: ::kernel::sys::raw::c_uint = 14;
-pub const A_SETSMASK: ::kernel::sys::raw::c_uint = 15;
-pub const A_OLDGETCOND: ::kernel::sys::raw::c_uint = 20;
-pub const A_OLDSETCOND: ::kernel::sys::raw::c_uint = 21;
-pub const A_GETCLASS: ::kernel::sys::raw::c_uint = 22;
-pub const A_SETCLASS: ::kernel::sys::raw::c_uint = 23;
-pub const A_GETPINFO: ::kernel::sys::raw::c_uint = 24;
-pub const A_SETPMASK: ::kernel::sys::raw::c_uint = 25;
-pub const A_SETFSIZE: ::kernel::sys::raw::c_uint = 26;
-pub const A_GETFSIZE: ::kernel::sys::raw::c_uint = 27;
-pub const A_GETPINFO_ADDR: ::kernel::sys::raw::c_uint = 28;
-pub const A_GETKAUDIT: ::kernel::sys::raw::c_uint = 29;
-pub const A_SETKAUDIT: ::kernel::sys::raw::c_uint = 30;
-pub const A_SENDTRIGGER: ::kernel::sys::raw::c_uint = 31;
-pub const A_GETSINFO_ADDR: ::kernel::sys::raw::c_uint = 32;
-pub const A_GETPOLICY: ::kernel::sys::raw::c_uint = 33;
-pub const A_SETPOLICY: ::kernel::sys::raw::c_uint = 34;
-pub const A_GETQCTRL: ::kernel::sys::raw::c_uint = 35;
-pub const A_SETQCTRL: ::kernel::sys::raw::c_uint = 36;
-pub const A_GETCOND: ::kernel::sys::raw::c_uint = 37;
-pub const A_SETCOND: ::kernel::sys::raw::c_uint = 38;
-pub const A_GETEVENT: ::kernel::sys::raw::c_uint = 39;
-pub const A_SETEVENT: ::kernel::sys::raw::c_uint = 40;
-pub const AUDIT_CNT: ::kernel::sys::raw::c_uint = 1;
-pub const AUDIT_AHLT: ::kernel::sys::raw::c_uint = 2;
-pub const AUDIT_ARGV: ::kernel::sys::raw::c_uint = 4;
-pub const AUDIT_ARGE: ::kernel::sys::raw::c_uint = 8;
-pub const AUDIT_SEQ: ::kernel::sys::raw::c_uint = 16;
-pub const AUDIT_WINDATA: ::kernel::sys::raw::c_uint = 32;
-pub const AUDIT_USER: ::kernel::sys::raw::c_uint = 64;
-pub const AUDIT_GROUP: ::kernel::sys::raw::c_uint = 128;
-pub const AUDIT_TRAIL: ::kernel::sys::raw::c_uint = 256;
-pub const AUDIT_PATH: ::kernel::sys::raw::c_uint = 512;
-pub const AUDIT_SCNT: ::kernel::sys::raw::c_uint = 1024;
-pub const AUDIT_PUBLIC: ::kernel::sys::raw::c_uint = 2048;
-pub const AUDIT_ZONENAME: ::kernel::sys::raw::c_uint = 4096;
-pub const AUDIT_PERZONE: ::kernel::sys::raw::c_uint = 8192;
-pub const AQ_HIWATER: ::kernel::sys::raw::c_uint = 100;
-pub const AQ_MAXHIGH: ::kernel::sys::raw::c_uint = 10000;
-pub const AQ_LOWATER: ::kernel::sys::raw::c_uint = 10;
-pub const AQ_BUFSZ: ::kernel::sys::raw::c_uint = 32767;
-pub const AQ_MAXBUFSZ: ::kernel::sys::raw::c_uint = 1048576;
-pub const AU_FS_MINFREE: ::kernel::sys::raw::c_uint = 20;
-pub const AU_IPv4: ::kernel::sys::raw::c_uint = 4;
-pub const AU_IPv6: ::kernel::sys::raw::c_uint = 16;
-pub const EVNAMEMAP_NAME_SIZE: ::kernel::sys::raw::c_uint = 64;
-pub const XU_NGROUPS: ::kernel::sys::raw::c_uint = 16;
-pub const CRED_FLAG_CAPMODE: ::kernel::sys::raw::c_uint = 1;
-pub const XUCRED_VERSION: ::kernel::sys::raw::c_uint = 0;
-pub const DOMAINSET_SETSIZE: ::kernel::sys::raw::c_uint = 8;
-pub const DOMAINSET_MAXSIZE: ::kernel::sys::raw::c_uint = 256;
-pub const KINFO_PROC_SIZE: ::kernel::sys::raw::c_uint = 1088;
-pub const KINFO_PROC32_SIZE: ::kernel::sys::raw::c_uint = 768;
-pub const TDF_BORROWING: ::kernel::sys::raw::c_uint = 1;
-pub const TDF_INPANIC: ::kernel::sys::raw::c_uint = 2;
-pub const TDF_INMEM: ::kernel::sys::raw::c_uint = 4;
-pub const TDF_SINTR: ::kernel::sys::raw::c_uint = 8;
-pub const TDF_TIMEOUT: ::kernel::sys::raw::c_uint = 16;
-pub const TDF_IDLETD: ::kernel::sys::raw::c_uint = 32;
-pub const TDF_CANSWAP: ::kernel::sys::raw::c_uint = 64;
-pub const TDF_SLEEPABORT: ::kernel::sys::raw::c_uint = 128;
-pub const TDF_KTH_SUSP: ::kernel::sys::raw::c_uint = 256;
-pub const TDF_ALLPROCSUSP: ::kernel::sys::raw::c_uint = 512;
-pub const TDF_BOUNDARY: ::kernel::sys::raw::c_uint = 1024;
-pub const TDF_ASTPENDING: ::kernel::sys::raw::c_uint = 2048;
-pub const TDF_UNUSED12: ::kernel::sys::raw::c_uint = 4096;
-pub const TDF_SBDRY: ::kernel::sys::raw::c_uint = 8192;
-pub const TDF_UPIBLOCKED: ::kernel::sys::raw::c_uint = 16384;
-pub const TDF_NEEDSUSPCHK: ::kernel::sys::raw::c_uint = 32768;
-pub const TDF_NEEDRESCHED: ::kernel::sys::raw::c_uint = 65536;
-pub const TDF_NEEDSIGCHK: ::kernel::sys::raw::c_uint = 131072;
-pub const TDF_NOLOAD: ::kernel::sys::raw::c_uint = 262144;
-pub const TDF_SERESTART: ::kernel::sys::raw::c_uint = 524288;
-pub const TDF_THRWAKEUP: ::kernel::sys::raw::c_uint = 1048576;
-pub const TDF_SEINTR: ::kernel::sys::raw::c_uint = 2097152;
-pub const TDF_SWAPINREQ: ::kernel::sys::raw::c_uint = 4194304;
-pub const TDF_UNUSED23: ::kernel::sys::raw::c_uint = 8388608;
-pub const TDF_SCHED0: ::kernel::sys::raw::c_uint = 16777216;
-pub const TDF_SCHED1: ::kernel::sys::raw::c_uint = 33554432;
-pub const TDF_SCHED2: ::kernel::sys::raw::c_uint = 67108864;
-pub const TDF_SCHED3: ::kernel::sys::raw::c_uint = 134217728;
-pub const TDF_ALRMPEND: ::kernel::sys::raw::c_uint = 268435456;
-pub const TDF_PROFPEND: ::kernel::sys::raw::c_uint = 536870912;
-pub const TDF_MACPEND: ::kernel::sys::raw::c_uint = 1073741824;
-pub const TDB_SUSPEND: ::kernel::sys::raw::c_uint = 1;
-pub const TDB_XSIG: ::kernel::sys::raw::c_uint = 2;
-pub const TDB_USERWR: ::kernel::sys::raw::c_uint = 4;
-pub const TDB_SCE: ::kernel::sys::raw::c_uint = 8;
-pub const TDB_SCX: ::kernel::sys::raw::c_uint = 16;
-pub const TDB_EXEC: ::kernel::sys::raw::c_uint = 32;
-pub const TDB_FORK: ::kernel::sys::raw::c_uint = 64;
-pub const TDB_STOPATFORK: ::kernel::sys::raw::c_uint = 128;
-pub const TDB_CHILD: ::kernel::sys::raw::c_uint = 256;
-pub const TDB_BORN: ::kernel::sys::raw::c_uint = 512;
-pub const TDB_EXIT: ::kernel::sys::raw::c_uint = 1024;
-pub const TDB_VFORK: ::kernel::sys::raw::c_uint = 2048;
-pub const TDB_FSTP: ::kernel::sys::raw::c_uint = 4096;
-pub const TDB_STEP: ::kernel::sys::raw::c_uint = 8192;
-pub const TDP_OLDMASK: ::kernel::sys::raw::c_uint = 1;
-pub const TDP_INKTR: ::kernel::sys::raw::c_uint = 2;
-pub const TDP_INKTRACE: ::kernel::sys::raw::c_uint = 4;
-pub const TDP_BUFNEED: ::kernel::sys::raw::c_uint = 8;
-pub const TDP_COWINPROGRESS: ::kernel::sys::raw::c_uint = 16;
-pub const TDP_ALTSTACK: ::kernel::sys::raw::c_uint = 32;
-pub const TDP_DEADLKTREAT: ::kernel::sys::raw::c_uint = 64;
-pub const TDP_NOFAULTING: ::kernel::sys::raw::c_uint = 128;
-pub const TDP_UNUSED9: ::kernel::sys::raw::c_uint = 256;
-pub const TDP_OWEUPC: ::kernel::sys::raw::c_uint = 512;
-pub const TDP_ITHREAD: ::kernel::sys::raw::c_uint = 1024;
-pub const TDP_SYNCIO: ::kernel::sys::raw::c_uint = 2048;
-pub const TDP_SCHED1: ::kernel::sys::raw::c_uint = 4096;
-pub const TDP_SCHED2: ::kernel::sys::raw::c_uint = 8192;
-pub const TDP_SCHED3: ::kernel::sys::raw::c_uint = 16384;
-pub const TDP_SCHED4: ::kernel::sys::raw::c_uint = 32768;
-pub const TDP_GEOM: ::kernel::sys::raw::c_uint = 65536;
-pub const TDP_SOFTDEP: ::kernel::sys::raw::c_uint = 131072;
-pub const TDP_NORUNNINGBUF: ::kernel::sys::raw::c_uint = 262144;
-pub const TDP_WAKEUP: ::kernel::sys::raw::c_uint = 524288;
-pub const TDP_INBDFLUSH: ::kernel::sys::raw::c_uint = 1048576;
-pub const TDP_KTHREAD: ::kernel::sys::raw::c_uint = 2097152;
-pub const TDP_CALLCHAIN: ::kernel::sys::raw::c_uint = 4194304;
-pub const TDP_IGNSUSP: ::kernel::sys::raw::c_uint = 8388608;
-pub const TDP_AUDITREC: ::kernel::sys::raw::c_uint = 16777216;
-pub const TDP_RFPPWAIT: ::kernel::sys::raw::c_uint = 33554432;
-pub const TDP_RESETSPUR: ::kernel::sys::raw::c_uint = 67108864;
-pub const TDP_NERRNO: ::kernel::sys::raw::c_uint = 134217728;
-pub const TDP_UIOHELD: ::kernel::sys::raw::c_uint = 268435456;
-pub const TDP_FORKING: ::kernel::sys::raw::c_uint = 536870912;
-pub const TDP_EXECVMSPC: ::kernel::sys::raw::c_uint = 1073741824;
-pub const TDI_SUSPENDED: ::kernel::sys::raw::c_uint = 1;
-pub const TDI_SLEEPING: ::kernel::sys::raw::c_uint = 2;
-pub const TDI_SWAPPED: ::kernel::sys::raw::c_uint = 4;
-pub const TDI_LOCK: ::kernel::sys::raw::c_uint = 8;
-pub const TDI_IWAIT: ::kernel::sys::raw::c_uint = 16;
-pub const NOCPU: ::kernel::sys::raw::c_int = -1;
-pub const NOCPU_OLD: ::kernel::sys::raw::c_uint = 255;
-pub const MAXCPU_OLD: ::kernel::sys::raw::c_uint = 254;
-pub const P_ADVLOCK: ::kernel::sys::raw::c_uint = 1;
-pub const P_CONTROLT: ::kernel::sys::raw::c_uint = 2;
-pub const P_KPROC: ::kernel::sys::raw::c_uint = 4;
-pub const P_UNUSED3: ::kernel::sys::raw::c_uint = 8;
-pub const P_PPWAIT: ::kernel::sys::raw::c_uint = 16;
-pub const P_PROFIL: ::kernel::sys::raw::c_uint = 32;
-pub const P_STOPPROF: ::kernel::sys::raw::c_uint = 64;
-pub const P_HADTHREADS: ::kernel::sys::raw::c_uint = 128;
-pub const P_SUGID: ::kernel::sys::raw::c_uint = 256;
-pub const P_SYSTEM: ::kernel::sys::raw::c_uint = 512;
-pub const P_SINGLE_EXIT: ::kernel::sys::raw::c_uint = 1024;
-pub const P_TRACED: ::kernel::sys::raw::c_uint = 2048;
-pub const P_WAITED: ::kernel::sys::raw::c_uint = 4096;
-pub const P_WEXIT: ::kernel::sys::raw::c_uint = 8192;
-pub const P_EXEC: ::kernel::sys::raw::c_uint = 16384;
-pub const P_WKILLED: ::kernel::sys::raw::c_uint = 32768;
-pub const P_CONTINUED: ::kernel::sys::raw::c_uint = 65536;
-pub const P_STOPPED_SIG: ::kernel::sys::raw::c_uint = 131072;
-pub const P_STOPPED_TRACE: ::kernel::sys::raw::c_uint = 262144;
-pub const P_STOPPED_SINGLE: ::kernel::sys::raw::c_uint = 524288;
-pub const P_PROTECTED: ::kernel::sys::raw::c_uint = 1048576;
-pub const P_SIGEVENT: ::kernel::sys::raw::c_uint = 2097152;
-pub const P_SINGLE_BOUNDARY: ::kernel::sys::raw::c_uint = 4194304;
-pub const P_HWPMC: ::kernel::sys::raw::c_uint = 8388608;
-pub const P_JAILED: ::kernel::sys::raw::c_uint = 16777216;
-pub const P_TOTAL_STOP: ::kernel::sys::raw::c_uint = 33554432;
-pub const P_INEXEC: ::kernel::sys::raw::c_uint = 67108864;
-pub const P_STATCHILD: ::kernel::sys::raw::c_uint = 134217728;
-pub const P_INMEM: ::kernel::sys::raw::c_uint = 268435456;
-pub const P_SWAPPINGOUT: ::kernel::sys::raw::c_uint = 536870912;
-pub const P_SWAPPINGIN: ::kernel::sys::raw::c_uint = 1073741824;
-pub const P_PPTRACE: ::kernel::sys::raw::c_uint = 2147483648;
-pub const P_STOPPED: ::kernel::sys::raw::c_uint = 917504;
-pub const P2_INHERIT_PROTECTED: ::kernel::sys::raw::c_uint = 1;
-pub const P2_NOTRACE: ::kernel::sys::raw::c_uint = 2;
-pub const P2_NOTRACE_EXEC: ::kernel::sys::raw::c_uint = 4;
-pub const P2_AST_SU: ::kernel::sys::raw::c_uint = 8;
-pub const P2_PTRACE_FSTP: ::kernel::sys::raw::c_uint = 16;
-pub const P2_TRAPCAP: ::kernel::sys::raw::c_uint = 32;
-pub const P_TREE_ORPHANED: ::kernel::sys::raw::c_uint = 1;
-pub const P_TREE_FIRST_ORPHAN: ::kernel::sys::raw::c_uint = 2;
-pub const P_TREE_REAPER: ::kernel::sys::raw::c_uint = 4;
-pub const SIDL: ::kernel::sys::raw::c_uint = 1;
-pub const SRUN: ::kernel::sys::raw::c_uint = 2;
-pub const SSLEEP: ::kernel::sys::raw::c_uint = 3;
-pub const SSTOP: ::kernel::sys::raw::c_uint = 4;
-pub const SZOMB: ::kernel::sys::raw::c_uint = 5;
-pub const SWAIT: ::kernel::sys::raw::c_uint = 6;
-pub const SLOCK: ::kernel::sys::raw::c_uint = 7;
-pub const P_MAGIC: ::kernel::sys::raw::c_uint = 3203398350;
-pub const SW_TYPE_MASK: ::kernel::sys::raw::c_uint = 255;
-pub const SWT_NONE: ::kernel::sys::raw::c_uint = 0;
-pub const SWT_PREEMPT: ::kernel::sys::raw::c_uint = 1;
-pub const SWT_OWEPREEMPT: ::kernel::sys::raw::c_uint = 2;
-pub const SWT_TURNSTILE: ::kernel::sys::raw::c_uint = 3;
-pub const SWT_SLEEPQ: ::kernel::sys::raw::c_uint = 4;
-pub const SWT_SLEEPQTIMO: ::kernel::sys::raw::c_uint = 5;
-pub const SWT_RELINQUISH: ::kernel::sys::raw::c_uint = 6;
-pub const SWT_NEEDRESCHED: ::kernel::sys::raw::c_uint = 7;
-pub const SWT_IDLE: ::kernel::sys::raw::c_uint = 8;
-pub const SWT_IWAIT: ::kernel::sys::raw::c_uint = 9;
-pub const SWT_SUSPEND: ::kernel::sys::raw::c_uint = 10;
-pub const SWT_REMOTEPREEMPT: ::kernel::sys::raw::c_uint = 11;
-pub const SWT_REMOTEWAKEIDLE: ::kernel::sys::raw::c_uint = 12;
-pub const SWT_COUNT: ::kernel::sys::raw::c_uint = 13;
-pub const SW_VOL: ::kernel::sys::raw::c_uint = 256;
-pub const SW_INVOL: ::kernel::sys::raw::c_uint = 512;
-pub const SW_PREEMPT: ::kernel::sys::raw::c_uint = 1024;
-pub const SINGLE_NO_EXIT: ::kernel::sys::raw::c_uint = 0;
-pub const SINGLE_EXIT: ::kernel::sys::raw::c_uint = 1;
-pub const SINGLE_BOUNDARY: ::kernel::sys::raw::c_uint = 2;
-pub const SINGLE_ALLPROC: ::kernel::sys::raw::c_uint = 3;
-pub const PID_MAX: ::kernel::sys::raw::c_uint = 99999;
-pub const NO_PID: ::kernel::sys::raw::c_uint = 100000;
-pub const PGET_HOLD: ::kernel::sys::raw::c_uint = 1;
-pub const PGET_CANSEE: ::kernel::sys::raw::c_uint = 2;
-pub const PGET_CANDEBUG: ::kernel::sys::raw::c_uint = 4;
-pub const PGET_ISCURRENT: ::kernel::sys::raw::c_uint = 8;
-pub const PGET_NOTWEXIT: ::kernel::sys::raw::c_uint = 16;
-pub const PGET_NOTINEXEC: ::kernel::sys::raw::c_uint = 32;
-pub const PGET_NOTID: ::kernel::sys::raw::c_uint = 64;
-pub const PGET_WANTREAD: ::kernel::sys::raw::c_uint = 21;
-pub const EPOCH_PREEMPT: ::kernel::sys::raw::c_uint = 1;
-pub const LOCKSTAT_WRITER: ::kernel::sys::raw::c_uint = 0;
-pub const LOCKSTAT_READER: ::kernel::sys::raw::c_uint = 1;
-pub const MTX_DEF: ::kernel::sys::raw::c_uint = 0;
-pub const MTX_SPIN: ::kernel::sys::raw::c_uint = 1;
-pub const MTX_RECURSE: ::kernel::sys::raw::c_uint = 4;
-pub const MTX_NOWITNESS: ::kernel::sys::raw::c_uint = 8;
-pub const MTX_NOPROFILE: ::kernel::sys::raw::c_uint = 32;
-pub const MTX_NEW: ::kernel::sys::raw::c_uint = 64;
-pub const MTX_QUIET: ::kernel::sys::raw::c_uint = 2;
-pub const MTX_DUPOK: ::kernel::sys::raw::c_uint = 16;
-pub const MTX_UNOWNED: ::kernel::sys::raw::c_uint = 0;
-pub const MTX_RECURSED: ::kernel::sys::raw::c_uint = 1;
-pub const MTX_CONTESTED: ::kernel::sys::raw::c_uint = 2;
-pub const MTX_DESTROYED: ::kernel::sys::raw::c_uint = 4;
-pub const MTX_FLAGMASK: ::kernel::sys::raw::c_uint = 7;
-pub const MTX_NETWORK_LOCK: &'static [u8; 15usize] = b"network driver\x00";
-pub const RW_LOCK_READ: ::kernel::sys::raw::c_uint = 1;
-pub const RW_LOCK_READ_WAITERS: ::kernel::sys::raw::c_uint = 2;
-pub const RW_LOCK_WRITE_WAITERS: ::kernel::sys::raw::c_uint = 4;
-pub const RW_LOCK_WRITE_SPINNER: ::kernel::sys::raw::c_uint = 8;
-pub const RW_LOCK_WRITER_RECURSED: ::kernel::sys::raw::c_uint = 16;
-pub const RW_LOCK_FLAGMASK: ::kernel::sys::raw::c_uint = 31;
-pub const RW_LOCK_WAITERS: ::kernel::sys::raw::c_uint = 6;
-pub const RW_READERS_SHIFT: ::kernel::sys::raw::c_uint = 5;
-pub const RW_ONE_READER: ::kernel::sys::raw::c_uint = 32;
-pub const RW_DESTROYED: ::kernel::sys::raw::c_uint = 6;
-pub const RW_DUPOK: ::kernel::sys::raw::c_uint = 1;
-pub const RW_NOPROFILE: ::kernel::sys::raw::c_uint = 2;
-pub const RW_NOWITNESS: ::kernel::sys::raw::c_uint = 4;
-pub const RW_QUIET: ::kernel::sys::raw::c_uint = 8;
-pub const RW_RECURSE: ::kernel::sys::raw::c_uint = 16;
-pub const RW_NEW: ::kernel::sys::raw::c_uint = 32;
-pub const SX_LOCK_SHARED: ::kernel::sys::raw::c_uint = 1;
-pub const SX_LOCK_SHARED_WAITERS: ::kernel::sys::raw::c_uint = 2;
-pub const SX_LOCK_EXCLUSIVE_WAITERS: ::kernel::sys::raw::c_uint = 4;
-pub const SX_LOCK_RECURSED: ::kernel::sys::raw::c_uint = 8;
-pub const SX_LOCK_WRITE_SPINNER: ::kernel::sys::raw::c_uint = 16;
-pub const SX_LOCK_FLAGMASK: ::kernel::sys::raw::c_uint = 31;
-pub const SX_LOCK_WAITERS: ::kernel::sys::raw::c_uint = 6;
-pub const SX_SHARERS_SHIFT: ::kernel::sys::raw::c_uint = 5;
-pub const SX_ONE_SHARER: ::kernel::sys::raw::c_uint = 32;
-pub const SX_LOCK_DESTROYED: ::kernel::sys::raw::c_uint = 6;
-pub const SX_DUPOK: ::kernel::sys::raw::c_uint = 1;
-pub const SX_NOPROFILE: ::kernel::sys::raw::c_uint = 2;
-pub const SX_NOWITNESS: ::kernel::sys::raw::c_uint = 4;
-pub const SX_QUIET: ::kernel::sys::raw::c_uint = 8;
-pub const SX_NOADAPTIVE: ::kernel::sys::raw::c_uint = 16;
-pub const SX_RECURSE: ::kernel::sys::raw::c_uint = 32;
-pub const SX_NEW: ::kernel::sys::raw::c_uint = 64;
-pub const SX_INTERRUPTIBLE: ::kernel::sys::raw::c_uint = 64;
-pub const GROUPTASK_NAMELEN: ::kernel::sys::raw::c_uint = 32;
-pub const IF_DUNIT_NONE: ::kernel::sys::raw::c_int = -1;
 pub const ALTQF_READY: ::kernel::sys::raw::c_uint = 1;
 pub const ALTQF_ENABLED: ::kernel::sys::raw::c_uint = 2;
 pub const ALTQF_CLASSIFY: ::kernel::sys::raw::c_uint = 4;
@@ -2174,7 +1771,8 @@ pub const IOC_OUT: ::kernel::sys::raw::c_uint = 1073741824;
 pub const IOC_IN: ::kernel::sys::raw::c_uint = 2147483648;
 pub const IOC_INOUT: ::kernel::sys::raw::c_uint = 3221225472;
 pub const IOC_DIRMASK: ::kernel::sys::raw::c_uint = 3758096384;
-pub const BUS_USER_VERSION: ::kernel::sys::raw::c_uint = 1;
+pub const BUS_USER_VERSION: ::kernel::sys::raw::c_uint = 2;
+pub const BUS_USER_BUFFER: ::kernel::sys::raw::c_uint = 3072;
 pub const DF_ENABLED: ::kernel::sys::raw::c_uint = 1;
 pub const DF_FIXEDCLASS: ::kernel::sys::raw::c_uint = 2;
 pub const DF_WILDCARD: ::kernel::sys::raw::c_uint = 4;
@@ -2296,7 +1894,6 @@ pub const TASKQUEUE_NAMELEN: ::kernel::sys::raw::c_uint = 32;
 pub const TASK_ENQUEUED: ::kernel::sys::raw::c_uint = 1;
 pub const TASK_SKIP_WAKEUP: ::kernel::sys::raw::c_uint = 2;
 pub const QIDX_INVALID: ::kernel::sys::raw::c_uint = 65535;
-pub const FREEBSD_TSO_SIZE_MAX: ::kernel::sys::raw::c_uint = 65518;
 pub const IPI_TX_INTR: ::kernel::sys::raw::c_uint = 1;
 pub const IPI_TX_IPV4: ::kernel::sys::raw::c_uint = 2;
 pub const IPI_TX_IPV6: ::kernel::sys::raw::c_uint = 4;
@@ -2642,6 +2239,8 @@ pub struct cap_rights {
     _unused: [u8; 0],
 }
 pub type cap_rights_t = cap_rights;
+pub type kvaddr_t = __uint64_t;
+pub type ksize_t = __uint64_t;
 pub type vm_offset_t = __vm_offset_t;
 pub type vm_ooffset_t = __int64_t;
 pub type vm_paddr_t = __vm_paddr_t;
@@ -5165,191 +4764,10 @@ pub struct netmap_adapter {
 pub struct netdump_methods {
     _unused: [u8; 0],
 }
-extern "C" {
-    pub fn atomic_cmpset_char(dst: *mut u_char, expect: u_char, src: u_char)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_cmpset_short(dst: *mut u_short, expect: u_short,
-                               src: u_short) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_cmpset_int(dst: *mut u_int, expect: u_int, src: u_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_cmpset_long(dst: *mut u_long, expect: u_long, src: u_long)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_fcmpset_char(dst: *mut u_char, expect: *mut u_char,
-                               src: u_char) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_fcmpset_short(dst: *mut u_short, expect: *mut u_short,
-                                src: u_short) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_fcmpset_int(dst: *mut u_int, expect: *mut u_int, src: u_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_fcmpset_long(dst: *mut u_long, expect: *mut u_long,
-                               src: u_long) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_fetchadd_int(p: *mut u_int, v: u_int) -> u_int;
-}
-extern "C" {
-    pub fn atomic_fetchadd_long(p: *mut u_long, v: u_long) -> u_long;
-}
-extern "C" {
-    pub fn atomic_testandset_int(p: *mut u_int, v: u_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_testandset_long(p: *mut u_long, v: u_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_testandclear_int(p: *mut u_int, v: u_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_testandclear_long(p: *mut u_long, v: u_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_thread_fence_acq();
-}
-extern "C" {
-    pub fn atomic_thread_fence_acq_rel();
-}
-extern "C" {
-    pub fn atomic_thread_fence_rel();
-}
-extern "C" {
-    pub fn atomic_thread_fence_seq_cst();
-}
-extern "C" {
-    pub fn atomic_set_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_set_barr_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_clear_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_clear_barr_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_add_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_add_barr_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_subtract_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_subtract_barr_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_set_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_set_barr_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_clear_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_clear_barr_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_add_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_add_barr_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_subtract_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_subtract_barr_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_set_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_set_barr_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_clear_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_clear_barr_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_add_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_add_barr_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_subtract_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_subtract_barr_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_set_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_set_barr_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_clear_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_clear_barr_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_add_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_add_barr_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_subtract_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_subtract_barr_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_load_acq_char(p: *mut u_char) -> u_char;
-}
-extern "C" {
-    pub fn atomic_store_rel_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_load_acq_short(p: *mut u_short) -> u_short;
-}
-extern "C" {
-    pub fn atomic_store_rel_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_load_acq_int(p: *mut u_int) -> u_int;
-}
-extern "C" {
-    pub fn atomic_store_rel_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_load_acq_long(p: *mut u_long) -> u_long;
-}
-extern "C" {
-    pub fn atomic_store_rel_long(p: *mut u_long, v: u_long);
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct __hack {
+    _unused: [u8; 0],
 }
 #[repr(C, packed)]
 #[derive(Debug, Default, Copy)]
@@ -6025,22 +5443,345 @@ pub enum VM_GUEST {
     VM_GUEST_BHYVE = 6,
     VM_LAST = 7,
 }
-extern "C" {
-    #[link_name = "osreldate"]
-    pub static mut osreldate: ::kernel::sys::raw::c_int;
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct timezone {
+    pub tz_minuteswest: ::kernel::sys::raw::c_int,
+    pub tz_dsttime: ::kernel::sys::raw::c_int,
+}
+#[test]
+fn bindgen_test_layout_timezone() {
+    assert_eq!(::core::mem::size_of::<timezone>() , 8usize , concat ! (
+               "Size of: " , stringify ! ( timezone ) ));
+    assert_eq! (::core::mem::align_of::<timezone>() , 4usize , concat ! (
+                "Alignment of " , stringify ! ( timezone ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const timezone ) ) . tz_minuteswest as * const
+                _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( timezone ) , "::" ,
+                stringify ! ( tz_minuteswest ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const timezone ) ) . tz_dsttime as * const _ as
+                usize } , 4usize , concat ! (
+                "Alignment of field: " , stringify ! ( timezone ) , "::" ,
+                stringify ! ( tz_dsttime ) ));
+}
+impl Clone for timezone {
+    fn clone(&self) -> Self { *self }
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct bintime {
+    pub sec: time_t,
+    pub frac: u64,
+}
+#[test]
+fn bindgen_test_layout_bintime() {
+    assert_eq!(::core::mem::size_of::<bintime>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( bintime ) ));
+    assert_eq! (::core::mem::align_of::<bintime>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( bintime ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const bintime ) ) . sec as * const _ as usize }
+                , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( bintime ) , "::" ,
+                stringify ! ( sec ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const bintime ) ) . frac as * const _ as usize
+                } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( bintime ) , "::" ,
+                stringify ! ( frac ) ));
+}
+impl Clone for bintime {
+    fn clone(&self) -> Self { *self }
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct itimerval {
+    pub it_interval: timeval,
+    pub it_value: timeval,
+}
+#[test]
+fn bindgen_test_layout_itimerval() {
+    assert_eq!(::core::mem::size_of::<itimerval>() , 32usize , concat ! (
+               "Size of: " , stringify ! ( itimerval ) ));
+    assert_eq! (::core::mem::align_of::<itimerval>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( itimerval ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const itimerval ) ) . it_interval as * const _
+                as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( itimerval ) , "::" ,
+                stringify ! ( it_interval ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const itimerval ) ) . it_value as * const _ as
+                usize } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( itimerval ) , "::" ,
+                stringify ! ( it_value ) ));
+}
+impl Clone for itimerval {
+    fn clone(&self) -> Self { *self }
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct clockinfo {
+    pub hz: ::kernel::sys::raw::c_int,
+    pub tick: ::kernel::sys::raw::c_int,
+    pub spare: ::kernel::sys::raw::c_int,
+    pub stathz: ::kernel::sys::raw::c_int,
+    pub profhz: ::kernel::sys::raw::c_int,
+}
+#[test]
+fn bindgen_test_layout_clockinfo() {
+    assert_eq!(::core::mem::size_of::<clockinfo>() , 20usize , concat ! (
+               "Size of: " , stringify ! ( clockinfo ) ));
+    assert_eq! (::core::mem::align_of::<clockinfo>() , 4usize , concat ! (
+                "Alignment of " , stringify ! ( clockinfo ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const clockinfo ) ) . hz as * const _ as usize
+                } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( clockinfo ) , "::" ,
+                stringify ! ( hz ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const clockinfo ) ) . tick as * const _ as
+                usize } , 4usize , concat ! (
+                "Alignment of field: " , stringify ! ( clockinfo ) , "::" ,
+                stringify ! ( tick ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const clockinfo ) ) . spare as * const _ as
+                usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( clockinfo ) , "::" ,
+                stringify ! ( spare ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const clockinfo ) ) . stathz as * const _ as
+                usize } , 12usize , concat ! (
+                "Alignment of field: " , stringify ! ( clockinfo ) , "::" ,
+                stringify ! ( stathz ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const clockinfo ) ) . profhz as * const _ as
+                usize } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( clockinfo ) , "::" ,
+                stringify ! ( profhz ) ));
+}
+impl Clone for clockinfo {
+    fn clone(&self) -> Self { *self }
 }
 extern "C" {
-    #[link_name = "envmode"]
-    pub static mut envmode: ::kernel::sys::raw::c_int;
+    pub fn inittodr(base: time_t);
 }
 extern "C" {
-    #[link_name = "hintmode"]
-    pub static mut hintmode: ::kernel::sys::raw::c_int;
+    pub fn resettodr();
 }
 extern "C" {
-    #[link_name = "dynamic_kenv"]
-    pub static mut dynamic_kenv: ::kernel::sys::raw::c_int;
+    #[link_name = "time_second"]
+    pub static mut time_second: time_t;
 }
+extern "C" {
+    #[link_name = "time_uptime"]
+    pub static mut time_uptime: time_t;
+}
+extern "C" {
+    #[link_name = "tc_tick_bt"]
+    pub static mut tc_tick_bt: bintime;
+}
+extern "C" {
+    #[link_name = "tc_tick_sbt"]
+    pub static mut tc_tick_sbt: sbintime_t;
+}
+extern "C" {
+    #[link_name = "tick_bt"]
+    pub static mut tick_bt: bintime;
+}
+extern "C" {
+    #[link_name = "tick_sbt"]
+    pub static mut tick_sbt: sbintime_t;
+}
+extern "C" {
+    #[link_name = "tc_precexp"]
+    pub static mut tc_precexp: ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    #[link_name = "tc_timepercentage"]
+    pub static mut tc_timepercentage: ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    #[link_name = "bt_timethreshold"]
+    pub static mut bt_timethreshold: bintime;
+}
+extern "C" {
+    #[link_name = "bt_tickthreshold"]
+    pub static mut bt_tickthreshold: bintime;
+}
+extern "C" {
+    #[link_name = "sbt_timethreshold"]
+    pub static mut sbt_timethreshold: sbintime_t;
+}
+extern "C" {
+    #[link_name = "sbt_tickthreshold"]
+    pub static mut sbt_tickthreshold: sbintime_t;
+}
+extern "C" {
+    #[link_name = "rtc_generation"]
+    pub static mut rtc_generation: ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn binuptime(bt: *mut bintime);
+}
+extern "C" {
+    pub fn nanouptime(tsp: *mut timespec);
+}
+extern "C" {
+    pub fn microuptime(tvp: *mut timeval);
+}
+extern "C" {
+    pub fn bintime(bt: *mut bintime);
+}
+extern "C" {
+    pub fn nanotime(tsp: *mut timespec);
+}
+extern "C" {
+    pub fn microtime(tvp: *mut timeval);
+}
+extern "C" {
+    pub fn getbinuptime(bt: *mut bintime);
+}
+extern "C" {
+    pub fn getnanouptime(tsp: *mut timespec);
+}
+extern "C" {
+    pub fn getmicrouptime(tvp: *mut timeval);
+}
+extern "C" {
+    pub fn getbintime(bt: *mut bintime);
+}
+extern "C" {
+    pub fn getnanotime(tsp: *mut timespec);
+}
+extern "C" {
+    pub fn getmicrotime(tvp: *mut timeval);
+}
+extern "C" {
+    pub fn getboottime(boottime: *mut timeval);
+}
+extern "C" {
+    pub fn getboottimebin(boottimebin: *mut bintime);
+}
+extern "C" {
+    pub fn itimerdecr(itp: *mut itimerval, usec: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn itimerfix(tv: *mut timeval) -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn ppsratecheck(arg1: *mut timeval,
+                        arg2: *mut ::kernel::sys::raw::c_int,
+                        arg3: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn ratecheck(arg1: *mut timeval, arg2: *const timeval)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn timevaladd(t1: *mut timeval, t2: *const timeval);
+}
+extern "C" {
+    pub fn timevalsub(t1: *mut timeval, t2: *const timeval);
+}
+extern "C" {
+    pub fn tvtohz(tv: *mut timeval) -> ::kernel::sys::raw::c_int;
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct priority {
+    pub pri_class: u_char,
+    pub pri_level: u_char,
+    pub pri_native: u_char,
+    pub pri_user: u_char,
+}
+#[test]
+fn bindgen_test_layout_priority() {
+    assert_eq!(::core::mem::size_of::<priority>() , 4usize , concat ! (
+               "Size of: " , stringify ! ( priority ) ));
+    assert_eq! (::core::mem::align_of::<priority>() , 1usize , concat ! (
+                "Alignment of " , stringify ! ( priority ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const priority ) ) . pri_class as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( priority ) , "::" ,
+                stringify ! ( pri_class ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const priority ) ) . pri_level as * const _ as
+                usize } , 1usize , concat ! (
+                "Alignment of field: " , stringify ! ( priority ) , "::" ,
+                stringify ! ( pri_level ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const priority ) ) . pri_native as * const _ as
+                usize } , 2usize , concat ! (
+                "Alignment of field: " , stringify ! ( priority ) , "::" ,
+                stringify ! ( pri_native ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const priority ) ) . pri_user as * const _ as
+                usize } , 3usize , concat ! (
+                "Alignment of field: " , stringify ! ( priority ) , "::" ,
+                stringify ! ( pri_user ) ));
+}
+impl Clone for priority {
+    fn clone(&self) -> Self { *self }
+}
+extern "C" {
+    pub fn htonl(arg1: __uint32_t) -> __uint32_t;
+}
+extern "C" {
+    pub fn htons(arg1: __uint16_t) -> __uint16_t;
+}
+extern "C" {
+    pub fn ntohl(arg1: __uint32_t) -> __uint32_t;
+}
+extern "C" {
+    pub fn ntohs(arg1: __uint16_t) -> __uint16_t;
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct bitset {
+    pub __bits: [::kernel::sys::raw::c_long; 1usize],
+}
+#[test]
+fn bindgen_test_layout_bitset() {
+    assert_eq!(::core::mem::size_of::<bitset>() , 8usize , concat ! (
+               "Size of: " , stringify ! ( bitset ) ));
+    assert_eq! (::core::mem::align_of::<bitset>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( bitset ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const bitset ) ) . __bits as * const _ as usize
+                } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( bitset ) , "::" ,
+                stringify ! ( __bits ) ));
+}
+impl Clone for bitset {
+    fn clone(&self) -> Self { *self }
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct _cpuset {
+    pub __bits: [::kernel::sys::raw::c_long; 4usize],
+}
+#[test]
+fn bindgen_test_layout__cpuset() {
+    assert_eq!(::core::mem::size_of::<_cpuset>() , 32usize , concat ! (
+               "Size of: " , stringify ! ( _cpuset ) ));
+    assert_eq! (::core::mem::align_of::<_cpuset>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( _cpuset ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const _cpuset ) ) . __bits as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( _cpuset ) , "::" ,
+                stringify ! ( __bits ) ));
+}
+impl Clone for _cpuset {
+    fn clone(&self) -> Self { *self }
+}
+pub type cpuset_t = _cpuset;
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct mtx {
@@ -6070,6 +5811,987 @@ impl Clone for mtx {
 impl Default for mtx {
     fn default() -> Self { unsafe { ::core::mem::zeroed() } }
 }
+#[repr(C)]
+#[derive(Copy)]
+pub struct mtx_padalign {
+    pub lock_object: lock_object,
+    pub mtx_lock: usize,
+    pub __bindgen_padding_0: [u64; 4usize],
+}
+#[test]
+fn bindgen_test_layout_mtx_padalign() {
+    assert_eq!(::core::mem::size_of::<mtx_padalign>() , 64usize , concat ! (
+               "Size of: " , stringify ! ( mtx_padalign ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const mtx_padalign ) ) . lock_object as * const
+                _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( mtx_padalign ) , "::" ,
+                stringify ! ( lock_object ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const mtx_padalign ) ) . mtx_lock as * const _
+                as usize } , 24usize , concat ! (
+                "Alignment of field: " , stringify ! ( mtx_padalign ) , "::" ,
+                stringify ! ( mtx_lock ) ));
+}
+impl Clone for mtx_padalign {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for mtx_padalign {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+impl ::kernel::fmt::Debug for mtx_padalign {
+    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
+        write!(f , "mtx_padalign {{ lock_object: {:?}, mtx_lock: {:?} }}" ,
+               self . lock_object , self . mtx_lock)
+    }
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct sx {
+    pub lock_object: lock_object,
+    pub sx_lock: usize,
+}
+#[test]
+fn bindgen_test_layout_sx() {
+    assert_eq!(::core::mem::size_of::<sx>() , 32usize , concat ! (
+               "Size of: " , stringify ! ( sx ) ));
+    assert_eq! (::core::mem::align_of::<sx>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( sx ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const sx ) ) . lock_object as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( sx ) , "::" , stringify
+                ! ( lock_object ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const sx ) ) . sx_lock as * const _ as usize }
+                , 24usize , concat ! (
+                "Alignment of field: " , stringify ! ( sx ) , "::" , stringify
+                ! ( sx_lock ) ));
+}
+impl Clone for sx {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for sx {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct rmpriolist {
+    pub lh_first: *mut rm_priotracker,
+}
+#[test]
+fn bindgen_test_layout_rmpriolist() {
+    assert_eq!(::core::mem::size_of::<rmpriolist>() , 8usize , concat ! (
+               "Size of: " , stringify ! ( rmpriolist ) ));
+    assert_eq! (::core::mem::align_of::<rmpriolist>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( rmpriolist ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rmpriolist ) ) . lh_first as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( rmpriolist ) , "::" ,
+                stringify ! ( lh_first ) ));
+}
+impl Clone for rmpriolist {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for rmpriolist {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct rm_queue {
+    pub rmq_next: *mut rm_queue,
+    pub rmq_prev: *mut rm_queue,
+}
+#[test]
+fn bindgen_test_layout_rm_queue() {
+    assert_eq!(::core::mem::size_of::<rm_queue>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( rm_queue ) ));
+    assert_eq! (::core::mem::align_of::<rm_queue>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( rm_queue ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rm_queue ) ) . rmq_next as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( rm_queue ) , "::" ,
+                stringify ! ( rmq_next ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rm_queue ) ) . rmq_prev as * const _ as
+                usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( rm_queue ) , "::" ,
+                stringify ! ( rmq_prev ) ));
+}
+impl Clone for rm_queue {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for rm_queue {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+#[repr(C)]
+#[derive(Copy)]
+pub struct rmlock {
+    pub lock_object: lock_object,
+    pub rm_writecpus: cpuset_t,
+    pub rm_activeReaders: rmlock__bindgen_ty_1,
+    pub _rm_lock: rmlock__bindgen_ty_2,
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct rmlock__bindgen_ty_1 {
+    pub lh_first: *mut rm_priotracker,
+}
+#[test]
+fn bindgen_test_layout_rmlock__bindgen_ty_1() {
+    assert_eq!(::core::mem::size_of::<rmlock__bindgen_ty_1>() , 8usize ,
+               concat ! ( "Size of: " , stringify ! ( rmlock__bindgen_ty_1 )
+               ));
+    assert_eq! (::core::mem::align_of::<rmlock__bindgen_ty_1>() , 8usize ,
+                concat ! (
+                "Alignment of " , stringify ! ( rmlock__bindgen_ty_1 ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rmlock__bindgen_ty_1 ) ) . lh_first as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( rmlock__bindgen_ty_1 )
+                , "::" , stringify ! ( lh_first ) ));
+}
+impl Clone for rmlock__bindgen_ty_1 {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for rmlock__bindgen_ty_1 {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+#[repr(C)]
+#[derive(Copy)]
+pub union rmlock__bindgen_ty_2 {
+    pub _rm_wlock_object: lock_object,
+    pub _rm_lock_mtx: mtx,
+    pub _rm_lock_sx: sx,
+    _bindgen_union_align: [u64; 4usize],
+}
+#[test]
+fn bindgen_test_layout_rmlock__bindgen_ty_2() {
+    assert_eq!(::core::mem::size_of::<rmlock__bindgen_ty_2>() , 32usize ,
+               concat ! ( "Size of: " , stringify ! ( rmlock__bindgen_ty_2 )
+               ));
+    assert_eq! (::core::mem::align_of::<rmlock__bindgen_ty_2>() , 8usize ,
+                concat ! (
+                "Alignment of " , stringify ! ( rmlock__bindgen_ty_2 ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rmlock__bindgen_ty_2 ) ) .
+                _rm_wlock_object as * const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( rmlock__bindgen_ty_2 )
+                , "::" , stringify ! ( _rm_wlock_object ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rmlock__bindgen_ty_2 ) ) . _rm_lock_mtx
+                as * const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( rmlock__bindgen_ty_2 )
+                , "::" , stringify ! ( _rm_lock_mtx ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rmlock__bindgen_ty_2 ) ) . _rm_lock_sx as
+                * const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( rmlock__bindgen_ty_2 )
+                , "::" , stringify ! ( _rm_lock_sx ) ));
+}
+impl Clone for rmlock__bindgen_ty_2 {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for rmlock__bindgen_ty_2 {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+impl ::kernel::fmt::Debug for rmlock__bindgen_ty_2 {
+    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
+        write!(f , "rmlock__bindgen_ty_2 {{ union }}")
+    }
+}
+#[test]
+fn bindgen_test_layout_rmlock() {
+    assert_eq!(::core::mem::size_of::<rmlock>() , 96usize , concat ! (
+               "Size of: " , stringify ! ( rmlock ) ));
+    assert_eq! (::core::mem::align_of::<rmlock>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( rmlock ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rmlock ) ) . lock_object as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( rmlock ) , "::" ,
+                stringify ! ( lock_object ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rmlock ) ) . rm_writecpus as * const _ as
+                usize } , 24usize , concat ! (
+                "Alignment of field: " , stringify ! ( rmlock ) , "::" ,
+                stringify ! ( rm_writecpus ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rmlock ) ) . rm_activeReaders as * const
+                _ as usize } , 56usize , concat ! (
+                "Alignment of field: " , stringify ! ( rmlock ) , "::" ,
+                stringify ! ( rm_activeReaders ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rmlock ) ) . _rm_lock as * const _ as
+                usize } , 64usize , concat ! (
+                "Alignment of field: " , stringify ! ( rmlock ) , "::" ,
+                stringify ! ( _rm_lock ) ));
+}
+impl Clone for rmlock {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for rmlock {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+impl ::kernel::fmt::Debug for rmlock {
+    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
+        write!(f ,
+               "rmlock {{ lock_object: {:?}, rm_writecpus: {:?}, rm_activeReaders: {:?}, _rm_lock: {:?} }}"
+               , self . lock_object , self . rm_writecpus , self .
+               rm_activeReaders , self . _rm_lock)
+    }
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct rm_priotracker {
+    pub rmp_cpuQueue: rm_queue,
+    pub rmp_rmlock: *mut rmlock,
+    pub rmp_thread: *mut thread,
+    pub rmp_flags: ::kernel::sys::raw::c_int,
+    pub rmp_qentry: rm_priotracker__bindgen_ty_1,
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct rm_priotracker__bindgen_ty_1 {
+    pub le_next: *mut rm_priotracker,
+    pub le_prev: *mut *mut rm_priotracker,
+}
+#[test]
+fn bindgen_test_layout_rm_priotracker__bindgen_ty_1() {
+    assert_eq!(::core::mem::size_of::<rm_priotracker__bindgen_ty_1>() ,
+               16usize , concat ! (
+               "Size of: " , stringify ! ( rm_priotracker__bindgen_ty_1 ) ));
+    assert_eq! (::core::mem::align_of::<rm_priotracker__bindgen_ty_1>() ,
+                8usize , concat ! (
+                "Alignment of " , stringify ! ( rm_priotracker__bindgen_ty_1 )
+                ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rm_priotracker__bindgen_ty_1 ) ) .
+                le_next as * const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! (
+                rm_priotracker__bindgen_ty_1 ) , "::" , stringify ! ( le_next
+                ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rm_priotracker__bindgen_ty_1 ) ) .
+                le_prev as * const _ as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! (
+                rm_priotracker__bindgen_ty_1 ) , "::" , stringify ! ( le_prev
+                ) ));
+}
+impl Clone for rm_priotracker__bindgen_ty_1 {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for rm_priotracker__bindgen_ty_1 {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+#[test]
+fn bindgen_test_layout_rm_priotracker() {
+    assert_eq!(::core::mem::size_of::<rm_priotracker>() , 56usize , concat ! (
+               "Size of: " , stringify ! ( rm_priotracker ) ));
+    assert_eq! (::core::mem::align_of::<rm_priotracker>() , 8usize , concat !
+                ( "Alignment of " , stringify ! ( rm_priotracker ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rm_priotracker ) ) . rmp_cpuQueue as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( rm_priotracker ) , "::"
+                , stringify ! ( rmp_cpuQueue ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rm_priotracker ) ) . rmp_rmlock as *
+                const _ as usize } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( rm_priotracker ) , "::"
+                , stringify ! ( rmp_rmlock ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rm_priotracker ) ) . rmp_thread as *
+                const _ as usize } , 24usize , concat ! (
+                "Alignment of field: " , stringify ! ( rm_priotracker ) , "::"
+                , stringify ! ( rmp_thread ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rm_priotracker ) ) . rmp_flags as * const
+                _ as usize } , 32usize , concat ! (
+                "Alignment of field: " , stringify ! ( rm_priotracker ) , "::"
+                , stringify ! ( rmp_flags ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rm_priotracker ) ) . rmp_qentry as *
+                const _ as usize } , 40usize , concat ! (
+                "Alignment of field: " , stringify ! ( rm_priotracker ) , "::"
+                , stringify ! ( rmp_qentry ) ));
+}
+impl Clone for rm_priotracker {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for rm_priotracker {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct rusage {
+    pub ru_utime: timeval,
+    pub ru_stime: timeval,
+    pub ru_maxrss: ::kernel::sys::raw::c_long,
+    pub ru_ixrss: ::kernel::sys::raw::c_long,
+    pub ru_idrss: ::kernel::sys::raw::c_long,
+    pub ru_isrss: ::kernel::sys::raw::c_long,
+    pub ru_minflt: ::kernel::sys::raw::c_long,
+    pub ru_majflt: ::kernel::sys::raw::c_long,
+    pub ru_nswap: ::kernel::sys::raw::c_long,
+    pub ru_inblock: ::kernel::sys::raw::c_long,
+    pub ru_oublock: ::kernel::sys::raw::c_long,
+    pub ru_msgsnd: ::kernel::sys::raw::c_long,
+    pub ru_msgrcv: ::kernel::sys::raw::c_long,
+    pub ru_nsignals: ::kernel::sys::raw::c_long,
+    pub ru_nvcsw: ::kernel::sys::raw::c_long,
+    pub ru_nivcsw: ::kernel::sys::raw::c_long,
+}
+#[test]
+fn bindgen_test_layout_rusage() {
+    assert_eq!(::core::mem::size_of::<rusage>() , 144usize , concat ! (
+               "Size of: " , stringify ! ( rusage ) ));
+    assert_eq! (::core::mem::align_of::<rusage>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( rusage ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_utime as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_utime ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_stime as * const _ as
+                usize } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_stime ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_maxrss as * const _ as
+                usize } , 32usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_maxrss ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_ixrss as * const _ as
+                usize } , 40usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_ixrss ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_idrss as * const _ as
+                usize } , 48usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_idrss ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_isrss as * const _ as
+                usize } , 56usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_isrss ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_minflt as * const _ as
+                usize } , 64usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_minflt ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_majflt as * const _ as
+                usize } , 72usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_majflt ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_nswap as * const _ as
+                usize } , 80usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_nswap ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_inblock as * const _ as
+                usize } , 88usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_inblock ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_oublock as * const _ as
+                usize } , 96usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_oublock ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_msgsnd as * const _ as
+                usize } , 104usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_msgsnd ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_msgrcv as * const _ as
+                usize } , 112usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_msgrcv ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_nsignals as * const _ as
+                usize } , 120usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_nsignals ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_nvcsw as * const _ as
+                usize } , 128usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_nvcsw ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_nivcsw as * const _ as
+                usize } , 136usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_nivcsw ) ));
+}
+impl Clone for rusage {
+    fn clone(&self) -> Self { *self }
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct __wrusage {
+    pub wru_self: rusage,
+    pub wru_children: rusage,
+}
+#[test]
+fn bindgen_test_layout___wrusage() {
+    assert_eq!(::core::mem::size_of::<__wrusage>() , 288usize , concat ! (
+               "Size of: " , stringify ! ( __wrusage ) ));
+    assert_eq! (::core::mem::align_of::<__wrusage>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( __wrusage ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const __wrusage ) ) . wru_self as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( __wrusage ) , "::" ,
+                stringify ! ( wru_self ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const __wrusage ) ) . wru_children as * const _
+                as usize } , 144usize , concat ! (
+                "Alignment of field: " , stringify ! ( __wrusage ) , "::" ,
+                stringify ! ( wru_children ) ));
+}
+impl Clone for __wrusage {
+    fn clone(&self) -> Self { *self }
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct rlimit {
+    pub rlim_cur: rlim_t,
+    pub rlim_max: rlim_t,
+}
+#[test]
+fn bindgen_test_layout_rlimit() {
+    assert_eq!(::core::mem::size_of::<rlimit>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( rlimit ) ));
+    assert_eq! (::core::mem::align_of::<rlimit>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( rlimit ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rlimit ) ) . rlim_cur as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( rlimit ) , "::" ,
+                stringify ! ( rlim_cur ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rlimit ) ) . rlim_max as * const _ as
+                usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( rlimit ) , "::" ,
+                stringify ! ( rlim_max ) ));
+}
+impl Clone for rlimit {
+    fn clone(&self) -> Self { *self }
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct orlimit {
+    pub rlim_cur: __int32_t,
+    pub rlim_max: __int32_t,
+}
+#[test]
+fn bindgen_test_layout_orlimit() {
+    assert_eq!(::core::mem::size_of::<orlimit>() , 8usize , concat ! (
+               "Size of: " , stringify ! ( orlimit ) ));
+    assert_eq! (::core::mem::align_of::<orlimit>() , 4usize , concat ! (
+                "Alignment of " , stringify ! ( orlimit ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const orlimit ) ) . rlim_cur as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( orlimit ) , "::" ,
+                stringify ! ( rlim_cur ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const orlimit ) ) . rlim_max as * const _ as
+                usize } , 4usize , concat ! (
+                "Alignment of field: " , stringify ! ( orlimit ) , "::" ,
+                stringify ! ( rlim_max ) ));
+}
+impl Clone for orlimit {
+    fn clone(&self) -> Self { *self }
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct loadavg {
+    pub ldavg: [__fixpt_t; 3usize],
+    pub fscale: ::kernel::sys::raw::c_long,
+}
+#[test]
+fn bindgen_test_layout_loadavg() {
+    assert_eq!(::core::mem::size_of::<loadavg>() , 24usize , concat ! (
+               "Size of: " , stringify ! ( loadavg ) ));
+    assert_eq! (::core::mem::align_of::<loadavg>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( loadavg ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const loadavg ) ) . ldavg as * const _ as usize
+                } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( loadavg ) , "::" ,
+                stringify ! ( ldavg ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const loadavg ) ) . fscale as * const _ as
+                usize } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( loadavg ) , "::" ,
+                stringify ! ( fscale ) ));
+}
+impl Clone for loadavg {
+    fn clone(&self) -> Self { *self }
+}
+extern "C" {
+    #[link_name = "averunnable"]
+    pub static mut averunnable: loadavg;
+}
+extern "C" {
+    pub fn read_cpu_time(cp_time: *mut ::kernel::sys::raw::c_long);
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct pcb {
+    _unused: [u8; 0],
+}
+extern "C" {
+    #[link_name = "__start_set_pcpu"]
+    pub static mut __start_set_pcpu: *mut usize;
+}
+extern "C" {
+    #[link_name = "__stop_set_pcpu"]
+    pub static mut __stop_set_pcpu: *mut usize;
+}
+extern "C" {
+    #[link_name = "dpcpu_off"]
+    pub static mut dpcpu_off: [usize; 0usize];
+}
+#[repr(C)]
+#[derive(Copy)]
+pub struct pcpu {
+    pub pc_curthread: *mut thread,
+    pub pc_idlethread: *mut thread,
+    pub pc_fpcurthread: *mut thread,
+    pub pc_deadthread: *mut thread,
+    pub pc_curpcb: *mut pcb,
+    pub pc_switchtime: u64,
+    pub pc_switchticks: ::kernel::sys::raw::c_int,
+    pub pc_cpuid: u_int,
+    pub pc_allcpu: pcpu__bindgen_ty_1,
+    pub pc_spinlocks: *mut lock_list_entry,
+    pub pc_cp_time: [::kernel::sys::raw::c_long; 5usize],
+    pub pc_device: *mut device,
+    pub pc_netisr: *mut ::kernel::sys::raw::c_void,
+    pub pc_unused1: ::kernel::sys::raw::c_int,
+    pub pc_domain: ::kernel::sys::raw::c_int,
+    pub pc_rm_queue: rm_queue,
+    pub pc_dynamic: usize,
+    pub pc_early_dummy_counter: u64,
+    pub __bindgen_padding_0: [u8; 88usize],
+    pub pc_monitorbuf: [::kernel::sys::raw::c_char; 128usize],
+    pub pc_prvspace: *mut pcpu,
+    pub pc_curpmap: *mut pmap,
+    pub pc_tssp: *mut amd64tss,
+    pub pc_commontssp: *mut amd64tss,
+    pub pc_kcr3: u64,
+    pub pc_ucr3: u64,
+    pub pc_saved_ucr3: u64,
+    pub pc_rsp0: register_t,
+    pub pc_scratch_rsp: register_t,
+    pub pc_scratch_rax: register_t,
+    pub pc_apic_id: u_int,
+    pub pc_acpi_id: u_int,
+    pub pc_fs32p: *mut user_segment_descriptor,
+    pub pc_gs32p: *mut user_segment_descriptor,
+    pub pc_ldt: *mut system_segment_descriptor,
+    pub pc_tss: *mut system_segment_descriptor,
+    pub pc_pm_save_cnt: u64,
+    pub pc_cmci_mask: u_int,
+    pub pc_dbreg: [u64; 16usize],
+    pub pc_pti_stack: [u64; 16usize],
+    pub pc_pti_rsp0: register_t,
+    pub pc_dbreg_cmd: ::kernel::sys::raw::c_int,
+    pub pc_vcpu_id: u_int,
+    pub pc_pcid_next: u32,
+    pub pc_pcid_gen: u32,
+    pub pc_smp_tlb_done: u32,
+    pub pc_ibpb_set: u32,
+    pub __pad: [::kernel::sys::raw::c_char; 3288usize],
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct pcpu__bindgen_ty_1 {
+    pub stqe_next: *mut pcpu,
+}
+#[test]
+fn bindgen_test_layout_pcpu__bindgen_ty_1() {
+    assert_eq!(::core::mem::size_of::<pcpu__bindgen_ty_1>() , 8usize , concat
+               ! ( "Size of: " , stringify ! ( pcpu__bindgen_ty_1 ) ));
+    assert_eq! (::core::mem::align_of::<pcpu__bindgen_ty_1>() , 8usize ,
+                concat ! (
+                "Alignment of " , stringify ! ( pcpu__bindgen_ty_1 ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu__bindgen_ty_1 ) ) . stqe_next as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu__bindgen_ty_1 ) ,
+                "::" , stringify ! ( stqe_next ) ));
+}
+impl Clone for pcpu__bindgen_ty_1 {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for pcpu__bindgen_ty_1 {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+#[test]
+fn bindgen_test_layout_pcpu() {
+    assert_eq!(::core::mem::size_of::<pcpu>() , 4096usize , concat ! (
+               "Size of: " , stringify ! ( pcpu ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_curthread as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_curthread ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_idlethread as * const _ as
+                usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_idlethread ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_fpcurthread as * const _ as
+                usize } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_fpcurthread ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_deadthread as * const _ as
+                usize } , 24usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_deadthread ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_curpcb as * const _ as
+                usize } , 32usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_curpcb ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_switchtime as * const _ as
+                usize } , 40usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_switchtime ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_switchticks as * const _ as
+                usize } , 48usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_switchticks ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_cpuid as * const _ as usize
+                } , 52usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_cpuid ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_allcpu as * const _ as
+                usize } , 56usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_allcpu ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_spinlocks as * const _ as
+                usize } , 64usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_spinlocks ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_cp_time as * const _ as
+                usize } , 72usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_cp_time ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_device as * const _ as
+                usize } , 112usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_device ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_netisr as * const _ as
+                usize } , 120usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_netisr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_unused1 as * const _ as
+                usize } , 128usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_unused1 ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_domain as * const _ as
+                usize } , 132usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_domain ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_rm_queue as * const _ as
+                usize } , 136usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_rm_queue ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_dynamic as * const _ as
+                usize } , 152usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_dynamic ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_early_dummy_counter as *
+                const _ as usize } , 160usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_early_dummy_counter ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_monitorbuf as * const _ as
+                usize } , 256usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_monitorbuf ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_prvspace as * const _ as
+                usize } , 384usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_prvspace ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_curpmap as * const _ as
+                usize } , 392usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_curpmap ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_tssp as * const _ as usize
+                } , 400usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_tssp ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_commontssp as * const _ as
+                usize } , 408usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_commontssp ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_kcr3 as * const _ as usize
+                } , 416usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_kcr3 ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_ucr3 as * const _ as usize
+                } , 424usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_ucr3 ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_saved_ucr3 as * const _ as
+                usize } , 432usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_saved_ucr3 ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_rsp0 as * const _ as usize
+                } , 440usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_rsp0 ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_scratch_rsp as * const _ as
+                usize } , 448usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_scratch_rsp ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_scratch_rax as * const _ as
+                usize } , 456usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_scratch_rax ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_apic_id as * const _ as
+                usize } , 464usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_apic_id ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_acpi_id as * const _ as
+                usize } , 468usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_acpi_id ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_fs32p as * const _ as usize
+                } , 472usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_fs32p ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_gs32p as * const _ as usize
+                } , 480usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_gs32p ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_ldt as * const _ as usize }
+                , 488usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_ldt ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_tss as * const _ as usize }
+                , 496usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_tss ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_pm_save_cnt as * const _ as
+                usize } , 504usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_pm_save_cnt ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_cmci_mask as * const _ as
+                usize } , 512usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_cmci_mask ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_dbreg as * const _ as usize
+                } , 520usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_dbreg ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_pti_stack as * const _ as
+                usize } , 648usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_pti_stack ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_pti_rsp0 as * const _ as
+                usize } , 776usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_pti_rsp0 ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_dbreg_cmd as * const _ as
+                usize } , 784usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_dbreg_cmd ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_vcpu_id as * const _ as
+                usize } , 788usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_vcpu_id ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_pcid_next as * const _ as
+                usize } , 792usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_pcid_next ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_pcid_gen as * const _ as
+                usize } , 796usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_pcid_gen ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_smp_tlb_done as * const _
+                as usize } , 800usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_smp_tlb_done ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_ibpb_set as * const _ as
+                usize } , 804usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_ibpb_set ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . __pad as * const _ as usize }
+                , 808usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( __pad ) ));
+}
+impl Clone for pcpu {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for pcpu {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+impl ::kernel::fmt::Debug for pcpu {
+    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
+        write!(f ,
+               "pcpu {{ pc_curthread: {:?}, pc_idlethread: {:?}, pc_fpcurthread: {:?}, pc_deadthread: {:?}, pc_curpcb: {:?}, pc_switchtime: {:?}, pc_switchticks: {:?}, pc_cpuid: {:?}, pc_allcpu: {:?}, pc_spinlocks: {:?}, pc_cp_time: {:?}, pc_device: {:?}, pc_netisr: {:?}, pc_unused1: {:?}, pc_domain: {:?}, pc_rm_queue: {:?}, pc_dynamic: {:?}, pc_early_dummy_counter: {:?}, pc_monitorbuf: [{}], pc_prvspace: {:?}, pc_curpmap: {:?}, pc_tssp: {:?}, pc_commontssp: {:?}, pc_kcr3: {:?}, pc_ucr3: {:?}, pc_saved_ucr3: {:?}, pc_rsp0: {:?}, pc_scratch_rsp: {:?}, pc_scratch_rax: {:?}, pc_apic_id: {:?}, pc_acpi_id: {:?}, pc_fs32p: {:?}, pc_gs32p: {:?}, pc_ldt: {:?}, pc_tss: {:?}, pc_pm_save_cnt: {:?}, pc_cmci_mask: {:?}, pc_dbreg: {:?}, pc_pti_stack: {:?}, pc_pti_rsp0: {:?}, pc_dbreg_cmd: {:?}, pc_vcpu_id: {:?}, pc_pcid_next: {:?}, pc_pcid_gen: {:?}, pc_smp_tlb_done: {:?}, pc_ibpb_set: {:?}, __pad: [{}] }}"
+               , self . pc_curthread , self . pc_idlethread , self .
+               pc_fpcurthread , self . pc_deadthread , self . pc_curpcb , self
+               . pc_switchtime , self . pc_switchticks , self . pc_cpuid ,
+               self . pc_allcpu , self . pc_spinlocks , self . pc_cp_time ,
+               self . pc_device , self . pc_netisr , self . pc_unused1 , self
+               . pc_domain , self . pc_rm_queue , self . pc_dynamic , self .
+               pc_early_dummy_counter , self . pc_monitorbuf . iter (  ) .
+               enumerate (  ) . map (
+               | ( i , v ) | format ! (
+               "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: <
+               String > (  ) , self . pc_prvspace , self . pc_curpmap , self .
+               pc_tssp , self . pc_commontssp , self . pc_kcr3 , self .
+               pc_ucr3 , self . pc_saved_ucr3 , self . pc_rsp0 , self .
+               pc_scratch_rsp , self . pc_scratch_rax , self . pc_apic_id ,
+               self . pc_acpi_id , self . pc_fs32p , self . pc_gs32p , self .
+               pc_ldt , self . pc_tss , self . pc_pm_save_cnt , self .
+               pc_cmci_mask , self . pc_dbreg , self . pc_pti_stack , self .
+               pc_pti_rsp0 , self . pc_dbreg_cmd , self . pc_vcpu_id , self .
+               pc_pcid_next , self . pc_pcid_gen , self . pc_smp_tlb_done ,
+               self . pc_ibpb_set , self . __pad . iter (  ) . enumerate (  )
+               . map (
+               | ( i , v ) | format ! (
+               "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: <
+               String > (  ))
+    }
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct cpuhead {
+    pub stqh_first: *mut pcpu,
+    pub stqh_last: *mut *mut pcpu,
+}
+#[test]
+fn bindgen_test_layout_cpuhead() {
+    assert_eq!(::core::mem::size_of::<cpuhead>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( cpuhead ) ));
+    assert_eq! (::core::mem::align_of::<cpuhead>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( cpuhead ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const cpuhead ) ) . stqh_first as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( cpuhead ) , "::" ,
+                stringify ! ( stqh_first ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const cpuhead ) ) . stqh_last as * const _ as
+                usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( cpuhead ) , "::" ,
+                stringify ! ( stqh_last ) ));
+}
+impl Clone for cpuhead {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for cpuhead {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+extern "C" {
+    #[link_name = "cpuhead"]
+    pub static mut cpuhead: cpuhead;
+}
+extern "C" {
+    #[link_name = "cpuid_to_pcpu"]
+    pub static mut cpuid_to_pcpu: [*mut pcpu; 0usize];
+}
+extern "C" {
+    pub fn cpu_pcpu_init(pcpu: *mut pcpu, cpuid: ::kernel::sys::raw::c_int,
+                         size: usize);
+}
+extern "C" {
+    pub fn db_show_mdpcpu(pcpu: *mut pcpu);
+}
+extern "C" {
+    pub fn dpcpu_alloc(size: ::kernel::sys::raw::c_int)
+     -> *mut ::kernel::sys::raw::c_void;
+}
+extern "C" {
+    pub fn dpcpu_copy(s: *mut ::kernel::sys::raw::c_void,
+                      size: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn dpcpu_free(s: *mut ::kernel::sys::raw::c_void,
+                      size: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn dpcpu_init(dpcpu: *mut ::kernel::sys::raw::c_void,
+                      cpuid: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn pcpu_destroy(pcpu: *mut pcpu);
+}
+extern "C" {
+    pub fn pcpu_find(cpuid: u_int) -> *mut pcpu;
+}
+extern "C" {
+    pub fn pcpu_init(pcpu: *mut pcpu, cpuid: ::kernel::sys::raw::c_int,
+                     size: usize);
+}
+extern "C" {
+    #[link_name = "osreldate"]
+    pub static mut osreldate: ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    #[link_name = "dynamic_kenv"]
+    pub static mut dynamic_kenv: bool_;
+}
 extern "C" {
     #[link_name = "kenv_lock"]
     pub static mut kenv_lock: mtx;
@@ -6077,6 +6799,10 @@ extern "C" {
 extern "C" {
     #[link_name = "kern_envp"]
     pub static mut kern_envp: *mut ::kernel::sys::raw::c_char;
+}
+extern "C" {
+    #[link_name = "md_envp"]
+    pub static mut md_envp: *mut ::kernel::sys::raw::c_char;
 }
 extern "C" {
     #[link_name = "static_env"]
@@ -6140,1997 +6866,14 @@ impl Default for malloc_type {
     fn default() -> Self { unsafe { ::core::mem::zeroed() } }
 }
 #[repr(C)]
-#[derive(Copy)]
+#[derive(Debug, Copy, Clone)]
 pub struct proc_ {
-    pub p_list: proc__bindgen_ty_1,
-    pub p_threads: proc__bindgen_ty_2,
-    pub p_slock: mtx,
-    pub p_ucred: *mut ucred,
-    pub p_fd: *mut filedesc,
-    pub p_fdtol: *mut filedesc_to_leader,
-    pub p_stats: *mut pstats,
-    pub p_limit: *mut plimit,
-    pub p_limco: callout,
-    pub p_sigacts: *mut sigacts,
-    pub p_flag: ::kernel::sys::raw::c_int,
-    pub p_flag2: ::kernel::sys::raw::c_int,
-    pub p_state: proc__bindgen_ty_3,
-    pub p_pid: pid_t,
-    pub p_hash: proc__bindgen_ty_4,
-    pub p_pglist: proc__bindgen_ty_5,
-    pub p_pptr: *mut proc_,
-    pub p_sibling: proc__bindgen_ty_6,
-    pub p_children: proc__bindgen_ty_7,
-    pub p_reaper: *mut proc_,
-    pub p_reaplist: proc__bindgen_ty_8,
-    pub p_reapsibling: proc__bindgen_ty_9,
-    pub p_mtx: mtx,
-    pub p_statmtx: mtx,
-    pub p_itimmtx: mtx,
-    pub p_profmtx: mtx,
-    pub p_ksi: *mut ksiginfo,
-    pub p_sigqueue: sigqueue_t,
-    pub p_oppid: pid_t,
-    pub p_vmspace: *mut vmspace,
-    pub p_swtick: u_int,
-    pub p_cowgen: u_int,
-    pub p_realtimer: itimerval,
-    pub p_ru: rusage,
-    pub p_rux: rusage_ext,
-    pub p_crux: rusage_ext,
-    pub p_profthreads: ::kernel::sys::raw::c_int,
-    pub p_exitthreads: ::kernel::sys::raw::c_int,
-    pub p_traceflag: ::kernel::sys::raw::c_int,
-    pub p_tracevp: *mut vnode,
-    pub p_tracecred: *mut ucred,
-    pub p_textvp: *mut vnode,
-    pub p_lock: u_int,
-    pub p_sigiolst: sigiolst,
-    pub p_sigparent: ::kernel::sys::raw::c_int,
-    pub p_sig: ::kernel::sys::raw::c_int,
-    pub p_code: u_long,
-    pub p_stops: u_int,
-    pub p_stype: u_int,
-    pub p_step: ::kernel::sys::raw::c_char,
-    pub p_pfsflags: u_char,
-    pub p_ptevents: u_int,
-    pub p_nlminfo: *mut nlminfo,
-    pub p_aioinfo: *mut kaioinfo,
-    pub p_singlethread: *mut thread,
-    pub p_suspcount: ::kernel::sys::raw::c_int,
-    pub p_xthread: *mut thread,
-    pub p_boundary_count: ::kernel::sys::raw::c_int,
-    pub p_pendingcnt: ::kernel::sys::raw::c_int,
-    pub p_itimers: *mut itimers,
-    pub p_procdesc: *mut procdesc,
-    pub p_treeflag: u_int,
-    pub p_pendingexits: ::kernel::sys::raw::c_int,
-    pub p_filemon: *mut filemon,
-    pub p_pdeathsig: ::kernel::sys::raw::c_int,
-    pub p_magic: u_int,
-    pub p_osrel: ::kernel::sys::raw::c_int,
-    pub p_comm: [::kernel::sys::raw::c_char; 20usize],
-    pub p_sysent: *mut sysentvec,
-    pub p_args: *mut pargs,
-    pub p_cpulimit: rlim_t,
-    pub p_nice: ::kernel::sys::raw::c_schar,
-    pub p_fibnum: ::kernel::sys::raw::c_int,
-    pub p_reapsubtree: pid_t,
-    pub p_elf_machine: u16,
-    pub p_elf_flags: u64,
-    pub p_xexit: u_int,
-    pub p_xsig: u_int,
-    pub p_pgrp: *mut pgrp,
-    pub p_klist: *mut knlist,
-    pub p_numthreads: ::kernel::sys::raw::c_int,
-    pub p_md: mdproc,
-    pub p_itcallout: callout,
-    pub p_acflag: u_short,
-    pub p_peers: *mut proc_,
-    pub p_leader: *mut proc_,
-    pub p_emuldata: *mut ::kernel::sys::raw::c_void,
-    pub p_label: *mut label,
-    pub p_ktr: proc__bindgen_ty_10,
-    pub p_mqnotifier: proc__bindgen_ty_11,
-    pub p_dtrace: *mut kdtrace_proc,
-    pub p_pwait: cv,
-    pub p_dbgwait: cv,
-    pub p_prev_runtime: u64,
-    pub p_racct: *mut racct,
-    pub p_throttled: ::kernel::sys::raw::c_int,
-    pub p_orphan: proc__bindgen_ty_12,
-    pub p_orphans: proc__bindgen_ty_13,
+    _unused: [u8; 0],
 }
 #[repr(C)]
-#[derive(Debug, Copy)]
-pub struct proc__bindgen_ty_1 {
-    pub le_next: *mut proc_,
-    pub le_prev: *mut *mut proc_,
-}
-#[test]
-fn bindgen_test_layout_proc__bindgen_ty_1() {
-    assert_eq!(::core::mem::size_of::<proc__bindgen_ty_1>() , 16usize , concat
-               ! ( "Size of: " , stringify ! ( proc__bindgen_ty_1 ) ));
-    assert_eq! (::core::mem::align_of::<proc__bindgen_ty_1>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( proc__bindgen_ty_1 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc__bindgen_ty_1 ) ) . le_next as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc__bindgen_ty_1 ) ,
-                "::" , stringify ! ( le_next ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc__bindgen_ty_1 ) ) . le_prev as *
-                const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc__bindgen_ty_1 ) ,
-                "::" , stringify ! ( le_prev ) ));
-}
-impl Clone for proc__bindgen_ty_1 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for proc__bindgen_ty_1 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct proc__bindgen_ty_2 {
-    pub tqh_first: *mut thread,
-    pub tqh_last: *mut *mut thread,
-}
-#[test]
-fn bindgen_test_layout_proc__bindgen_ty_2() {
-    assert_eq!(::core::mem::size_of::<proc__bindgen_ty_2>() , 16usize , concat
-               ! ( "Size of: " , stringify ! ( proc__bindgen_ty_2 ) ));
-    assert_eq! (::core::mem::align_of::<proc__bindgen_ty_2>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( proc__bindgen_ty_2 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc__bindgen_ty_2 ) ) . tqh_first as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc__bindgen_ty_2 ) ,
-                "::" , stringify ! ( tqh_first ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc__bindgen_ty_2 ) ) . tqh_last as *
-                const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc__bindgen_ty_2 ) ,
-                "::" , stringify ! ( tqh_last ) ));
-}
-impl Clone for proc__bindgen_ty_2 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for proc__bindgen_ty_2 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-pub const proc__PRS_NEW: proc__bindgen_ty_3 = proc__bindgen_ty_3::PRS_NEW;
-pub const proc__PRS_NORMAL: proc__bindgen_ty_3 =
-    proc__bindgen_ty_3::PRS_NORMAL;
-pub const proc__PRS_ZOMBIE: proc__bindgen_ty_3 =
-    proc__bindgen_ty_3::PRS_ZOMBIE;
-#[repr(u32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
-pub enum proc__bindgen_ty_3 { PRS_NEW = 0, PRS_NORMAL = 1, PRS_ZOMBIE = 2, }
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct proc__bindgen_ty_4 {
-    pub le_next: *mut proc_,
-    pub le_prev: *mut *mut proc_,
-}
-#[test]
-fn bindgen_test_layout_proc__bindgen_ty_4() {
-    assert_eq!(::core::mem::size_of::<proc__bindgen_ty_4>() , 16usize , concat
-               ! ( "Size of: " , stringify ! ( proc__bindgen_ty_4 ) ));
-    assert_eq! (::core::mem::align_of::<proc__bindgen_ty_4>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( proc__bindgen_ty_4 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc__bindgen_ty_4 ) ) . le_next as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc__bindgen_ty_4 ) ,
-                "::" , stringify ! ( le_next ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc__bindgen_ty_4 ) ) . le_prev as *
-                const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc__bindgen_ty_4 ) ,
-                "::" , stringify ! ( le_prev ) ));
-}
-impl Clone for proc__bindgen_ty_4 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for proc__bindgen_ty_4 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct proc__bindgen_ty_5 {
-    pub le_next: *mut proc_,
-    pub le_prev: *mut *mut proc_,
-}
-#[test]
-fn bindgen_test_layout_proc__bindgen_ty_5() {
-    assert_eq!(::core::mem::size_of::<proc__bindgen_ty_5>() , 16usize , concat
-               ! ( "Size of: " , stringify ! ( proc__bindgen_ty_5 ) ));
-    assert_eq! (::core::mem::align_of::<proc__bindgen_ty_5>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( proc__bindgen_ty_5 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc__bindgen_ty_5 ) ) . le_next as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc__bindgen_ty_5 ) ,
-                "::" , stringify ! ( le_next ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc__bindgen_ty_5 ) ) . le_prev as *
-                const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc__bindgen_ty_5 ) ,
-                "::" , stringify ! ( le_prev ) ));
-}
-impl Clone for proc__bindgen_ty_5 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for proc__bindgen_ty_5 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct proc__bindgen_ty_6 {
-    pub le_next: *mut proc_,
-    pub le_prev: *mut *mut proc_,
-}
-#[test]
-fn bindgen_test_layout_proc__bindgen_ty_6() {
-    assert_eq!(::core::mem::size_of::<proc__bindgen_ty_6>() , 16usize , concat
-               ! ( "Size of: " , stringify ! ( proc__bindgen_ty_6 ) ));
-    assert_eq! (::core::mem::align_of::<proc__bindgen_ty_6>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( proc__bindgen_ty_6 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc__bindgen_ty_6 ) ) . le_next as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc__bindgen_ty_6 ) ,
-                "::" , stringify ! ( le_next ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc__bindgen_ty_6 ) ) . le_prev as *
-                const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc__bindgen_ty_6 ) ,
-                "::" , stringify ! ( le_prev ) ));
-}
-impl Clone for proc__bindgen_ty_6 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for proc__bindgen_ty_6 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct proc__bindgen_ty_7 {
-    pub lh_first: *mut proc_,
-}
-#[test]
-fn bindgen_test_layout_proc__bindgen_ty_7() {
-    assert_eq!(::core::mem::size_of::<proc__bindgen_ty_7>() , 8usize , concat
-               ! ( "Size of: " , stringify ! ( proc__bindgen_ty_7 ) ));
-    assert_eq! (::core::mem::align_of::<proc__bindgen_ty_7>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( proc__bindgen_ty_7 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc__bindgen_ty_7 ) ) . lh_first as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc__bindgen_ty_7 ) ,
-                "::" , stringify ! ( lh_first ) ));
-}
-impl Clone for proc__bindgen_ty_7 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for proc__bindgen_ty_7 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct proc__bindgen_ty_8 {
-    pub lh_first: *mut proc_,
-}
-#[test]
-fn bindgen_test_layout_proc__bindgen_ty_8() {
-    assert_eq!(::core::mem::size_of::<proc__bindgen_ty_8>() , 8usize , concat
-               ! ( "Size of: " , stringify ! ( proc__bindgen_ty_8 ) ));
-    assert_eq! (::core::mem::align_of::<proc__bindgen_ty_8>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( proc__bindgen_ty_8 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc__bindgen_ty_8 ) ) . lh_first as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc__bindgen_ty_8 ) ,
-                "::" , stringify ! ( lh_first ) ));
-}
-impl Clone for proc__bindgen_ty_8 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for proc__bindgen_ty_8 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct proc__bindgen_ty_9 {
-    pub le_next: *mut proc_,
-    pub le_prev: *mut *mut proc_,
-}
-#[test]
-fn bindgen_test_layout_proc__bindgen_ty_9() {
-    assert_eq!(::core::mem::size_of::<proc__bindgen_ty_9>() , 16usize , concat
-               ! ( "Size of: " , stringify ! ( proc__bindgen_ty_9 ) ));
-    assert_eq! (::core::mem::align_of::<proc__bindgen_ty_9>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( proc__bindgen_ty_9 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc__bindgen_ty_9 ) ) . le_next as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc__bindgen_ty_9 ) ,
-                "::" , stringify ! ( le_next ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc__bindgen_ty_9 ) ) . le_prev as *
-                const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc__bindgen_ty_9 ) ,
-                "::" , stringify ! ( le_prev ) ));
-}
-impl Clone for proc__bindgen_ty_9 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for proc__bindgen_ty_9 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct proc__bindgen_ty_10 {
-    pub stqh_first: *mut ktr_request,
-    pub stqh_last: *mut *mut ktr_request,
-}
-#[test]
-fn bindgen_test_layout_proc__bindgen_ty_10() {
-    assert_eq!(::core::mem::size_of::<proc__bindgen_ty_10>() , 16usize ,
-               concat ! ( "Size of: " , stringify ! ( proc__bindgen_ty_10 )
-               ));
-    assert_eq! (::core::mem::align_of::<proc__bindgen_ty_10>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( proc__bindgen_ty_10 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc__bindgen_ty_10 ) ) . stqh_first as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc__bindgen_ty_10 ) ,
-                "::" , stringify ! ( stqh_first ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc__bindgen_ty_10 ) ) . stqh_last as *
-                const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc__bindgen_ty_10 ) ,
-                "::" , stringify ! ( stqh_last ) ));
-}
-impl Clone for proc__bindgen_ty_10 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for proc__bindgen_ty_10 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct proc__bindgen_ty_11 {
-    pub lh_first: *mut mqueue_notifier,
-}
-#[test]
-fn bindgen_test_layout_proc__bindgen_ty_11() {
-    assert_eq!(::core::mem::size_of::<proc__bindgen_ty_11>() , 8usize , concat
-               ! ( "Size of: " , stringify ! ( proc__bindgen_ty_11 ) ));
-    assert_eq! (::core::mem::align_of::<proc__bindgen_ty_11>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( proc__bindgen_ty_11 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc__bindgen_ty_11 ) ) . lh_first as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc__bindgen_ty_11 ) ,
-                "::" , stringify ! ( lh_first ) ));
-}
-impl Clone for proc__bindgen_ty_11 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for proc__bindgen_ty_11 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct proc__bindgen_ty_12 {
-    pub le_next: *mut proc_,
-    pub le_prev: *mut *mut proc_,
-}
-#[test]
-fn bindgen_test_layout_proc__bindgen_ty_12() {
-    assert_eq!(::core::mem::size_of::<proc__bindgen_ty_12>() , 16usize ,
-               concat ! ( "Size of: " , stringify ! ( proc__bindgen_ty_12 )
-               ));
-    assert_eq! (::core::mem::align_of::<proc__bindgen_ty_12>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( proc__bindgen_ty_12 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc__bindgen_ty_12 ) ) . le_next as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc__bindgen_ty_12 ) ,
-                "::" , stringify ! ( le_next ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc__bindgen_ty_12 ) ) . le_prev as *
-                const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc__bindgen_ty_12 ) ,
-                "::" , stringify ! ( le_prev ) ));
-}
-impl Clone for proc__bindgen_ty_12 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for proc__bindgen_ty_12 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct proc__bindgen_ty_13 {
-    pub lh_first: *mut proc_,
-}
-#[test]
-fn bindgen_test_layout_proc__bindgen_ty_13() {
-    assert_eq!(::core::mem::size_of::<proc__bindgen_ty_13>() , 8usize , concat
-               ! ( "Size of: " , stringify ! ( proc__bindgen_ty_13 ) ));
-    assert_eq! (::core::mem::align_of::<proc__bindgen_ty_13>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( proc__bindgen_ty_13 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc__bindgen_ty_13 ) ) . lh_first as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc__bindgen_ty_13 ) ,
-                "::" , stringify ! ( lh_first ) ));
-}
-impl Clone for proc__bindgen_ty_13 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for proc__bindgen_ty_13 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[test]
-fn bindgen_test_layout_proc_() {
-    assert_eq!(::core::mem::size_of::<proc_>() , 1336usize , concat ! (
-               "Size of: " , stringify ! ( proc_ ) ));
-    assert_eq! (::core::mem::align_of::<proc_>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( proc_ ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_list as * const _ as usize
-                } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_list ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_threads as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_threads ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_slock as * const _ as usize
-                } , 32usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_slock ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_ucred as * const _ as usize
-                } , 64usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_ucred ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_fd as * const _ as usize }
-                , 72usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_fd ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_fdtol as * const _ as usize
-                } , 80usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_fdtol ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_stats as * const _ as usize
-                } , 88usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_stats ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_limit as * const _ as usize
-                } , 96usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_limit ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_limco as * const _ as usize
-                } , 104usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_limco ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_sigacts as * const _ as
-                usize } , 168usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_sigacts ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_flag as * const _ as usize
-                } , 176usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_flag ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_flag2 as * const _ as usize
-                } , 180usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_flag2 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_state as * const _ as usize
-                } , 184usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_state ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_pid as * const _ as usize }
-                , 188usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_pid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_hash as * const _ as usize
-                } , 192usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_hash ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_pglist as * const _ as
-                usize } , 208usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_pglist ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_pptr as * const _ as usize
-                } , 224usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_pptr ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_sibling as * const _ as
-                usize } , 232usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_sibling ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_children as * const _ as
-                usize } , 248usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_children ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_reaper as * const _ as
-                usize } , 256usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_reaper ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_reaplist as * const _ as
-                usize } , 264usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_reaplist ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_reapsibling as * const _ as
-                usize } , 272usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_reapsibling ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_mtx as * const _ as usize }
-                , 288usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_mtx ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_statmtx as * const _ as
-                usize } , 320usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_statmtx ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_itimmtx as * const _ as
-                usize } , 352usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_itimmtx ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_profmtx as * const _ as
-                usize } , 384usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_profmtx ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_ksi as * const _ as usize }
-                , 416usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_ksi ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_sigqueue as * const _ as
-                usize } , 424usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_sigqueue ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_oppid as * const _ as usize
-                } , 504usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_oppid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_vmspace as * const _ as
-                usize } , 512usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_vmspace ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_swtick as * const _ as
-                usize } , 520usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_swtick ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_cowgen as * const _ as
-                usize } , 524usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_cowgen ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_realtimer as * const _ as
-                usize } , 528usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_realtimer ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_ru as * const _ as usize }
-                , 560usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_ru ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_rux as * const _ as usize }
-                , 704usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_rux ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_crux as * const _ as usize
-                } , 760usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_crux ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_profthreads as * const _ as
-                usize } , 816usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_profthreads ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_exitthreads as * const _ as
-                usize } , 820usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_exitthreads ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_traceflag as * const _ as
-                usize } , 824usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_traceflag ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_tracevp as * const _ as
-                usize } , 832usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_tracevp ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_tracecred as * const _ as
-                usize } , 840usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_tracecred ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_textvp as * const _ as
-                usize } , 848usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_textvp ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_lock as * const _ as usize
-                } , 856usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_lock ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_sigiolst as * const _ as
-                usize } , 864usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_sigiolst ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_sigparent as * const _ as
-                usize } , 872usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_sigparent ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_sig as * const _ as usize }
-                , 876usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_sig ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_code as * const _ as usize
-                } , 880usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_code ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_stops as * const _ as usize
-                } , 888usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_stops ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_stype as * const _ as usize
-                } , 892usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_stype ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_step as * const _ as usize
-                } , 896usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_step ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_pfsflags as * const _ as
-                usize } , 897usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_pfsflags ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_ptevents as * const _ as
-                usize } , 900usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_ptevents ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_nlminfo as * const _ as
-                usize } , 904usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_nlminfo ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_aioinfo as * const _ as
-                usize } , 912usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_aioinfo ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_singlethread as * const _
-                as usize } , 920usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_singlethread ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_suspcount as * const _ as
-                usize } , 928usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_suspcount ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_xthread as * const _ as
-                usize } , 936usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_xthread ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_boundary_count as * const _
-                as usize } , 944usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_boundary_count ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_pendingcnt as * const _ as
-                usize } , 948usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_pendingcnt ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_itimers as * const _ as
-                usize } , 952usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_itimers ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_procdesc as * const _ as
-                usize } , 960usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_procdesc ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_treeflag as * const _ as
-                usize } , 968usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_treeflag ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_pendingexits as * const _
-                as usize } , 972usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_pendingexits ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_filemon as * const _ as
-                usize } , 976usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_filemon ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_pdeathsig as * const _ as
-                usize } , 984usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_pdeathsig ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_magic as * const _ as usize
-                } , 988usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_magic ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_osrel as * const _ as usize
-                } , 992usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_osrel ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_comm as * const _ as usize
-                } , 996usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_comm ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_sysent as * const _ as
-                usize } , 1016usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_sysent ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_args as * const _ as usize
-                } , 1024usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_args ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_cpulimit as * const _ as
-                usize } , 1032usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_cpulimit ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_nice as * const _ as usize
-                } , 1040usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_nice ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_fibnum as * const _ as
-                usize } , 1044usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_fibnum ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_reapsubtree as * const _ as
-                usize } , 1048usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_reapsubtree ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_elf_machine as * const _ as
-                usize } , 1052usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_elf_machine ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_elf_flags as * const _ as
-                usize } , 1056usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_elf_flags ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_xexit as * const _ as usize
-                } , 1064usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_xexit ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_xsig as * const _ as usize
-                } , 1068usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_xsig ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_pgrp as * const _ as usize
-                } , 1072usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_pgrp ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_klist as * const _ as usize
-                } , 1080usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_klist ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_numthreads as * const _ as
-                usize } , 1088usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_numthreads ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_md as * const _ as usize }
-                , 1096usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_md ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_itcallout as * const _ as
-                usize } , 1120usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_itcallout ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_acflag as * const _ as
-                usize } , 1184usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_acflag ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_peers as * const _ as usize
-                } , 1192usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_peers ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_leader as * const _ as
-                usize } , 1200usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_leader ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_emuldata as * const _ as
-                usize } , 1208usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_emuldata ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_label as * const _ as usize
-                } , 1216usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_label ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_ktr as * const _ as usize }
-                , 1224usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_ktr ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_mqnotifier as * const _ as
-                usize } , 1240usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_mqnotifier ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_dtrace as * const _ as
-                usize } , 1248usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_dtrace ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_pwait as * const _ as usize
-                } , 1256usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_pwait ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_dbgwait as * const _ as
-                usize } , 1272usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_dbgwait ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_prev_runtime as * const _
-                as usize } , 1288usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_prev_runtime ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_racct as * const _ as usize
-                } , 1296usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_racct ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_throttled as * const _ as
-                usize } , 1304usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_throttled ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_orphan as * const _ as
-                usize } , 1312usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_orphan ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ ) ) . p_orphans as * const _ as
-                usize } , 1328usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ ) , "::" ,
-                stringify ! ( p_orphans ) ));
-}
-impl Clone for proc_ {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for proc_ {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for proc_ {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f ,
-               "proc_ {{ p_list: {:?}, p_threads: {:?}, p_slock: {:?}, p_ucred: {:?}, p_fd: {:?}, p_fdtol: {:?}, p_stats: {:?}, p_limit: {:?}, p_limco: {:?}, p_sigacts: {:?}, p_flag: {:?}, p_flag2: {:?}, p_state: {:?}, p_pid: {:?}, p_hash: {:?}, p_pglist: {:?}, p_pptr: {:?}, p_sibling: {:?}, p_children: {:?}, p_reaper: {:?}, p_reaplist: {:?}, p_reapsibling: {:?}, p_mtx: {:?}, p_statmtx: {:?}, p_itimmtx: {:?}, p_profmtx: {:?}, p_ksi: {:?}, p_sigqueue: {:?}, p_oppid: {:?}, p_vmspace: {:?}, p_swtick: {:?}, p_cowgen: {:?}, p_realtimer: {:?}, p_ru: {:?}, p_rux: {:?}, p_crux: {:?}, p_profthreads: {:?}, p_exitthreads: {:?}, p_traceflag: {:?}, p_tracevp: {:?}, p_tracecred: {:?}, p_textvp: {:?}, p_lock: {:?}, p_sigiolst: {:?}, p_sigparent: {:?}, p_sig: {:?}, p_code: {:?}, p_stops: {:?}, p_stype: {:?}, p_step: {:?}, p_pfsflags: {:?}, p_ptevents: {:?}, p_nlminfo: {:?}, p_aioinfo: {:?}, p_singlethread: {:?}, p_suspcount: {:?}, p_xthread: {:?}, p_boundary_count: {:?}, p_pendingcnt: {:?}, p_itimers: {:?}, p_procdesc: {:?}, p_treeflag: {:?}, p_pendingexits: {:?}, p_filemon: {:?}, p_pdeathsig: {:?}, p_magic: {:?}, p_osrel: {:?}, p_comm: {:?}, p_sysent: {:?}, p_args: {:?}, p_cpulimit: {:?}, p_nice: {:?}, p_fibnum: {:?}, p_reapsubtree: {:?}, p_elf_machine: {:?}, p_elf_flags: {:?}, p_xexit: {:?}, p_xsig: {:?}, p_pgrp: {:?}, p_klist: {:?}, p_numthreads: {:?}, p_md: {:?}, p_itcallout: {:?}, p_acflag: {:?}, p_peers: {:?}, p_leader: {:?}, p_emuldata: {:?}, p_label: {:?}, p_ktr: {:?}, p_mqnotifier: {:?}, p_dtrace: {:?}, p_pwait: {:?}, p_dbgwait: {:?}, p_prev_runtime: {:?}, p_racct: {:?}, p_throttled: {:?}, p_orphan: {:?}, p_orphans: {:?} }}"
-               , self . p_list , self . p_threads , self . p_slock , self .
-               p_ucred , self . p_fd , self . p_fdtol , self . p_stats , self
-               . p_limit , self . p_limco , self . p_sigacts , self . p_flag ,
-               self . p_flag2 , self . p_state , self . p_pid , self . p_hash
-               , self . p_pglist , self . p_pptr , self . p_sibling , self .
-               p_children , self . p_reaper , self . p_reaplist , self .
-               p_reapsibling , self . p_mtx , self . p_statmtx , self .
-               p_itimmtx , self . p_profmtx , self . p_ksi , self . p_sigqueue
-               , self . p_oppid , self . p_vmspace , self . p_swtick , self .
-               p_cowgen , self . p_realtimer , self . p_ru , self . p_rux ,
-               self . p_crux , self . p_profthreads , self . p_exitthreads ,
-               self . p_traceflag , self . p_tracevp , self . p_tracecred ,
-               self . p_textvp , self . p_lock , self . p_sigiolst , self .
-               p_sigparent , self . p_sig , self . p_code , self . p_stops ,
-               self . p_stype , self . p_step , self . p_pfsflags , self .
-               p_ptevents , self . p_nlminfo , self . p_aioinfo , self .
-               p_singlethread , self . p_suspcount , self . p_xthread , self .
-               p_boundary_count , self . p_pendingcnt , self . p_itimers ,
-               self . p_procdesc , self . p_treeflag , self . p_pendingexits ,
-               self . p_filemon , self . p_pdeathsig , self . p_magic , self .
-               p_osrel , self . p_comm , self . p_sysent , self . p_args ,
-               self . p_cpulimit , self . p_nice , self . p_fibnum , self .
-               p_reapsubtree , self . p_elf_machine , self . p_elf_flags ,
-               self . p_xexit , self . p_xsig , self . p_pgrp , self . p_klist
-               , self . p_numthreads , self . p_md , self . p_itcallout , self
-               . p_acflag , self . p_peers , self . p_leader , self .
-               p_emuldata , self . p_label , self . p_ktr , self .
-               p_mqnotifier , self . p_dtrace , self . p_pwait , self .
-               p_dbgwait , self . p_prev_runtime , self . p_racct , self .
-               p_throttled , self . p_orphan , self . p_orphans)
-    }
-}
-#[repr(C)]
-#[derive(Copy)]
+#[derive(Debug, Copy, Clone)]
 pub struct thread {
-    pub td_lock: *mut mtx,
-    pub td_proc: *mut proc_,
-    pub td_plist: thread__bindgen_ty_1,
-    pub td_runq: thread__bindgen_ty_2,
-    pub td_slpq: thread__bindgen_ty_3,
-    pub td_lockq: thread__bindgen_ty_4,
-    pub td_hash: thread__bindgen_ty_5,
-    pub td_cpuset: *mut cpuset,
-    pub td_domain: domainset_ref,
-    pub td_sel: *mut seltd,
-    pub td_sleepqueue: *mut sleepqueue,
-    pub td_turnstile: *mut turnstile,
-    pub td_rlqe: *mut rl_q_entry,
-    pub td_umtxq: *mut umtx_q,
-    pub td_tid: lwpid_t,
-    pub td_sigqueue: sigqueue_t,
-    pub td_lend_user_pri: u_char,
-    pub td_epochnest: u_char,
-    pub td_flags: ::kernel::sys::raw::c_int,
-    pub td_inhibitors: ::kernel::sys::raw::c_int,
-    pub td_pflags: ::kernel::sys::raw::c_int,
-    pub td_dupfd: ::kernel::sys::raw::c_int,
-    pub td_sqqueue: ::kernel::sys::raw::c_int,
-    pub td_wchan: *mut ::kernel::sys::raw::c_void,
-    pub td_wmesg: *const ::kernel::sys::raw::c_char,
-    pub td_owepreempt: u_char,
-    pub td_tsqueue: u_char,
-    pub td_locks: ::kernel::sys::raw::c_short,
-    pub td_rw_rlocks: ::kernel::sys::raw::c_short,
-    pub td_sx_slocks: ::kernel::sys::raw::c_short,
-    pub td_lk_slocks: ::kernel::sys::raw::c_short,
-    pub td_stopsched: ::kernel::sys::raw::c_short,
-    pub td_blocked: *mut turnstile,
-    pub td_lockname: *const ::kernel::sys::raw::c_char,
-    pub td_contested: thread__bindgen_ty_6,
-    pub td_sleeplocks: *mut lock_list_entry,
-    pub td_intr_nesting_level: ::kernel::sys::raw::c_int,
-    pub td_pinned: ::kernel::sys::raw::c_int,
-    pub td_ucred: *mut ucred,
-    pub td_limit: *mut plimit,
-    pub td_slptick: ::kernel::sys::raw::c_int,
-    pub td_blktick: ::kernel::sys::raw::c_int,
-    pub td_swvoltick: ::kernel::sys::raw::c_int,
-    pub td_swinvoltick: ::kernel::sys::raw::c_int,
-    pub td_cow: u_int,
-    pub td_ru: rusage,
-    pub td_rux: rusage_ext,
-    pub td_incruntime: u64,
-    pub td_runtime: u64,
-    pub td_pticks: u_int,
-    pub td_sticks: u_int,
-    pub td_iticks: u_int,
-    pub td_uticks: u_int,
-    pub td_intrval: ::kernel::sys::raw::c_int,
-    pub td_oldsigmask: sigset_t,
-    pub td_generation: u_int,
-    pub td_sigstk: stack_t,
-    pub td_xsig: ::kernel::sys::raw::c_int,
-    pub td_profil_addr: u_long,
-    pub td_profil_ticks: u_int,
-    pub td_name: [::kernel::sys::raw::c_char; 20usize],
-    pub td_fpop: *mut file,
-    pub td_dbgflags: ::kernel::sys::raw::c_int,
-    pub td_si: siginfo_t,
-    pub td_ng_outbound: ::kernel::sys::raw::c_int,
-    pub td_osd: osd,
-    pub td_map_def_user: *mut vm_map_entry,
-    pub td_dbg_forked: pid_t,
-    pub td_vp_reserv: u_int,
-    pub td_no_sleeping: ::kernel::sys::raw::c_int,
-    pub td_su: *mut ::kernel::sys::raw::c_void,
-    pub td_sleeptimo: sbintime_t,
-    pub td_rtcgen: ::kernel::sys::raw::c_int,
-    pub td_vslock_sz: usize,
-    pub td_sigmask: sigset_t,
-    pub td_rqindex: u_char,
-    pub td_base_pri: u_char,
-    pub td_priority: u_char,
-    pub td_pri_class: u_char,
-    pub td_user_pri: u_char,
-    pub td_base_user_pri: u_char,
-    pub td_pre_epoch_prio: u_char,
-    pub td_rb_list: usize,
-    pub td_rbp_list: usize,
-    pub td_rb_inact: usize,
-    pub td_sa: syscall_args,
-    pub td_pcb: *mut pcb,
-    pub td_state: thread__bindgen_ty_7,
-    pub td_uretoff: thread__bindgen_ty_8,
-    pub td_cowgen: u_int,
-    pub td_slpcallout: callout,
-    pub td_frame: *mut trapframe,
-    pub td_kstack_obj: *mut vm_object,
-    pub td_kstack: vm_offset_t,
-    pub td_kstack_pages: ::kernel::sys::raw::c_int,
-    pub td_critnest: u_int,
-    pub td_md: mdthread,
-    pub td_ar: *mut kaudit_record,
-    pub td_lprof: [lpohead; 2usize],
-    pub td_dtrace: *mut kdtrace_thread,
-    pub td_errno: ::kernel::sys::raw::c_int,
-    pub td_vnet: *mut vnet,
-    pub td_vnet_lpush: *const ::kernel::sys::raw::c_char,
-    pub td_intr_frame: *mut trapframe,
-    pub td_rfppwait_p: *mut proc_,
-    pub td_ma: *mut *mut vm_page,
-    pub td_ma_cnt: ::kernel::sys::raw::c_int,
-    pub td_emuldata: *mut ::kernel::sys::raw::c_void,
-    pub td_lastcpu: ::kernel::sys::raw::c_int,
-    pub td_oncpu: ::kernel::sys::raw::c_int,
-    pub td_lkpi_task: *mut ::kernel::sys::raw::c_void,
-    pub td_epochq: thread__bindgen_ty_9,
-    pub td_epoch_section: epoch_section_t,
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct thread__bindgen_ty_1 {
-    pub tqe_next: *mut thread,
-    pub tqe_prev: *mut *mut thread,
-}
-#[test]
-fn bindgen_test_layout_thread__bindgen_ty_1() {
-    assert_eq!(::core::mem::size_of::<thread__bindgen_ty_1>() , 16usize ,
-               concat ! ( "Size of: " , stringify ! ( thread__bindgen_ty_1 )
-               ));
-    assert_eq! (::core::mem::align_of::<thread__bindgen_ty_1>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( thread__bindgen_ty_1 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread__bindgen_ty_1 ) ) . tqe_next as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread__bindgen_ty_1 )
-                , "::" , stringify ! ( tqe_next ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread__bindgen_ty_1 ) ) . tqe_prev as *
-                const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread__bindgen_ty_1 )
-                , "::" , stringify ! ( tqe_prev ) ));
-}
-impl Clone for thread__bindgen_ty_1 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for thread__bindgen_ty_1 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct thread__bindgen_ty_2 {
-    pub tqe_next: *mut thread,
-    pub tqe_prev: *mut *mut thread,
-}
-#[test]
-fn bindgen_test_layout_thread__bindgen_ty_2() {
-    assert_eq!(::core::mem::size_of::<thread__bindgen_ty_2>() , 16usize ,
-               concat ! ( "Size of: " , stringify ! ( thread__bindgen_ty_2 )
-               ));
-    assert_eq! (::core::mem::align_of::<thread__bindgen_ty_2>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( thread__bindgen_ty_2 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread__bindgen_ty_2 ) ) . tqe_next as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread__bindgen_ty_2 )
-                , "::" , stringify ! ( tqe_next ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread__bindgen_ty_2 ) ) . tqe_prev as *
-                const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread__bindgen_ty_2 )
-                , "::" , stringify ! ( tqe_prev ) ));
-}
-impl Clone for thread__bindgen_ty_2 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for thread__bindgen_ty_2 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct thread__bindgen_ty_3 {
-    pub tqe_next: *mut thread,
-    pub tqe_prev: *mut *mut thread,
-}
-#[test]
-fn bindgen_test_layout_thread__bindgen_ty_3() {
-    assert_eq!(::core::mem::size_of::<thread__bindgen_ty_3>() , 16usize ,
-               concat ! ( "Size of: " , stringify ! ( thread__bindgen_ty_3 )
-               ));
-    assert_eq! (::core::mem::align_of::<thread__bindgen_ty_3>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( thread__bindgen_ty_3 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread__bindgen_ty_3 ) ) . tqe_next as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread__bindgen_ty_3 )
-                , "::" , stringify ! ( tqe_next ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread__bindgen_ty_3 ) ) . tqe_prev as *
-                const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread__bindgen_ty_3 )
-                , "::" , stringify ! ( tqe_prev ) ));
-}
-impl Clone for thread__bindgen_ty_3 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for thread__bindgen_ty_3 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct thread__bindgen_ty_4 {
-    pub tqe_next: *mut thread,
-    pub tqe_prev: *mut *mut thread,
-}
-#[test]
-fn bindgen_test_layout_thread__bindgen_ty_4() {
-    assert_eq!(::core::mem::size_of::<thread__bindgen_ty_4>() , 16usize ,
-               concat ! ( "Size of: " , stringify ! ( thread__bindgen_ty_4 )
-               ));
-    assert_eq! (::core::mem::align_of::<thread__bindgen_ty_4>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( thread__bindgen_ty_4 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread__bindgen_ty_4 ) ) . tqe_next as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread__bindgen_ty_4 )
-                , "::" , stringify ! ( tqe_next ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread__bindgen_ty_4 ) ) . tqe_prev as *
-                const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread__bindgen_ty_4 )
-                , "::" , stringify ! ( tqe_prev ) ));
-}
-impl Clone for thread__bindgen_ty_4 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for thread__bindgen_ty_4 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct thread__bindgen_ty_5 {
-    pub le_next: *mut thread,
-    pub le_prev: *mut *mut thread,
-}
-#[test]
-fn bindgen_test_layout_thread__bindgen_ty_5() {
-    assert_eq!(::core::mem::size_of::<thread__bindgen_ty_5>() , 16usize ,
-               concat ! ( "Size of: " , stringify ! ( thread__bindgen_ty_5 )
-               ));
-    assert_eq! (::core::mem::align_of::<thread__bindgen_ty_5>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( thread__bindgen_ty_5 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread__bindgen_ty_5 ) ) . le_next as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread__bindgen_ty_5 )
-                , "::" , stringify ! ( le_next ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread__bindgen_ty_5 ) ) . le_prev as *
-                const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread__bindgen_ty_5 )
-                , "::" , stringify ! ( le_prev ) ));
-}
-impl Clone for thread__bindgen_ty_5 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for thread__bindgen_ty_5 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct thread__bindgen_ty_6 {
-    pub lh_first: *mut turnstile,
-}
-#[test]
-fn bindgen_test_layout_thread__bindgen_ty_6() {
-    assert_eq!(::core::mem::size_of::<thread__bindgen_ty_6>() , 8usize ,
-               concat ! ( "Size of: " , stringify ! ( thread__bindgen_ty_6 )
-               ));
-    assert_eq! (::core::mem::align_of::<thread__bindgen_ty_6>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( thread__bindgen_ty_6 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread__bindgen_ty_6 ) ) . lh_first as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread__bindgen_ty_6 )
-                , "::" , stringify ! ( lh_first ) ));
-}
-impl Clone for thread__bindgen_ty_6 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for thread__bindgen_ty_6 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-pub const thread_TDS_INACTIVE: thread__bindgen_ty_7 =
-    thread__bindgen_ty_7::TDS_INACTIVE;
-pub const thread_TDS_INHIBITED: thread__bindgen_ty_7 =
-    thread__bindgen_ty_7::TDS_INHIBITED;
-pub const thread_TDS_CAN_RUN: thread__bindgen_ty_7 =
-    thread__bindgen_ty_7::TDS_CAN_RUN;
-pub const thread_TDS_RUNQ: thread__bindgen_ty_7 =
-    thread__bindgen_ty_7::TDS_RUNQ;
-pub const thread_TDS_RUNNING: thread__bindgen_ty_7 =
-    thread__bindgen_ty_7::TDS_RUNNING;
-#[repr(u32)]
-#[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
-pub enum thread__bindgen_ty_7 {
-    TDS_INACTIVE = 0,
-    TDS_INHIBITED = 1,
-    TDS_CAN_RUN = 2,
-    TDS_RUNQ = 3,
-    TDS_RUNNING = 4,
-}
-#[repr(C)]
-#[derive(Copy)]
-pub union thread__bindgen_ty_8 {
-    pub tdu_retval: [register_t; 2usize],
-    pub tdu_off: off_t,
-    _bindgen_union_align: [u64; 2usize],
-}
-#[test]
-fn bindgen_test_layout_thread__bindgen_ty_8() {
-    assert_eq!(::core::mem::size_of::<thread__bindgen_ty_8>() , 16usize ,
-               concat ! ( "Size of: " , stringify ! ( thread__bindgen_ty_8 )
-               ));
-    assert_eq! (::core::mem::align_of::<thread__bindgen_ty_8>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( thread__bindgen_ty_8 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread__bindgen_ty_8 ) ) . tdu_retval as
-                * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread__bindgen_ty_8 )
-                , "::" , stringify ! ( tdu_retval ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread__bindgen_ty_8 ) ) . tdu_off as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread__bindgen_ty_8 )
-                , "::" , stringify ! ( tdu_off ) ));
-}
-impl Clone for thread__bindgen_ty_8 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for thread__bindgen_ty_8 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for thread__bindgen_ty_8 {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f , "thread__bindgen_ty_8 {{ union }}")
-    }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct thread__bindgen_ty_9 {
-    pub tqe_next: *mut thread,
-    pub tqe_prev: *mut *mut thread,
-}
-#[test]
-fn bindgen_test_layout_thread__bindgen_ty_9() {
-    assert_eq!(::core::mem::size_of::<thread__bindgen_ty_9>() , 16usize ,
-               concat ! ( "Size of: " , stringify ! ( thread__bindgen_ty_9 )
-               ));
-    assert_eq! (::core::mem::align_of::<thread__bindgen_ty_9>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( thread__bindgen_ty_9 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread__bindgen_ty_9 ) ) . tqe_next as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread__bindgen_ty_9 )
-                , "::" , stringify ! ( tqe_next ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread__bindgen_ty_9 ) ) . tqe_prev as *
-                const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread__bindgen_ty_9 )
-                , "::" , stringify ! ( tqe_prev ) ));
-}
-impl Clone for thread__bindgen_ty_9 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for thread__bindgen_ty_9 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[test]
-fn bindgen_test_layout_thread() {
-    assert_eq!(::core::mem::size_of::<thread>() , 1352usize , concat ! (
-               "Size of: " , stringify ! ( thread ) ));
-    assert_eq! (::core::mem::align_of::<thread>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( thread ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_lock as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_lock ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_proc as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_proc ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_plist as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_plist ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_runq as * const _ as
-                usize } , 32usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_runq ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_slpq as * const _ as
-                usize } , 48usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_slpq ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_lockq as * const _ as
-                usize } , 64usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_lockq ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_hash as * const _ as
-                usize } , 80usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_hash ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_cpuset as * const _ as
-                usize } , 96usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_cpuset ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_domain as * const _ as
-                usize } , 104usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_domain ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_sel as * const _ as usize
-                } , 120usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_sel ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_sleepqueue as * const _
-                as usize } , 128usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_sleepqueue ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_turnstile as * const _ as
-                usize } , 136usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_turnstile ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_rlqe as * const _ as
-                usize } , 144usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_rlqe ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_umtxq as * const _ as
-                usize } , 152usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_umtxq ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_tid as * const _ as usize
-                } , 160usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_tid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_sigqueue as * const _ as
-                usize } , 168usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_sigqueue ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_lend_user_pri as * const
-                _ as usize } , 248usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_lend_user_pri ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_epochnest as * const _ as
-                usize } , 249usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_epochnest ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_flags as * const _ as
-                usize } , 252usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_flags ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_inhibitors as * const _
-                as usize } , 256usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_inhibitors ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_pflags as * const _ as
-                usize } , 260usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_pflags ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_dupfd as * const _ as
-                usize } , 264usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_dupfd ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_sqqueue as * const _ as
-                usize } , 268usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_sqqueue ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_wchan as * const _ as
-                usize } , 272usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_wchan ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_wmesg as * const _ as
-                usize } , 280usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_wmesg ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_owepreempt as * const _
-                as usize } , 288usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_owepreempt ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_tsqueue as * const _ as
-                usize } , 289usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_tsqueue ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_locks as * const _ as
-                usize } , 290usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_locks ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_rw_rlocks as * const _ as
-                usize } , 292usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_rw_rlocks ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_sx_slocks as * const _ as
-                usize } , 294usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_sx_slocks ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_lk_slocks as * const _ as
-                usize } , 296usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_lk_slocks ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_stopsched as * const _ as
-                usize } , 298usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_stopsched ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_blocked as * const _ as
-                usize } , 304usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_blocked ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_lockname as * const _ as
-                usize } , 312usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_lockname ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_contested as * const _ as
-                usize } , 320usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_contested ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_sleeplocks as * const _
-                as usize } , 328usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_sleeplocks ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_intr_nesting_level as *
-                const _ as usize } , 336usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_intr_nesting_level ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_pinned as * const _ as
-                usize } , 340usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_pinned ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_ucred as * const _ as
-                usize } , 344usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_ucred ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_limit as * const _ as
-                usize } , 352usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_limit ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_slptick as * const _ as
-                usize } , 360usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_slptick ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_blktick as * const _ as
-                usize } , 364usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_blktick ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_swvoltick as * const _ as
-                usize } , 368usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_swvoltick ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_swinvoltick as * const _
-                as usize } , 372usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_swinvoltick ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_cow as * const _ as usize
-                } , 376usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_cow ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_ru as * const _ as usize
-                } , 384usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_ru ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_rux as * const _ as usize
-                } , 528usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_rux ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_incruntime as * const _
-                as usize } , 584usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_incruntime ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_runtime as * const _ as
-                usize } , 592usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_runtime ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_pticks as * const _ as
-                usize } , 600usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_pticks ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_sticks as * const _ as
-                usize } , 604usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_sticks ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_iticks as * const _ as
-                usize } , 608usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_iticks ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_uticks as * const _ as
-                usize } , 612usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_uticks ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_intrval as * const _ as
-                usize } , 616usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_intrval ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_oldsigmask as * const _
-                as usize } , 620usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_oldsigmask ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_generation as * const _
-                as usize } , 636usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_generation ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_sigstk as * const _ as
-                usize } , 640usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_sigstk ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_xsig as * const _ as
-                usize } , 664usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_xsig ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_profil_addr as * const _
-                as usize } , 672usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_profil_addr ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_profil_ticks as * const _
-                as usize } , 680usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_profil_ticks ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_name as * const _ as
-                usize } , 684usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_name ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_fpop as * const _ as
-                usize } , 704usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_fpop ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_dbgflags as * const _ as
-                usize } , 712usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_dbgflags ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_si as * const _ as usize
-                } , 720usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_si ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_ng_outbound as * const _
-                as usize } , 800usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_ng_outbound ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_osd as * const _ as usize
-                } , 808usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_osd ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_map_def_user as * const _
-                as usize } , 840usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_map_def_user ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_dbg_forked as * const _
-                as usize } , 848usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_dbg_forked ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_vp_reserv as * const _ as
-                usize } , 852usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_vp_reserv ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_no_sleeping as * const _
-                as usize } , 856usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_no_sleeping ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_su as * const _ as usize
-                } , 864usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_su ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_sleeptimo as * const _ as
-                usize } , 872usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_sleeptimo ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_rtcgen as * const _ as
-                usize } , 880usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_rtcgen ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_vslock_sz as * const _ as
-                usize } , 888usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_vslock_sz ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_sigmask as * const _ as
-                usize } , 896usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_sigmask ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_rqindex as * const _ as
-                usize } , 912usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_rqindex ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_base_pri as * const _ as
-                usize } , 913usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_base_pri ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_priority as * const _ as
-                usize } , 914usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_priority ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_pri_class as * const _ as
-                usize } , 915usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_pri_class ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_user_pri as * const _ as
-                usize } , 916usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_user_pri ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_base_user_pri as * const
-                _ as usize } , 917usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_base_user_pri ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_pre_epoch_prio as * const
-                _ as usize } , 918usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_pre_epoch_prio ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_rb_list as * const _ as
-                usize } , 920usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_rb_list ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_rbp_list as * const _ as
-                usize } , 928usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_rbp_list ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_rb_inact as * const _ as
-                usize } , 936usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_rb_inact ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_sa as * const _ as usize
-                } , 944usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_sa ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_pcb as * const _ as usize
-                } , 1032usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_pcb ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_state as * const _ as
-                usize } , 1040usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_state ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_uretoff as * const _ as
-                usize } , 1048usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_uretoff ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_cowgen as * const _ as
-                usize } , 1064usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_cowgen ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_slpcallout as * const _
-                as usize } , 1072usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_slpcallout ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_frame as * const _ as
-                usize } , 1136usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_frame ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_kstack_obj as * const _
-                as usize } , 1144usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_kstack_obj ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_kstack as * const _ as
-                usize } , 1152usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_kstack ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_kstack_pages as * const _
-                as usize } , 1160usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_kstack_pages ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_critnest as * const _ as
-                usize } , 1164usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_critnest ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_md as * const _ as usize
-                } , 1168usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_md ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_ar as * const _ as usize
-                } , 1216usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_ar ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_lprof as * const _ as
-                usize } , 1224usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_lprof ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_dtrace as * const _ as
-                usize } , 1240usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_dtrace ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_errno as * const _ as
-                usize } , 1248usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_errno ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_vnet as * const _ as
-                usize } , 1256usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_vnet ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_vnet_lpush as * const _
-                as usize } , 1264usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_vnet_lpush ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_intr_frame as * const _
-                as usize } , 1272usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_intr_frame ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_rfppwait_p as * const _
-                as usize } , 1280usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_rfppwait_p ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_ma as * const _ as usize
-                } , 1288usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_ma ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_ma_cnt as * const _ as
-                usize } , 1296usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_ma_cnt ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_emuldata as * const _ as
-                usize } , 1304usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_emuldata ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_lastcpu as * const _ as
-                usize } , 1312usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_lastcpu ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_oncpu as * const _ as
-                usize } , 1316usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_oncpu ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_lkpi_task as * const _ as
-                usize } , 1320usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_lkpi_task ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_epochq as * const _ as
-                usize } , 1328usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_epochq ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread ) ) . td_epoch_section as * const
-                _ as usize } , 1344usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread ) , "::" ,
-                stringify ! ( td_epoch_section ) ));
-}
-impl Clone for thread {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for thread {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for thread {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f ,
-               "thread {{ td_lock: {:?}, td_proc: {:?}, td_plist: {:?}, td_runq: {:?}, td_slpq: {:?}, td_lockq: {:?}, td_hash: {:?}, td_cpuset: {:?}, td_domain: {:?}, td_sel: {:?}, td_sleepqueue: {:?}, td_turnstile: {:?}, td_rlqe: {:?}, td_umtxq: {:?}, td_tid: {:?}, td_sigqueue: {:?}, td_lend_user_pri: {:?}, td_epochnest: {:?}, td_flags: {:?}, td_inhibitors: {:?}, td_pflags: {:?}, td_dupfd: {:?}, td_sqqueue: {:?}, td_wchan: {:?}, td_wmesg: {:?}, td_owepreempt: {:?}, td_tsqueue: {:?}, td_locks: {:?}, td_rw_rlocks: {:?}, td_sx_slocks: {:?}, td_lk_slocks: {:?}, td_stopsched: {:?}, td_blocked: {:?}, td_lockname: {:?}, td_contested: {:?}, td_sleeplocks: {:?}, td_intr_nesting_level: {:?}, td_pinned: {:?}, td_ucred: {:?}, td_limit: {:?}, td_slptick: {:?}, td_blktick: {:?}, td_swvoltick: {:?}, td_swinvoltick: {:?}, td_cow: {:?}, td_ru: {:?}, td_rux: {:?}, td_incruntime: {:?}, td_runtime: {:?}, td_pticks: {:?}, td_sticks: {:?}, td_iticks: {:?}, td_uticks: {:?}, td_intrval: {:?}, td_oldsigmask: {:?}, td_generation: {:?}, td_sigstk: {:?}, td_xsig: {:?}, td_profil_addr: {:?}, td_profil_ticks: {:?}, td_name: {:?}, td_fpop: {:?}, td_dbgflags: {:?}, td_si: {:?}, td_ng_outbound: {:?}, td_osd: {:?}, td_map_def_user: {:?}, td_dbg_forked: {:?}, td_vp_reserv: {:?}, td_no_sleeping: {:?}, td_su: {:?}, td_sleeptimo: {:?}, td_rtcgen: {:?}, td_vslock_sz: {:?}, td_sigmask: {:?}, td_rqindex: {:?}, td_base_pri: {:?}, td_priority: {:?}, td_pri_class: {:?}, td_user_pri: {:?}, td_base_user_pri: {:?}, td_pre_epoch_prio: {:?}, td_rb_list: {:?}, td_rbp_list: {:?}, td_rb_inact: {:?}, td_sa: {:?}, td_pcb: {:?}, td_state: {:?}, td_uretoff: {:?}, td_cowgen: {:?}, td_slpcallout: {:?}, td_frame: {:?}, td_kstack_obj: {:?}, td_kstack: {:?}, td_kstack_pages: {:?}, td_critnest: {:?}, td_md: {:?}, td_ar: {:?}, td_lprof: {:?}, td_dtrace: {:?}, td_errno: {:?}, td_vnet: {:?}, td_vnet_lpush: {:?}, td_intr_frame: {:?}, td_rfppwait_p: {:?}, td_ma: {:?}, td_ma_cnt: {:?}, td_emuldata: {:?}, td_lastcpu: {:?}, td_oncpu: {:?}, td_lkpi_task: {:?}, td_epochq: {:?}, td_epoch_section: {:?} }}"
-               , self . td_lock , self . td_proc , self . td_plist , self .
-               td_runq , self . td_slpq , self . td_lockq , self . td_hash ,
-               self . td_cpuset , self . td_domain , self . td_sel , self .
-               td_sleepqueue , self . td_turnstile , self . td_rlqe , self .
-               td_umtxq , self . td_tid , self . td_sigqueue , self .
-               td_lend_user_pri , self . td_epochnest , self . td_flags , self
-               . td_inhibitors , self . td_pflags , self . td_dupfd , self .
-               td_sqqueue , self . td_wchan , self . td_wmesg , self .
-               td_owepreempt , self . td_tsqueue , self . td_locks , self .
-               td_rw_rlocks , self . td_sx_slocks , self . td_lk_slocks , self
-               . td_stopsched , self . td_blocked , self . td_lockname , self
-               . td_contested , self . td_sleeplocks , self .
-               td_intr_nesting_level , self . td_pinned , self . td_ucred ,
-               self . td_limit , self . td_slptick , self . td_blktick , self
-               . td_swvoltick , self . td_swinvoltick , self . td_cow , self .
-               td_ru , self . td_rux , self . td_incruntime , self .
-               td_runtime , self . td_pticks , self . td_sticks , self .
-               td_iticks , self . td_uticks , self . td_intrval , self .
-               td_oldsigmask , self . td_generation , self . td_sigstk , self
-               . td_xsig , self . td_profil_addr , self . td_profil_ticks ,
-               self . td_name , self . td_fpop , self . td_dbgflags , self .
-               td_si , self . td_ng_outbound , self . td_osd , self .
-               td_map_def_user , self . td_dbg_forked , self . td_vp_reserv ,
-               self . td_no_sleeping , self . td_su , self . td_sleeptimo ,
-               self . td_rtcgen , self . td_vslock_sz , self . td_sigmask ,
-               self . td_rqindex , self . td_base_pri , self . td_priority ,
-               self . td_pri_class , self . td_user_pri , self .
-               td_base_user_pri , self . td_pre_epoch_prio , self . td_rb_list
-               , self . td_rbp_list , self . td_rb_inact , self . td_sa , self
-               . td_pcb , self . td_state , self . td_uretoff , self .
-               td_cowgen , self . td_slpcallout , self . td_frame , self .
-               td_kstack_obj , self . td_kstack , self . td_kstack_pages ,
-               self . td_critnest , self . td_md , self . td_ar , self .
-               td_lprof , self . td_dtrace , self . td_errno , self . td_vnet
-               , self . td_vnet_lpush , self . td_intr_frame , self .
-               td_rfppwait_p , self . td_ma , self . td_ma_cnt , self .
-               td_emuldata , self . td_lastcpu , self . td_oncpu , self .
-               td_lkpi_task , self . td_epochq , self . td_epoch_section)
-    }
+    _unused: [u8; 0],
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -8138,129 +6881,9 @@ pub struct tty {
     _unused: [u8; 0],
 }
 #[repr(C)]
-#[derive(Debug, Copy)]
+#[derive(Debug, Copy, Clone)]
 pub struct ucred {
-    pub cr_ref: u_int,
-    pub cr_uid: uid_t,
-    pub cr_ruid: uid_t,
-    pub cr_svuid: uid_t,
-    pub cr_ngroups: ::kernel::sys::raw::c_int,
-    pub cr_rgid: gid_t,
-    pub cr_svgid: gid_t,
-    pub cr_uidinfo: *mut uidinfo,
-    pub cr_ruidinfo: *mut uidinfo,
-    pub cr_prison: *mut prison,
-    pub cr_loginclass: *mut loginclass,
-    pub cr_flags: u_int,
-    pub cr_pspare2: [*mut ::kernel::sys::raw::c_void; 2usize],
-    pub cr_label: *mut label,
-    pub cr_audit: auditinfo_addr,
-    pub cr_groups: *mut gid_t,
-    pub cr_agroups: ::kernel::sys::raw::c_int,
-    pub cr_smallgroups: [gid_t; 16usize],
-}
-#[test]
-fn bindgen_test_layout_ucred() {
-    assert_eq!(::core::mem::size_of::<ucred>() , 224usize , concat ! (
-               "Size of: " , stringify ! ( ucred ) ));
-    assert_eq! (::core::mem::align_of::<ucred>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( ucred ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const ucred ) ) . cr_ref as * const _ as usize
-                } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( ucred ) , "::" ,
-                stringify ! ( cr_ref ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const ucred ) ) . cr_uid as * const _ as usize
-                } , 4usize , concat ! (
-                "Alignment of field: " , stringify ! ( ucred ) , "::" ,
-                stringify ! ( cr_uid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const ucred ) ) . cr_ruid as * const _ as usize
-                } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( ucred ) , "::" ,
-                stringify ! ( cr_ruid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const ucred ) ) . cr_svuid as * const _ as
-                usize } , 12usize , concat ! (
-                "Alignment of field: " , stringify ! ( ucred ) , "::" ,
-                stringify ! ( cr_svuid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const ucred ) ) . cr_ngroups as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( ucred ) , "::" ,
-                stringify ! ( cr_ngroups ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const ucred ) ) . cr_rgid as * const _ as usize
-                } , 20usize , concat ! (
-                "Alignment of field: " , stringify ! ( ucred ) , "::" ,
-                stringify ! ( cr_rgid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const ucred ) ) . cr_svgid as * const _ as
-                usize } , 24usize , concat ! (
-                "Alignment of field: " , stringify ! ( ucred ) , "::" ,
-                stringify ! ( cr_svgid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const ucred ) ) . cr_uidinfo as * const _ as
-                usize } , 32usize , concat ! (
-                "Alignment of field: " , stringify ! ( ucred ) , "::" ,
-                stringify ! ( cr_uidinfo ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const ucred ) ) . cr_ruidinfo as * const _ as
-                usize } , 40usize , concat ! (
-                "Alignment of field: " , stringify ! ( ucred ) , "::" ,
-                stringify ! ( cr_ruidinfo ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const ucred ) ) . cr_prison as * const _ as
-                usize } , 48usize , concat ! (
-                "Alignment of field: " , stringify ! ( ucred ) , "::" ,
-                stringify ! ( cr_prison ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const ucred ) ) . cr_loginclass as * const _ as
-                usize } , 56usize , concat ! (
-                "Alignment of field: " , stringify ! ( ucred ) , "::" ,
-                stringify ! ( cr_loginclass ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const ucred ) ) . cr_flags as * const _ as
-                usize } , 64usize , concat ! (
-                "Alignment of field: " , stringify ! ( ucred ) , "::" ,
-                stringify ! ( cr_flags ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const ucred ) ) . cr_pspare2 as * const _ as
-                usize } , 72usize , concat ! (
-                "Alignment of field: " , stringify ! ( ucred ) , "::" ,
-                stringify ! ( cr_pspare2 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const ucred ) ) . cr_label as * const _ as
-                usize } , 88usize , concat ! (
-                "Alignment of field: " , stringify ! ( ucred ) , "::" ,
-                stringify ! ( cr_label ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const ucred ) ) . cr_audit as * const _ as
-                usize } , 96usize , concat ! (
-                "Alignment of field: " , stringify ! ( ucred ) , "::" ,
-                stringify ! ( cr_audit ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const ucred ) ) . cr_groups as * const _ as
-                usize } , 144usize , concat ! (
-                "Alignment of field: " , stringify ! ( ucred ) , "::" ,
-                stringify ! ( cr_groups ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const ucred ) ) . cr_agroups as * const _ as
-                usize } , 152usize , concat ! (
-                "Alignment of field: " , stringify ! ( ucred ) , "::" ,
-                stringify ! ( cr_agroups ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const ucred ) ) . cr_smallgroups as * const _
-                as usize } , 156usize , concat ! (
-                "Alignment of field: " , stringify ! ( ucred ) , "::" ,
-                stringify ! ( cr_smallgroups ) ));
-}
-impl Clone for ucred {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for ucred {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+    _unused: [u8; 0],
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -8525,10 +7148,13 @@ extern "C" {
     pub fn cpu_rootconf();
 }
 extern "C" {
-    pub fn critical_enter();
+    pub fn critical_enter_KBI();
 }
 extern "C" {
-    pub fn critical_exit();
+    pub fn critical_exit_KBI();
+}
+extern "C" {
+    pub fn critical_exit_preempt();
 }
 extern "C" {
     pub fn init_param1();
@@ -8678,6 +7304,16 @@ extern "C" {
     pub fn explicit_bzero(arg1: *mut ::kernel::sys::raw::c_void, arg2: usize);
 }
 extern "C" {
+    pub fn bcmp(b1: *const ::kernel::sys::raw::c_void,
+                b2: *const ::kernel::sys::raw::c_void, len: usize)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn memset(buf: *mut ::kernel::sys::raw::c_void,
+                  c: ::kernel::sys::raw::c_int, len: usize)
+     -> *mut ::kernel::sys::raw::c_void;
+}
+extern "C" {
     pub fn memcpy(to: *mut ::kernel::sys::raw::c_void,
                   from: *const ::kernel::sys::raw::c_void, len: usize)
      -> *mut ::kernel::sys::raw::c_void;
@@ -8686,6 +7322,11 @@ extern "C" {
     pub fn memmove(dest: *mut ::kernel::sys::raw::c_void,
                    src: *const ::kernel::sys::raw::c_void, n: usize)
      -> *mut ::kernel::sys::raw::c_void;
+}
+extern "C" {
+    pub fn memcmp(b1: *const ::kernel::sys::raw::c_void,
+                  b2: *const ::kernel::sys::raw::c_void, len: usize)
+     -> ::kernel::sys::raw::c_int;
 }
 extern "C" {
     pub fn copystr(kfaddr: *const ::kernel::sys::raw::c_void,
@@ -8923,6 +7564,14 @@ extern "C" {
     pub fn testenv(name: *const ::kernel::sys::raw::c_char)
      -> ::kernel::sys::raw::c_int;
 }
+extern "C" {
+    pub fn getenv_array(name: *const ::kernel::sys::raw::c_char,
+                        data: *mut ::kernel::sys::raw::c_void,
+                        size: ::kernel::sys::raw::c_int,
+                        psize: *mut ::kernel::sys::raw::c_int,
+                        type_size: ::kernel::sys::raw::c_int,
+                        allow_signed: bool_) -> ::kernel::sys::raw::c_int;
+}
 pub type cpu_tick_f = ::core::option::Option<unsafe extern "C" fn() -> u64>;
 extern "C" {
     pub fn set_cputicker(func: cpu_tick_f, freq: u64,
@@ -8965,11 +7614,6 @@ extern "C" {
                     arg3: ::kernel::sys::raw::c_int);
 }
 extern "C" {
-    pub fn bcmp(arg1: *const ::kernel::sys::raw::c_void,
-                arg2: *const ::kernel::sys::raw::c_void, arg3: usize)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
     pub fn timingsafe_bcmp(arg1: *const ::kernel::sys::raw::c_void,
                            arg2: *const ::kernel::sys::raw::c_void,
                            arg3: usize) -> ::kernel::sys::raw::c_int;
@@ -9007,11 +7651,6 @@ extern "C" {
     pub fn memcchr(s: *const ::kernel::sys::raw::c_void,
                    c: ::kernel::sys::raw::c_int, n: usize)
      -> *mut ::kernel::sys::raw::c_void;
-}
-extern "C" {
-    pub fn memcmp(b1: *const ::kernel::sys::raw::c_void,
-                  b2: *const ::kernel::sys::raw::c_void, len: usize)
-     -> ::kernel::sys::raw::c_int;
 }
 extern "C" {
     pub fn memmem(l: *const ::kernel::sys::raw::c_void, l_len: usize,
@@ -9317,338 +7956,6 @@ extern "C" {
 extern "C" {
     pub fn _gone_in_dev(dev: *mut device, major: ::kernel::sys::raw::c_int,
                         msg: *const ::kernel::sys::raw::c_char);
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct timezone {
-    pub tz_minuteswest: ::kernel::sys::raw::c_int,
-    pub tz_dsttime: ::kernel::sys::raw::c_int,
-}
-#[test]
-fn bindgen_test_layout_timezone() {
-    assert_eq!(::core::mem::size_of::<timezone>() , 8usize , concat ! (
-               "Size of: " , stringify ! ( timezone ) ));
-    assert_eq! (::core::mem::align_of::<timezone>() , 4usize , concat ! (
-                "Alignment of " , stringify ! ( timezone ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const timezone ) ) . tz_minuteswest as * const
-                _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( timezone ) , "::" ,
-                stringify ! ( tz_minuteswest ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const timezone ) ) . tz_dsttime as * const _ as
-                usize } , 4usize , concat ! (
-                "Alignment of field: " , stringify ! ( timezone ) , "::" ,
-                stringify ! ( tz_dsttime ) ));
-}
-impl Clone for timezone {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct bintime {
-    pub sec: time_t,
-    pub frac: u64,
-}
-#[test]
-fn bindgen_test_layout_bintime() {
-    assert_eq!(::core::mem::size_of::<bintime>() , 16usize , concat ! (
-               "Size of: " , stringify ! ( bintime ) ));
-    assert_eq! (::core::mem::align_of::<bintime>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( bintime ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const bintime ) ) . sec as * const _ as usize }
-                , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( bintime ) , "::" ,
-                stringify ! ( sec ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const bintime ) ) . frac as * const _ as usize
-                } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( bintime ) , "::" ,
-                stringify ! ( frac ) ));
-}
-impl Clone for bintime {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct itimerval {
-    pub it_interval: timeval,
-    pub it_value: timeval,
-}
-#[test]
-fn bindgen_test_layout_itimerval() {
-    assert_eq!(::core::mem::size_of::<itimerval>() , 32usize , concat ! (
-               "Size of: " , stringify ! ( itimerval ) ));
-    assert_eq! (::core::mem::align_of::<itimerval>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( itimerval ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const itimerval ) ) . it_interval as * const _
-                as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( itimerval ) , "::" ,
-                stringify ! ( it_interval ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const itimerval ) ) . it_value as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( itimerval ) , "::" ,
-                stringify ! ( it_value ) ));
-}
-impl Clone for itimerval {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct clockinfo {
-    pub hz: ::kernel::sys::raw::c_int,
-    pub tick: ::kernel::sys::raw::c_int,
-    pub spare: ::kernel::sys::raw::c_int,
-    pub stathz: ::kernel::sys::raw::c_int,
-    pub profhz: ::kernel::sys::raw::c_int,
-}
-#[test]
-fn bindgen_test_layout_clockinfo() {
-    assert_eq!(::core::mem::size_of::<clockinfo>() , 20usize , concat ! (
-               "Size of: " , stringify ! ( clockinfo ) ));
-    assert_eq! (::core::mem::align_of::<clockinfo>() , 4usize , concat ! (
-                "Alignment of " , stringify ! ( clockinfo ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const clockinfo ) ) . hz as * const _ as usize
-                } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( clockinfo ) , "::" ,
-                stringify ! ( hz ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const clockinfo ) ) . tick as * const _ as
-                usize } , 4usize , concat ! (
-                "Alignment of field: " , stringify ! ( clockinfo ) , "::" ,
-                stringify ! ( tick ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const clockinfo ) ) . spare as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( clockinfo ) , "::" ,
-                stringify ! ( spare ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const clockinfo ) ) . stathz as * const _ as
-                usize } , 12usize , concat ! (
-                "Alignment of field: " , stringify ! ( clockinfo ) , "::" ,
-                stringify ! ( stathz ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const clockinfo ) ) . profhz as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( clockinfo ) , "::" ,
-                stringify ! ( profhz ) ));
-}
-impl Clone for clockinfo {
-    fn clone(&self) -> Self { *self }
-}
-extern "C" {
-    pub fn inittodr(base: time_t);
-}
-extern "C" {
-    pub fn resettodr();
-}
-extern "C" {
-    #[link_name = "time_second"]
-    pub static mut time_second: time_t;
-}
-extern "C" {
-    #[link_name = "time_uptime"]
-    pub static mut time_uptime: time_t;
-}
-extern "C" {
-    #[link_name = "tc_tick_bt"]
-    pub static mut tc_tick_bt: bintime;
-}
-extern "C" {
-    #[link_name = "tc_tick_sbt"]
-    pub static mut tc_tick_sbt: sbintime_t;
-}
-extern "C" {
-    #[link_name = "tick_bt"]
-    pub static mut tick_bt: bintime;
-}
-extern "C" {
-    #[link_name = "tick_sbt"]
-    pub static mut tick_sbt: sbintime_t;
-}
-extern "C" {
-    #[link_name = "tc_precexp"]
-    pub static mut tc_precexp: ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    #[link_name = "tc_timepercentage"]
-    pub static mut tc_timepercentage: ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    #[link_name = "bt_timethreshold"]
-    pub static mut bt_timethreshold: bintime;
-}
-extern "C" {
-    #[link_name = "bt_tickthreshold"]
-    pub static mut bt_tickthreshold: bintime;
-}
-extern "C" {
-    #[link_name = "sbt_timethreshold"]
-    pub static mut sbt_timethreshold: sbintime_t;
-}
-extern "C" {
-    #[link_name = "sbt_tickthreshold"]
-    pub static mut sbt_tickthreshold: sbintime_t;
-}
-extern "C" {
-    #[link_name = "rtc_generation"]
-    pub static mut rtc_generation: ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn binuptime(bt: *mut bintime);
-}
-extern "C" {
-    pub fn nanouptime(tsp: *mut timespec);
-}
-extern "C" {
-    pub fn microuptime(tvp: *mut timeval);
-}
-extern "C" {
-    pub fn bintime(bt: *mut bintime);
-}
-extern "C" {
-    pub fn nanotime(tsp: *mut timespec);
-}
-extern "C" {
-    pub fn microtime(tvp: *mut timeval);
-}
-extern "C" {
-    pub fn getbinuptime(bt: *mut bintime);
-}
-extern "C" {
-    pub fn getnanouptime(tsp: *mut timespec);
-}
-extern "C" {
-    pub fn getmicrouptime(tvp: *mut timeval);
-}
-extern "C" {
-    pub fn getbintime(bt: *mut bintime);
-}
-extern "C" {
-    pub fn getnanotime(tsp: *mut timespec);
-}
-extern "C" {
-    pub fn getmicrotime(tvp: *mut timeval);
-}
-extern "C" {
-    pub fn getboottime(boottime: *mut timeval);
-}
-extern "C" {
-    pub fn getboottimebin(boottimebin: *mut bintime);
-}
-extern "C" {
-    pub fn itimerdecr(itp: *mut itimerval, usec: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn itimerfix(tv: *mut timeval) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn ppsratecheck(arg1: *mut timeval,
-                        arg2: *mut ::kernel::sys::raw::c_int,
-                        arg3: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn ratecheck(arg1: *mut timeval, arg2: *const timeval)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn timevaladd(t1: *mut timeval, t2: *const timeval);
-}
-extern "C" {
-    pub fn timevalsub(t1: *mut timeval, t2: *const timeval);
-}
-extern "C" {
-    pub fn tvtohz(tv: *mut timeval) -> ::kernel::sys::raw::c_int;
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct priority {
-    pub pri_class: u_char,
-    pub pri_level: u_char,
-    pub pri_native: u_char,
-    pub pri_user: u_char,
-}
-#[test]
-fn bindgen_test_layout_priority() {
-    assert_eq!(::core::mem::size_of::<priority>() , 4usize , concat ! (
-               "Size of: " , stringify ! ( priority ) ));
-    assert_eq! (::core::mem::align_of::<priority>() , 1usize , concat ! (
-                "Alignment of " , stringify ! ( priority ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const priority ) ) . pri_class as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( priority ) , "::" ,
-                stringify ! ( pri_class ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const priority ) ) . pri_level as * const _ as
-                usize } , 1usize , concat ! (
-                "Alignment of field: " , stringify ! ( priority ) , "::" ,
-                stringify ! ( pri_level ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const priority ) ) . pri_native as * const _ as
-                usize } , 2usize , concat ! (
-                "Alignment of field: " , stringify ! ( priority ) , "::" ,
-                stringify ! ( pri_native ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const priority ) ) . pri_user as * const _ as
-                usize } , 3usize , concat ! (
-                "Alignment of field: " , stringify ! ( priority ) , "::" ,
-                stringify ! ( pri_user ) ));
-}
-impl Clone for priority {
-    fn clone(&self) -> Self { *self }
-}
-extern "C" {
-    pub fn htonl(arg1: __uint32_t) -> __uint32_t;
-}
-extern "C" {
-    pub fn htons(arg1: __uint16_t) -> __uint16_t;
-}
-extern "C" {
-    pub fn ntohl(arg1: __uint32_t) -> __uint32_t;
-}
-extern "C" {
-    pub fn ntohs(arg1: __uint16_t) -> __uint16_t;
-}
-#[repr(C)]
-#[derive(Copy)]
-pub struct mtx_padalign {
-    pub lock_object: lock_object,
-    pub mtx_lock: usize,
-    pub __bindgen_padding_0: [u64; 4usize],
-}
-#[test]
-fn bindgen_test_layout_mtx_padalign() {
-    assert_eq!(::core::mem::size_of::<mtx_padalign>() , 64usize , concat ! (
-               "Size of: " , stringify ! ( mtx_padalign ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const mtx_padalign ) ) . lock_object as * const
-                _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( mtx_padalign ) , "::" ,
-                stringify ! ( lock_object ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const mtx_padalign ) ) . mtx_lock as * const _
-                as usize } , 24usize , concat ! (
-                "Alignment of field: " , stringify ! ( mtx_padalign ) , "::" ,
-                stringify ! ( mtx_lock ) ));
-}
-impl Clone for mtx_padalign {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for mtx_padalign {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for mtx_padalign {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f , "mtx_padalign {{ lock_object: {:?}, mtx_lock: {:?} }}" ,
-               self . lock_object , self . mtx_lock)
-    }
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy)]
@@ -10025,6 +8332,12 @@ extern "C" {
      -> *mut ::kernel::sys::raw::c_void;
 }
 extern "C" {
+    pub fn uma_zalloc_pcpu_arg(zone: uma_zone_t,
+                               arg: *mut ::kernel::sys::raw::c_void,
+                               flags: ::kernel::sys::raw::c_int)
+     -> *mut ::kernel::sys::raw::c_void;
+}
+extern "C" {
     pub fn uma_zalloc_domain(zone: uma_zone_t,
                              arg: *mut ::kernel::sys::raw::c_void,
                              domain: ::kernel::sys::raw::c_int,
@@ -10035,6 +8348,11 @@ extern "C" {
     pub fn uma_zfree_arg(zone: uma_zone_t,
                          item: *mut ::kernel::sys::raw::c_void,
                          arg: *mut ::kernel::sys::raw::c_void);
+}
+extern "C" {
+    pub fn uma_zfree_pcpu_arg(zone: uma_zone_t,
+                              item: *mut ::kernel::sys::raw::c_void,
+                              arg: *mut ::kernel::sys::raw::c_void);
 }
 extern "C" {
     pub fn uma_zfree_domain(zone: uma_zone_t,
@@ -13025,986 +11343,6 @@ extern "C" {
     pub fn ck_epoch_reclaim(arg1: *mut ck_epoch_record_t);
 }
 pub type counter_u64_t = *mut u64;
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct bitset {
-    pub __bits: [::kernel::sys::raw::c_long; 1usize],
-}
-#[test]
-fn bindgen_test_layout_bitset() {
-    assert_eq!(::core::mem::size_of::<bitset>() , 8usize , concat ! (
-               "Size of: " , stringify ! ( bitset ) ));
-    assert_eq! (::core::mem::align_of::<bitset>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( bitset ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const bitset ) ) . __bits as * const _ as usize
-                } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( bitset ) , "::" ,
-                stringify ! ( __bits ) ));
-}
-impl Clone for bitset {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct _cpuset {
-    pub __bits: [::kernel::sys::raw::c_long; 4usize],
-}
-#[test]
-fn bindgen_test_layout__cpuset() {
-    assert_eq!(::core::mem::size_of::<_cpuset>() , 32usize , concat ! (
-               "Size of: " , stringify ! ( _cpuset ) ));
-    assert_eq! (::core::mem::align_of::<_cpuset>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( _cpuset ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const _cpuset ) ) . __bits as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( _cpuset ) , "::" ,
-                stringify ! ( __bits ) ));
-}
-impl Clone for _cpuset {
-    fn clone(&self) -> Self { *self }
-}
-pub type cpuset_t = _cpuset;
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct sx {
-    pub lock_object: lock_object,
-    pub sx_lock: usize,
-}
-#[test]
-fn bindgen_test_layout_sx() {
-    assert_eq!(::core::mem::size_of::<sx>() , 32usize , concat ! (
-               "Size of: " , stringify ! ( sx ) ));
-    assert_eq! (::core::mem::align_of::<sx>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( sx ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sx ) ) . lock_object as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sx ) , "::" , stringify
-                ! ( lock_object ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sx ) ) . sx_lock as * const _ as usize }
-                , 24usize , concat ! (
-                "Alignment of field: " , stringify ! ( sx ) , "::" , stringify
-                ! ( sx_lock ) ));
-}
-impl Clone for sx {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for sx {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct rmpriolist {
-    pub lh_first: *mut rm_priotracker,
-}
-#[test]
-fn bindgen_test_layout_rmpriolist() {
-    assert_eq!(::core::mem::size_of::<rmpriolist>() , 8usize , concat ! (
-               "Size of: " , stringify ! ( rmpriolist ) ));
-    assert_eq! (::core::mem::align_of::<rmpriolist>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( rmpriolist ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rmpriolist ) ) . lh_first as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( rmpriolist ) , "::" ,
-                stringify ! ( lh_first ) ));
-}
-impl Clone for rmpriolist {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for rmpriolist {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct rm_queue {
-    pub rmq_next: *mut rm_queue,
-    pub rmq_prev: *mut rm_queue,
-}
-#[test]
-fn bindgen_test_layout_rm_queue() {
-    assert_eq!(::core::mem::size_of::<rm_queue>() , 16usize , concat ! (
-               "Size of: " , stringify ! ( rm_queue ) ));
-    assert_eq! (::core::mem::align_of::<rm_queue>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( rm_queue ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rm_queue ) ) . rmq_next as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( rm_queue ) , "::" ,
-                stringify ! ( rmq_next ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rm_queue ) ) . rmq_prev as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( rm_queue ) , "::" ,
-                stringify ! ( rmq_prev ) ));
-}
-impl Clone for rm_queue {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for rm_queue {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Copy)]
-pub struct rmlock {
-    pub lock_object: lock_object,
-    pub rm_writecpus: cpuset_t,
-    pub rm_activeReaders: rmlock__bindgen_ty_1,
-    pub _rm_lock: rmlock__bindgen_ty_2,
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct rmlock__bindgen_ty_1 {
-    pub lh_first: *mut rm_priotracker,
-}
-#[test]
-fn bindgen_test_layout_rmlock__bindgen_ty_1() {
-    assert_eq!(::core::mem::size_of::<rmlock__bindgen_ty_1>() , 8usize ,
-               concat ! ( "Size of: " , stringify ! ( rmlock__bindgen_ty_1 )
-               ));
-    assert_eq! (::core::mem::align_of::<rmlock__bindgen_ty_1>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( rmlock__bindgen_ty_1 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rmlock__bindgen_ty_1 ) ) . lh_first as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( rmlock__bindgen_ty_1 )
-                , "::" , stringify ! ( lh_first ) ));
-}
-impl Clone for rmlock__bindgen_ty_1 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for rmlock__bindgen_ty_1 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Copy)]
-pub union rmlock__bindgen_ty_2 {
-    pub _rm_wlock_object: lock_object,
-    pub _rm_lock_mtx: mtx,
-    pub _rm_lock_sx: sx,
-    _bindgen_union_align: [u64; 4usize],
-}
-#[test]
-fn bindgen_test_layout_rmlock__bindgen_ty_2() {
-    assert_eq!(::core::mem::size_of::<rmlock__bindgen_ty_2>() , 32usize ,
-               concat ! ( "Size of: " , stringify ! ( rmlock__bindgen_ty_2 )
-               ));
-    assert_eq! (::core::mem::align_of::<rmlock__bindgen_ty_2>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( rmlock__bindgen_ty_2 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rmlock__bindgen_ty_2 ) ) .
-                _rm_wlock_object as * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( rmlock__bindgen_ty_2 )
-                , "::" , stringify ! ( _rm_wlock_object ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rmlock__bindgen_ty_2 ) ) . _rm_lock_mtx
-                as * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( rmlock__bindgen_ty_2 )
-                , "::" , stringify ! ( _rm_lock_mtx ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rmlock__bindgen_ty_2 ) ) . _rm_lock_sx as
-                * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( rmlock__bindgen_ty_2 )
-                , "::" , stringify ! ( _rm_lock_sx ) ));
-}
-impl Clone for rmlock__bindgen_ty_2 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for rmlock__bindgen_ty_2 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for rmlock__bindgen_ty_2 {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f , "rmlock__bindgen_ty_2 {{ union }}")
-    }
-}
-#[test]
-fn bindgen_test_layout_rmlock() {
-    assert_eq!(::core::mem::size_of::<rmlock>() , 96usize , concat ! (
-               "Size of: " , stringify ! ( rmlock ) ));
-    assert_eq! (::core::mem::align_of::<rmlock>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( rmlock ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rmlock ) ) . lock_object as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( rmlock ) , "::" ,
-                stringify ! ( lock_object ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rmlock ) ) . rm_writecpus as * const _ as
-                usize } , 24usize , concat ! (
-                "Alignment of field: " , stringify ! ( rmlock ) , "::" ,
-                stringify ! ( rm_writecpus ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rmlock ) ) . rm_activeReaders as * const
-                _ as usize } , 56usize , concat ! (
-                "Alignment of field: " , stringify ! ( rmlock ) , "::" ,
-                stringify ! ( rm_activeReaders ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rmlock ) ) . _rm_lock as * const _ as
-                usize } , 64usize , concat ! (
-                "Alignment of field: " , stringify ! ( rmlock ) , "::" ,
-                stringify ! ( _rm_lock ) ));
-}
-impl Clone for rmlock {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for rmlock {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for rmlock {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f ,
-               "rmlock {{ lock_object: {:?}, rm_writecpus: {:?}, rm_activeReaders: {:?}, _rm_lock: {:?} }}"
-               , self . lock_object , self . rm_writecpus , self .
-               rm_activeReaders , self . _rm_lock)
-    }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct rm_priotracker {
-    pub rmp_cpuQueue: rm_queue,
-    pub rmp_rmlock: *mut rmlock,
-    pub rmp_thread: *mut thread,
-    pub rmp_flags: ::kernel::sys::raw::c_int,
-    pub rmp_qentry: rm_priotracker__bindgen_ty_1,
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct rm_priotracker__bindgen_ty_1 {
-    pub le_next: *mut rm_priotracker,
-    pub le_prev: *mut *mut rm_priotracker,
-}
-#[test]
-fn bindgen_test_layout_rm_priotracker__bindgen_ty_1() {
-    assert_eq!(::core::mem::size_of::<rm_priotracker__bindgen_ty_1>() ,
-               16usize , concat ! (
-               "Size of: " , stringify ! ( rm_priotracker__bindgen_ty_1 ) ));
-    assert_eq! (::core::mem::align_of::<rm_priotracker__bindgen_ty_1>() ,
-                8usize , concat ! (
-                "Alignment of " , stringify ! ( rm_priotracker__bindgen_ty_1 )
-                ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rm_priotracker__bindgen_ty_1 ) ) .
-                le_next as * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! (
-                rm_priotracker__bindgen_ty_1 ) , "::" , stringify ! ( le_next
-                ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rm_priotracker__bindgen_ty_1 ) ) .
-                le_prev as * const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! (
-                rm_priotracker__bindgen_ty_1 ) , "::" , stringify ! ( le_prev
-                ) ));
-}
-impl Clone for rm_priotracker__bindgen_ty_1 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for rm_priotracker__bindgen_ty_1 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[test]
-fn bindgen_test_layout_rm_priotracker() {
-    assert_eq!(::core::mem::size_of::<rm_priotracker>() , 56usize , concat ! (
-               "Size of: " , stringify ! ( rm_priotracker ) ));
-    assert_eq! (::core::mem::align_of::<rm_priotracker>() , 8usize , concat !
-                ( "Alignment of " , stringify ! ( rm_priotracker ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rm_priotracker ) ) . rmp_cpuQueue as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( rm_priotracker ) , "::"
-                , stringify ! ( rmp_cpuQueue ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rm_priotracker ) ) . rmp_rmlock as *
-                const _ as usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( rm_priotracker ) , "::"
-                , stringify ! ( rmp_rmlock ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rm_priotracker ) ) . rmp_thread as *
-                const _ as usize } , 24usize , concat ! (
-                "Alignment of field: " , stringify ! ( rm_priotracker ) , "::"
-                , stringify ! ( rmp_thread ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rm_priotracker ) ) . rmp_flags as * const
-                _ as usize } , 32usize , concat ! (
-                "Alignment of field: " , stringify ! ( rm_priotracker ) , "::"
-                , stringify ! ( rmp_flags ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rm_priotracker ) ) . rmp_qentry as *
-                const _ as usize } , 40usize , concat ! (
-                "Alignment of field: " , stringify ! ( rm_priotracker ) , "::"
-                , stringify ! ( rmp_qentry ) ));
-}
-impl Clone for rm_priotracker {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for rm_priotracker {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct rusage {
-    pub ru_utime: timeval,
-    pub ru_stime: timeval,
-    pub ru_maxrss: ::kernel::sys::raw::c_long,
-    pub ru_ixrss: ::kernel::sys::raw::c_long,
-    pub ru_idrss: ::kernel::sys::raw::c_long,
-    pub ru_isrss: ::kernel::sys::raw::c_long,
-    pub ru_minflt: ::kernel::sys::raw::c_long,
-    pub ru_majflt: ::kernel::sys::raw::c_long,
-    pub ru_nswap: ::kernel::sys::raw::c_long,
-    pub ru_inblock: ::kernel::sys::raw::c_long,
-    pub ru_oublock: ::kernel::sys::raw::c_long,
-    pub ru_msgsnd: ::kernel::sys::raw::c_long,
-    pub ru_msgrcv: ::kernel::sys::raw::c_long,
-    pub ru_nsignals: ::kernel::sys::raw::c_long,
-    pub ru_nvcsw: ::kernel::sys::raw::c_long,
-    pub ru_nivcsw: ::kernel::sys::raw::c_long,
-}
-#[test]
-fn bindgen_test_layout_rusage() {
-    assert_eq!(::core::mem::size_of::<rusage>() , 144usize , concat ! (
-               "Size of: " , stringify ! ( rusage ) ));
-    assert_eq! (::core::mem::align_of::<rusage>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( rusage ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rusage ) ) . ru_utime as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
-                stringify ! ( ru_utime ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rusage ) ) . ru_stime as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
-                stringify ! ( ru_stime ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rusage ) ) . ru_maxrss as * const _ as
-                usize } , 32usize , concat ! (
-                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
-                stringify ! ( ru_maxrss ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rusage ) ) . ru_ixrss as * const _ as
-                usize } , 40usize , concat ! (
-                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
-                stringify ! ( ru_ixrss ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rusage ) ) . ru_idrss as * const _ as
-                usize } , 48usize , concat ! (
-                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
-                stringify ! ( ru_idrss ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rusage ) ) . ru_isrss as * const _ as
-                usize } , 56usize , concat ! (
-                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
-                stringify ! ( ru_isrss ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rusage ) ) . ru_minflt as * const _ as
-                usize } , 64usize , concat ! (
-                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
-                stringify ! ( ru_minflt ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rusage ) ) . ru_majflt as * const _ as
-                usize } , 72usize , concat ! (
-                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
-                stringify ! ( ru_majflt ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rusage ) ) . ru_nswap as * const _ as
-                usize } , 80usize , concat ! (
-                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
-                stringify ! ( ru_nswap ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rusage ) ) . ru_inblock as * const _ as
-                usize } , 88usize , concat ! (
-                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
-                stringify ! ( ru_inblock ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rusage ) ) . ru_oublock as * const _ as
-                usize } , 96usize , concat ! (
-                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
-                stringify ! ( ru_oublock ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rusage ) ) . ru_msgsnd as * const _ as
-                usize } , 104usize , concat ! (
-                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
-                stringify ! ( ru_msgsnd ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rusage ) ) . ru_msgrcv as * const _ as
-                usize } , 112usize , concat ! (
-                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
-                stringify ! ( ru_msgrcv ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rusage ) ) . ru_nsignals as * const _ as
-                usize } , 120usize , concat ! (
-                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
-                stringify ! ( ru_nsignals ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rusage ) ) . ru_nvcsw as * const _ as
-                usize } , 128usize , concat ! (
-                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
-                stringify ! ( ru_nvcsw ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rusage ) ) . ru_nivcsw as * const _ as
-                usize } , 136usize , concat ! (
-                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
-                stringify ! ( ru_nivcsw ) ));
-}
-impl Clone for rusage {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct __wrusage {
-    pub wru_self: rusage,
-    pub wru_children: rusage,
-}
-#[test]
-fn bindgen_test_layout___wrusage() {
-    assert_eq!(::core::mem::size_of::<__wrusage>() , 288usize , concat ! (
-               "Size of: " , stringify ! ( __wrusage ) ));
-    assert_eq! (::core::mem::align_of::<__wrusage>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( __wrusage ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __wrusage ) ) . wru_self as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( __wrusage ) , "::" ,
-                stringify ! ( wru_self ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __wrusage ) ) . wru_children as * const _
-                as usize } , 144usize , concat ! (
-                "Alignment of field: " , stringify ! ( __wrusage ) , "::" ,
-                stringify ! ( wru_children ) ));
-}
-impl Clone for __wrusage {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct rlimit {
-    pub rlim_cur: rlim_t,
-    pub rlim_max: rlim_t,
-}
-#[test]
-fn bindgen_test_layout_rlimit() {
-    assert_eq!(::core::mem::size_of::<rlimit>() , 16usize , concat ! (
-               "Size of: " , stringify ! ( rlimit ) ));
-    assert_eq! (::core::mem::align_of::<rlimit>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( rlimit ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rlimit ) ) . rlim_cur as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( rlimit ) , "::" ,
-                stringify ! ( rlim_cur ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rlimit ) ) . rlim_max as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( rlimit ) , "::" ,
-                stringify ! ( rlim_max ) ));
-}
-impl Clone for rlimit {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct orlimit {
-    pub rlim_cur: __int32_t,
-    pub rlim_max: __int32_t,
-}
-#[test]
-fn bindgen_test_layout_orlimit() {
-    assert_eq!(::core::mem::size_of::<orlimit>() , 8usize , concat ! (
-               "Size of: " , stringify ! ( orlimit ) ));
-    assert_eq! (::core::mem::align_of::<orlimit>() , 4usize , concat ! (
-                "Alignment of " , stringify ! ( orlimit ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const orlimit ) ) . rlim_cur as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( orlimit ) , "::" ,
-                stringify ! ( rlim_cur ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const orlimit ) ) . rlim_max as * const _ as
-                usize } , 4usize , concat ! (
-                "Alignment of field: " , stringify ! ( orlimit ) , "::" ,
-                stringify ! ( rlim_max ) ));
-}
-impl Clone for orlimit {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct loadavg {
-    pub ldavg: [__fixpt_t; 3usize],
-    pub fscale: ::kernel::sys::raw::c_long,
-}
-#[test]
-fn bindgen_test_layout_loadavg() {
-    assert_eq!(::core::mem::size_of::<loadavg>() , 24usize , concat ! (
-               "Size of: " , stringify ! ( loadavg ) ));
-    assert_eq! (::core::mem::align_of::<loadavg>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( loadavg ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const loadavg ) ) . ldavg as * const _ as usize
-                } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( loadavg ) , "::" ,
-                stringify ! ( ldavg ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const loadavg ) ) . fscale as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( loadavg ) , "::" ,
-                stringify ! ( fscale ) ));
-}
-impl Clone for loadavg {
-    fn clone(&self) -> Self { *self }
-}
-extern "C" {
-    #[link_name = "averunnable"]
-    pub static mut averunnable: loadavg;
-}
-extern "C" {
-    pub fn read_cpu_time(cp_time: *mut ::kernel::sys::raw::c_long);
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct pcb {
-    _unused: [u8; 0],
-}
-extern "C" {
-    #[link_name = "__start_set_pcpu"]
-    pub static mut __start_set_pcpu: *mut usize;
-}
-extern "C" {
-    #[link_name = "__stop_set_pcpu"]
-    pub static mut __stop_set_pcpu: *mut usize;
-}
-extern "C" {
-    #[link_name = "dpcpu_off"]
-    pub static mut dpcpu_off: [usize; 0usize];
-}
-#[repr(C)]
-#[derive(Copy)]
-pub struct pcpu {
-    pub pc_curthread: *mut thread,
-    pub pc_idlethread: *mut thread,
-    pub pc_fpcurthread: *mut thread,
-    pub pc_deadthread: *mut thread,
-    pub pc_curpcb: *mut pcb,
-    pub pc_switchtime: u64,
-    pub pc_switchticks: ::kernel::sys::raw::c_int,
-    pub pc_cpuid: u_int,
-    pub pc_allcpu: pcpu__bindgen_ty_1,
-    pub pc_spinlocks: *mut lock_list_entry,
-    pub pc_cp_time: [::kernel::sys::raw::c_long; 5usize],
-    pub pc_device: *mut device,
-    pub pc_netisr: *mut ::kernel::sys::raw::c_void,
-    pub pc_unused1: ::kernel::sys::raw::c_int,
-    pub pc_domain: ::kernel::sys::raw::c_int,
-    pub pc_rm_queue: rm_queue,
-    pub pc_dynamic: usize,
-    pub pc_early_dummy_counter: u64,
-    pub __bindgen_padding_0: [u8; 88usize],
-    pub pc_monitorbuf: [::kernel::sys::raw::c_char; 128usize],
-    pub pc_prvspace: *mut pcpu,
-    pub pc_curpmap: *mut pmap,
-    pub pc_tssp: *mut amd64tss,
-    pub pc_commontssp: *mut amd64tss,
-    pub pc_kcr3: u64,
-    pub pc_ucr3: u64,
-    pub pc_saved_ucr3: u64,
-    pub pc_rsp0: register_t,
-    pub pc_scratch_rsp: register_t,
-    pub pc_scratch_rax: register_t,
-    pub pc_apic_id: u_int,
-    pub pc_acpi_id: u_int,
-    pub pc_fs32p: *mut user_segment_descriptor,
-    pub pc_gs32p: *mut user_segment_descriptor,
-    pub pc_ldt: *mut system_segment_descriptor,
-    pub pc_tss: *mut system_segment_descriptor,
-    pub pc_pm_save_cnt: u64,
-    pub pc_cmci_mask: u_int,
-    pub pc_dbreg: [u64; 16usize],
-    pub pc_pti_stack: [u64; 16usize],
-    pub pc_pti_rsp0: register_t,
-    pub pc_dbreg_cmd: ::kernel::sys::raw::c_int,
-    pub pc_vcpu_id: u_int,
-    pub pc_pcid_next: u32,
-    pub pc_pcid_gen: u32,
-    pub pc_smp_tlb_done: u32,
-    pub pc_ibpb_set: u32,
-    pub __pad: [::kernel::sys::raw::c_char; 216usize],
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct pcpu__bindgen_ty_1 {
-    pub stqe_next: *mut pcpu,
-}
-#[test]
-fn bindgen_test_layout_pcpu__bindgen_ty_1() {
-    assert_eq!(::core::mem::size_of::<pcpu__bindgen_ty_1>() , 8usize , concat
-               ! ( "Size of: " , stringify ! ( pcpu__bindgen_ty_1 ) ));
-    assert_eq! (::core::mem::align_of::<pcpu__bindgen_ty_1>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( pcpu__bindgen_ty_1 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu__bindgen_ty_1 ) ) . stqe_next as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu__bindgen_ty_1 ) ,
-                "::" , stringify ! ( stqe_next ) ));
-}
-impl Clone for pcpu__bindgen_ty_1 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for pcpu__bindgen_ty_1 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[test]
-fn bindgen_test_layout_pcpu() {
-    assert_eq!(::core::mem::size_of::<pcpu>() , 1024usize , concat ! (
-               "Size of: " , stringify ! ( pcpu ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_curthread as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_curthread ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_idlethread as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_idlethread ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_fpcurthread as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_fpcurthread ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_deadthread as * const _ as
-                usize } , 24usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_deadthread ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_curpcb as * const _ as
-                usize } , 32usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_curpcb ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_switchtime as * const _ as
-                usize } , 40usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_switchtime ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_switchticks as * const _ as
-                usize } , 48usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_switchticks ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_cpuid as * const _ as usize
-                } , 52usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_cpuid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_allcpu as * const _ as
-                usize } , 56usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_allcpu ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_spinlocks as * const _ as
-                usize } , 64usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_spinlocks ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_cp_time as * const _ as
-                usize } , 72usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_cp_time ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_device as * const _ as
-                usize } , 112usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_device ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_netisr as * const _ as
-                usize } , 120usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_netisr ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_unused1 as * const _ as
-                usize } , 128usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_unused1 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_domain as * const _ as
-                usize } , 132usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_domain ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_rm_queue as * const _ as
-                usize } , 136usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_rm_queue ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_dynamic as * const _ as
-                usize } , 152usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_dynamic ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_early_dummy_counter as *
-                const _ as usize } , 160usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_early_dummy_counter ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_monitorbuf as * const _ as
-                usize } , 256usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_monitorbuf ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_prvspace as * const _ as
-                usize } , 384usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_prvspace ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_curpmap as * const _ as
-                usize } , 392usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_curpmap ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_tssp as * const _ as usize
-                } , 400usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_tssp ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_commontssp as * const _ as
-                usize } , 408usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_commontssp ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_kcr3 as * const _ as usize
-                } , 416usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_kcr3 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_ucr3 as * const _ as usize
-                } , 424usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_ucr3 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_saved_ucr3 as * const _ as
-                usize } , 432usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_saved_ucr3 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_rsp0 as * const _ as usize
-                } , 440usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_rsp0 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_scratch_rsp as * const _ as
-                usize } , 448usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_scratch_rsp ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_scratch_rax as * const _ as
-                usize } , 456usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_scratch_rax ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_apic_id as * const _ as
-                usize } , 464usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_apic_id ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_acpi_id as * const _ as
-                usize } , 468usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_acpi_id ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_fs32p as * const _ as usize
-                } , 472usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_fs32p ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_gs32p as * const _ as usize
-                } , 480usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_gs32p ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_ldt as * const _ as usize }
-                , 488usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_ldt ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_tss as * const _ as usize }
-                , 496usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_tss ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_pm_save_cnt as * const _ as
-                usize } , 504usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_pm_save_cnt ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_cmci_mask as * const _ as
-                usize } , 512usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_cmci_mask ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_dbreg as * const _ as usize
-                } , 520usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_dbreg ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_pti_stack as * const _ as
-                usize } , 648usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_pti_stack ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_pti_rsp0 as * const _ as
-                usize } , 776usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_pti_rsp0 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_dbreg_cmd as * const _ as
-                usize } , 784usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_dbreg_cmd ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_vcpu_id as * const _ as
-                usize } , 788usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_vcpu_id ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_pcid_next as * const _ as
-                usize } , 792usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_pcid_next ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_pcid_gen as * const _ as
-                usize } , 796usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_pcid_gen ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_smp_tlb_done as * const _
-                as usize } , 800usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_smp_tlb_done ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . pc_ibpb_set as * const _ as
-                usize } , 804usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( pc_ibpb_set ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pcpu ) ) . __pad as * const _ as usize }
-                , 808usize , concat ! (
-                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
-                stringify ! ( __pad ) ));
-}
-impl Clone for pcpu {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for pcpu {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for pcpu {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f ,
-               "pcpu {{ pc_curthread: {:?}, pc_idlethread: {:?}, pc_fpcurthread: {:?}, pc_deadthread: {:?}, pc_curpcb: {:?}, pc_switchtime: {:?}, pc_switchticks: {:?}, pc_cpuid: {:?}, pc_allcpu: {:?}, pc_spinlocks: {:?}, pc_cp_time: {:?}, pc_device: {:?}, pc_netisr: {:?}, pc_unused1: {:?}, pc_domain: {:?}, pc_rm_queue: {:?}, pc_dynamic: {:?}, pc_early_dummy_counter: {:?}, pc_monitorbuf: [{}], pc_prvspace: {:?}, pc_curpmap: {:?}, pc_tssp: {:?}, pc_commontssp: {:?}, pc_kcr3: {:?}, pc_ucr3: {:?}, pc_saved_ucr3: {:?}, pc_rsp0: {:?}, pc_scratch_rsp: {:?}, pc_scratch_rax: {:?}, pc_apic_id: {:?}, pc_acpi_id: {:?}, pc_fs32p: {:?}, pc_gs32p: {:?}, pc_ldt: {:?}, pc_tss: {:?}, pc_pm_save_cnt: {:?}, pc_cmci_mask: {:?}, pc_dbreg: {:?}, pc_pti_stack: {:?}, pc_pti_rsp0: {:?}, pc_dbreg_cmd: {:?}, pc_vcpu_id: {:?}, pc_pcid_next: {:?}, pc_pcid_gen: {:?}, pc_smp_tlb_done: {:?}, pc_ibpb_set: {:?}, __pad: [{}] }}"
-               , self . pc_curthread , self . pc_idlethread , self .
-               pc_fpcurthread , self . pc_deadthread , self . pc_curpcb , self
-               . pc_switchtime , self . pc_switchticks , self . pc_cpuid ,
-               self . pc_allcpu , self . pc_spinlocks , self . pc_cp_time ,
-               self . pc_device , self . pc_netisr , self . pc_unused1 , self
-               . pc_domain , self . pc_rm_queue , self . pc_dynamic , self .
-               pc_early_dummy_counter , self . pc_monitorbuf . iter (  ) .
-               enumerate (  ) . map (
-               | ( i , v ) | format ! (
-               "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: <
-               String > (  ) , self . pc_prvspace , self . pc_curpmap , self .
-               pc_tssp , self . pc_commontssp , self . pc_kcr3 , self .
-               pc_ucr3 , self . pc_saved_ucr3 , self . pc_rsp0 , self .
-               pc_scratch_rsp , self . pc_scratch_rax , self . pc_apic_id ,
-               self . pc_acpi_id , self . pc_fs32p , self . pc_gs32p , self .
-               pc_ldt , self . pc_tss , self . pc_pm_save_cnt , self .
-               pc_cmci_mask , self . pc_dbreg , self . pc_pti_stack , self .
-               pc_pti_rsp0 , self . pc_dbreg_cmd , self . pc_vcpu_id , self .
-               pc_pcid_next , self . pc_pcid_gen , self . pc_smp_tlb_done ,
-               self . pc_ibpb_set , self . __pad . iter (  ) . enumerate (  )
-               . map (
-               | ( i , v ) | format ! (
-               "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: <
-               String > (  ))
-    }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct cpuhead {
-    pub stqh_first: *mut pcpu,
-    pub stqh_last: *mut *mut pcpu,
-}
-#[test]
-fn bindgen_test_layout_cpuhead() {
-    assert_eq!(::core::mem::size_of::<cpuhead>() , 16usize , concat ! (
-               "Size of: " , stringify ! ( cpuhead ) ));
-    assert_eq! (::core::mem::align_of::<cpuhead>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( cpuhead ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const cpuhead ) ) . stqh_first as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( cpuhead ) , "::" ,
-                stringify ! ( stqh_first ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const cpuhead ) ) . stqh_last as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( cpuhead ) , "::" ,
-                stringify ! ( stqh_last ) ));
-}
-impl Clone for cpuhead {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for cpuhead {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-extern "C" {
-    #[link_name = "cpuhead"]
-    pub static mut cpuhead: cpuhead;
-}
-extern "C" {
-    #[link_name = "cpuid_to_pcpu"]
-    pub static mut cpuid_to_pcpu: [*mut pcpu; 0usize];
-}
-extern "C" {
-    pub fn cpu_pcpu_init(pcpu: *mut pcpu, cpuid: ::kernel::sys::raw::c_int,
-                         size: usize);
-}
-extern "C" {
-    pub fn db_show_mdpcpu(pcpu: *mut pcpu);
-}
-extern "C" {
-    pub fn dpcpu_alloc(size: ::kernel::sys::raw::c_int)
-     -> *mut ::kernel::sys::raw::c_void;
-}
-extern "C" {
-    pub fn dpcpu_copy(s: *mut ::kernel::sys::raw::c_void,
-                      size: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn dpcpu_free(s: *mut ::kernel::sys::raw::c_void,
-                      size: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn dpcpu_init(dpcpu: *mut ::kernel::sys::raw::c_void,
-                      cpuid: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn pcpu_destroy(pcpu: *mut pcpu);
-}
-extern "C" {
-    pub fn pcpu_find(cpuid: u_int) -> *mut pcpu;
-}
-extern "C" {
-    pub fn pcpu_init(pcpu: *mut pcpu, cpuid: ::kernel::sys::raw::c_int,
-                     size: usize);
-}
 extern "C" {
     #[link_name = "__pcpu"]
     pub static mut __pcpu: [pcpu; 0usize];
@@ -14352,6 +11690,873 @@ extern "C" {
 }
 extern "C" {
     pub fn witness_thread_exit(arg1: *mut thread);
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct epoch {
+    _unused: [u8; 0],
+}
+pub type epoch_t = *mut epoch;
+extern "C" {
+    #[link_name = "global_epoch"]
+    pub static mut global_epoch: epoch_t;
+}
+extern "C" {
+    #[link_name = "global_epoch_preempt"]
+    pub static mut global_epoch_preempt: epoch_t;
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct epoch_context {
+    pub data: [*mut ::kernel::sys::raw::c_void; 2usize],
+}
+#[test]
+fn bindgen_test_layout_epoch_context() {
+    assert_eq!(::core::mem::size_of::<epoch_context>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( epoch_context ) ));
+    assert_eq! (::core::mem::align_of::<epoch_context>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( epoch_context ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const epoch_context ) ) . data as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( epoch_context ) , "::"
+                , stringify ! ( data ) ));
+}
+impl Clone for epoch_context {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for epoch_context {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+pub type epoch_context_t = *mut epoch_context;
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct epoch_tracker {
+    pub datap: [*mut ::kernel::sys::raw::c_void; 3usize],
+    pub datai: [::kernel::sys::raw::c_int; 1usize],
+}
+#[test]
+fn bindgen_test_layout_epoch_tracker() {
+    assert_eq!(::core::mem::size_of::<epoch_tracker>() , 32usize , concat ! (
+               "Size of: " , stringify ! ( epoch_tracker ) ));
+    assert_eq! (::core::mem::align_of::<epoch_tracker>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( epoch_tracker ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const epoch_tracker ) ) . datap as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( epoch_tracker ) , "::"
+                , stringify ! ( datap ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const epoch_tracker ) ) . datai as * const _ as
+                usize } , 24usize , concat ! (
+                "Alignment of field: " , stringify ! ( epoch_tracker ) , "::"
+                , stringify ! ( datai ) ));
+}
+impl Clone for epoch_tracker {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for epoch_tracker {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+pub type epoch_tracker_t = *mut epoch_tracker;
+extern "C" {
+    pub fn epoch_alloc(flags: ::kernel::sys::raw::c_int) -> epoch_t;
+}
+extern "C" {
+    pub fn epoch_free(epoch: epoch_t);
+}
+extern "C" {
+    pub fn epoch_wait(epoch: epoch_t);
+}
+extern "C" {
+    pub fn epoch_wait_preempt(epoch: epoch_t);
+}
+extern "C" {
+    pub fn epoch_call(epoch: epoch_t, ctx: epoch_context_t,
+                      callback:
+                          ::core::option::Option<unsafe extern "C" fn(arg1:
+                                                                          epoch_context_t)>);
+}
+extern "C" {
+    pub fn in_epoch(epoch: epoch_t) -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn in_epoch_verbose(epoch: epoch_t,
+                            dump_onfail: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    #[link_name = "pcpu_entry_epoch_cb_count"]
+    pub static mut pcpu_entry_epoch_cb_count: ::kernel::sys::raw::c_int;
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct grouptask {
+    pub gt_task: gtask,
+    pub gt_taskqueue: *mut ::kernel::sys::raw::c_void,
+    pub gt_list: grouptask__bindgen_ty_1,
+    pub gt_uniq: *mut ::kernel::sys::raw::c_void,
+    pub gt_name: [::kernel::sys::raw::c_char; 32usize],
+    pub gt_irq: i16,
+    pub gt_cpu: i16,
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct grouptask__bindgen_ty_1 {
+    pub le_next: *mut grouptask,
+    pub le_prev: *mut *mut grouptask,
+}
+#[test]
+fn bindgen_test_layout_grouptask__bindgen_ty_1() {
+    assert_eq!(::core::mem::size_of::<grouptask__bindgen_ty_1>() , 16usize ,
+               concat ! (
+               "Size of: " , stringify ! ( grouptask__bindgen_ty_1 ) ));
+    assert_eq! (::core::mem::align_of::<grouptask__bindgen_ty_1>() , 8usize ,
+                concat ! (
+                "Alignment of " , stringify ! ( grouptask__bindgen_ty_1 ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const grouptask__bindgen_ty_1 ) ) . le_next as
+                * const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( grouptask__bindgen_ty_1
+                ) , "::" , stringify ! ( le_next ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const grouptask__bindgen_ty_1 ) ) . le_prev as
+                * const _ as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( grouptask__bindgen_ty_1
+                ) , "::" , stringify ! ( le_prev ) ));
+}
+impl Clone for grouptask__bindgen_ty_1 {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for grouptask__bindgen_ty_1 {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+#[test]
+fn bindgen_test_layout_grouptask() {
+    assert_eq!(::core::mem::size_of::<grouptask>() , 104usize , concat ! (
+               "Size of: " , stringify ! ( grouptask ) ));
+    assert_eq! (::core::mem::align_of::<grouptask>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( grouptask ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const grouptask ) ) . gt_task as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( grouptask ) , "::" ,
+                stringify ! ( gt_task ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const grouptask ) ) . gt_taskqueue as * const _
+                as usize } , 32usize , concat ! (
+                "Alignment of field: " , stringify ! ( grouptask ) , "::" ,
+                stringify ! ( gt_taskqueue ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const grouptask ) ) . gt_list as * const _ as
+                usize } , 40usize , concat ! (
+                "Alignment of field: " , stringify ! ( grouptask ) , "::" ,
+                stringify ! ( gt_list ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const grouptask ) ) . gt_uniq as * const _ as
+                usize } , 56usize , concat ! (
+                "Alignment of field: " , stringify ! ( grouptask ) , "::" ,
+                stringify ! ( gt_uniq ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const grouptask ) ) . gt_name as * const _ as
+                usize } , 64usize , concat ! (
+                "Alignment of field: " , stringify ! ( grouptask ) , "::" ,
+                stringify ! ( gt_name ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const grouptask ) ) . gt_irq as * const _ as
+                usize } , 96usize , concat ! (
+                "Alignment of field: " , stringify ! ( grouptask ) , "::" ,
+                stringify ! ( gt_irq ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const grouptask ) ) . gt_cpu as * const _ as
+                usize } , 98usize , concat ! (
+                "Alignment of field: " , stringify ! ( grouptask ) , "::" ,
+                stringify ! ( gt_cpu ) ));
+}
+impl Clone for grouptask {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for grouptask {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+extern "C" {
+    #[link_name = "pcpu_entry_epoch_cb_task"]
+    pub static mut pcpu_entry_epoch_cb_task: grouptask;
+}
+extern "C" {
+    pub fn epoch_enter_preempt_KBI(epoch: epoch_t, et: epoch_tracker_t);
+}
+extern "C" {
+    pub fn epoch_exit_preempt_KBI(epoch: epoch_t, et: epoch_tracker_t);
+}
+extern "C" {
+    pub fn epoch_enter_KBI(epoch: epoch_t);
+}
+extern "C" {
+    pub fn epoch_exit_KBI(epoch: epoch_t);
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct lock_profile_object {
+    _unused: [u8; 0],
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct lpohead {
+    pub lh_first: *mut lock_profile_object,
+}
+#[test]
+fn bindgen_test_layout_lpohead() {
+    assert_eq!(::core::mem::size_of::<lpohead>() , 8usize , concat ! (
+               "Size of: " , stringify ! ( lpohead ) ));
+    assert_eq! (::core::mem::align_of::<lpohead>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( lpohead ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const lpohead ) ) . lh_first as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( lpohead ) , "::" ,
+                stringify ! ( lh_first ) ));
+}
+impl Clone for lpohead {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for lpohead {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+extern "C" {
+    #[link_name = "lockstat_enabled"]
+    pub static mut lockstat_enabled: bool_;
+}
+extern "C" {
+    pub fn _mtx_init(c: *mut usize, name: *const ::kernel::sys::raw::c_char,
+                     type_: *const ::kernel::sys::raw::c_char,
+                     opts: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn _mtx_destroy(c: *mut usize);
+}
+extern "C" {
+    pub fn mtx_sysinit(arg: *mut ::kernel::sys::raw::c_void);
+}
+extern "C" {
+    pub fn _mtx_trylock_flags_int(m: *mut mtx,
+                                  opts: ::kernel::sys::raw::c_int,
+                                  file: *const ::kernel::sys::raw::c_char,
+                                  line: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn _mtx_trylock_flags_(c: *mut usize, opts: ::kernel::sys::raw::c_int,
+                               file: *const ::kernel::sys::raw::c_char,
+                               line: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn mutex_init();
+}
+extern "C" {
+    pub fn __mtx_lock_sleep(c: *mut usize, v: usize,
+                            opts: ::kernel::sys::raw::c_int,
+                            file: *const ::kernel::sys::raw::c_char,
+                            line: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn __mtx_unlock_sleep(c: *mut usize, v: usize,
+                              opts: ::kernel::sys::raw::c_int,
+                              file: *const ::kernel::sys::raw::c_char,
+                              line: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn __mtx_lock_flags(c: *mut usize, opts: ::kernel::sys::raw::c_int,
+                            file: *const ::kernel::sys::raw::c_char,
+                            line: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn __mtx_unlock_flags(c: *mut usize, opts: ::kernel::sys::raw::c_int,
+                              file: *const ::kernel::sys::raw::c_char,
+                              line: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn __mtx_lock_spin_flags(c: *mut usize,
+                                 opts: ::kernel::sys::raw::c_int,
+                                 file: *const ::kernel::sys::raw::c_char,
+                                 line: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn __mtx_trylock_spin_flags(c: *mut usize,
+                                    opts: ::kernel::sys::raw::c_int,
+                                    file: *const ::kernel::sys::raw::c_char,
+                                    line: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn __mtx_unlock_spin_flags(c: *mut usize,
+                                   opts: ::kernel::sys::raw::c_int,
+                                   file: *const ::kernel::sys::raw::c_char,
+                                   line: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn mtx_spin_wait_unlocked(m: *mut mtx);
+}
+extern "C" {
+    pub fn thread_lock_flags_(arg1: *mut thread,
+                              arg2: ::kernel::sys::raw::c_int,
+                              arg3: *const ::kernel::sys::raw::c_char,
+                              arg4: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn _thread_lock(td: *mut thread, opts: ::kernel::sys::raw::c_int,
+                        file: *const ::kernel::sys::raw::c_char,
+                        line: ::kernel::sys::raw::c_int);
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct mtx_pool {
+    _unused: [u8; 0],
+}
+extern "C" {
+    pub fn mtx_pool_create(mtx_name: *const ::kernel::sys::raw::c_char,
+                           pool_size: ::kernel::sys::raw::c_int,
+                           opts: ::kernel::sys::raw::c_int) -> *mut mtx_pool;
+}
+extern "C" {
+    pub fn mtx_pool_destroy(poolp: *mut *mut mtx_pool);
+}
+extern "C" {
+    pub fn mtx_pool_find(pool: *mut mtx_pool,
+                         ptr: *mut ::kernel::sys::raw::c_void) -> *mut mtx;
+}
+extern "C" {
+    pub fn mtx_pool_alloc(pool: *mut mtx_pool) -> *mut mtx;
+}
+extern "C" {
+    #[link_name = "mtxpool_sleep"]
+    pub static mut mtxpool_sleep: *mut mtx_pool;
+}
+extern "C" {
+    #[link_name = "Giant"]
+    pub static mut Giant: mtx;
+}
+extern "C" {
+    #[link_name = "blocked_lock"]
+    pub static mut blocked_lock: mtx;
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct mtx_args {
+    pub ma_mtx: *mut ::kernel::sys::raw::c_void,
+    pub ma_desc: *const ::kernel::sys::raw::c_char,
+    pub ma_opts: ::kernel::sys::raw::c_int,
+}
+#[test]
+fn bindgen_test_layout_mtx_args() {
+    assert_eq!(::core::mem::size_of::<mtx_args>() , 24usize , concat ! (
+               "Size of: " , stringify ! ( mtx_args ) ));
+    assert_eq! (::core::mem::align_of::<mtx_args>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( mtx_args ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const mtx_args ) ) . ma_mtx as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( mtx_args ) , "::" ,
+                stringify ! ( ma_mtx ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const mtx_args ) ) . ma_desc as * const _ as
+                usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( mtx_args ) , "::" ,
+                stringify ! ( ma_desc ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const mtx_args ) ) . ma_opts as * const _ as
+                usize } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( mtx_args ) , "::" ,
+                stringify ! ( ma_opts ) ));
+}
+impl Clone for mtx_args {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for mtx_args {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct rwlock {
+    pub lock_object: lock_object,
+    pub rw_lock: usize,
+}
+#[test]
+fn bindgen_test_layout_rwlock() {
+    assert_eq!(::core::mem::size_of::<rwlock>() , 32usize , concat ! (
+               "Size of: " , stringify ! ( rwlock ) ));
+    assert_eq! (::core::mem::align_of::<rwlock>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( rwlock ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rwlock ) ) . lock_object as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( rwlock ) , "::" ,
+                stringify ! ( lock_object ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rwlock ) ) . rw_lock as * const _ as
+                usize } , 24usize , concat ! (
+                "Alignment of field: " , stringify ! ( rwlock ) , "::" ,
+                stringify ! ( rw_lock ) ));
+}
+impl Clone for rwlock {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for rwlock {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+#[repr(C)]
+#[derive(Copy)]
+pub struct rwlock_padalign {
+    pub lock_object: lock_object,
+    pub rw_lock: usize,
+    pub __bindgen_padding_0: [u64; 4usize],
+}
+#[test]
+fn bindgen_test_layout_rwlock_padalign() {
+    assert_eq!(::core::mem::size_of::<rwlock_padalign>() , 64usize , concat !
+               ( "Size of: " , stringify ! ( rwlock_padalign ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rwlock_padalign ) ) . lock_object as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( rwlock_padalign ) ,
+                "::" , stringify ! ( lock_object ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rwlock_padalign ) ) . rw_lock as * const
+                _ as usize } , 24usize , concat ! (
+                "Alignment of field: " , stringify ! ( rwlock_padalign ) ,
+                "::" , stringify ! ( rw_lock ) ));
+}
+impl Clone for rwlock_padalign {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for rwlock_padalign {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+impl ::kernel::fmt::Debug for rwlock_padalign {
+    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
+        write!(f , "rwlock_padalign {{ lock_object: {:?}, rw_lock: {:?} }}" ,
+               self . lock_object , self . rw_lock)
+    }
+}
+extern "C" {
+    pub fn _rw_init_flags(c: *mut usize,
+                          name: *const ::kernel::sys::raw::c_char,
+                          opts: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn _rw_destroy(c: *mut usize);
+}
+extern "C" {
+    pub fn rw_sysinit(arg: *mut ::kernel::sys::raw::c_void);
+}
+extern "C" {
+    pub fn rw_sysinit_flags(arg: *mut ::kernel::sys::raw::c_void);
+}
+extern "C" {
+    pub fn _rw_wowned(c: *const usize) -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn _rw_wlock_cookie(c: *mut usize,
+                            file: *const ::kernel::sys::raw::c_char,
+                            line: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn __rw_try_wlock_int(rw: *mut rwlock,
+                              file: *const ::kernel::sys::raw::c_char,
+                              line: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn __rw_try_wlock(c: *mut usize,
+                          file: *const ::kernel::sys::raw::c_char,
+                          line: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn _rw_wunlock_cookie(c: *mut usize,
+                              file: *const ::kernel::sys::raw::c_char,
+                              line: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn __rw_rlock_int(rw: *mut rwlock,
+                          file: *const ::kernel::sys::raw::c_char,
+                          line: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn __rw_rlock(c: *mut usize, file: *const ::kernel::sys::raw::c_char,
+                      line: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn __rw_try_rlock_int(rw: *mut rwlock,
+                              file: *const ::kernel::sys::raw::c_char,
+                              line: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn __rw_try_rlock(c: *mut usize,
+                          file: *const ::kernel::sys::raw::c_char,
+                          line: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn _rw_runlock_cookie_int(rw: *mut rwlock,
+                                  file: *const ::kernel::sys::raw::c_char,
+                                  line: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn _rw_runlock_cookie(c: *mut usize,
+                              file: *const ::kernel::sys::raw::c_char,
+                              line: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn __rw_wlock_hard(c: *mut usize, v: usize,
+                           file: *const ::kernel::sys::raw::c_char,
+                           line: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn __rw_wunlock_hard(c: *mut usize, v: usize,
+                             file: *const ::kernel::sys::raw::c_char,
+                             line: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn __rw_try_upgrade_int(rw: *mut rwlock,
+                                file: *const ::kernel::sys::raw::c_char,
+                                line: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn __rw_try_upgrade(c: *mut usize,
+                            file: *const ::kernel::sys::raw::c_char,
+                            line: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn __rw_downgrade_int(rw: *mut rwlock,
+                              file: *const ::kernel::sys::raw::c_char,
+                              line: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn __rw_downgrade(c: *mut usize,
+                          file: *const ::kernel::sys::raw::c_char,
+                          line: ::kernel::sys::raw::c_int);
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct rw_args {
+    pub ra_rw: *mut ::kernel::sys::raw::c_void,
+    pub ra_desc: *const ::kernel::sys::raw::c_char,
+    pub ra_flags: ::kernel::sys::raw::c_int,
+}
+#[test]
+fn bindgen_test_layout_rw_args() {
+    assert_eq!(::core::mem::size_of::<rw_args>() , 24usize , concat ! (
+               "Size of: " , stringify ! ( rw_args ) ));
+    assert_eq! (::core::mem::align_of::<rw_args>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( rw_args ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rw_args ) ) . ra_rw as * const _ as usize
+                } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( rw_args ) , "::" ,
+                stringify ! ( ra_rw ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rw_args ) ) . ra_desc as * const _ as
+                usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( rw_args ) , "::" ,
+                stringify ! ( ra_desc ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rw_args ) ) . ra_flags as * const _ as
+                usize } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( rw_args ) , "::" ,
+                stringify ! ( ra_flags ) ));
+}
+impl Clone for rw_args {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for rw_args {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+extern "C" {
+    pub fn sx_sysinit(arg: *mut ::kernel::sys::raw::c_void);
+}
+extern "C" {
+    pub fn sx_init_flags(sx: *mut sx,
+                         description: *const ::kernel::sys::raw::c_char,
+                         opts: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn sx_destroy(sx: *mut sx);
+}
+extern "C" {
+    pub fn sx_try_slock_int(sx: *mut sx,
+                            file: *const ::kernel::sys::raw::c_char,
+                            line: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn sx_try_slock_(sx: *mut sx, file: *const ::kernel::sys::raw::c_char,
+                         line: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn sx_try_xlock_int(sx: *mut sx,
+                            file: *const ::kernel::sys::raw::c_char,
+                            line: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn sx_try_xlock_(sx: *mut sx, file: *const ::kernel::sys::raw::c_char,
+                         line: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn sx_try_upgrade_int(sx: *mut sx,
+                              file: *const ::kernel::sys::raw::c_char,
+                              line: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn sx_try_upgrade_(sx: *mut sx,
+                           file: *const ::kernel::sys::raw::c_char,
+                           line: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn sx_downgrade_int(sx: *mut sx,
+                            file: *const ::kernel::sys::raw::c_char,
+                            line: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn sx_downgrade_(sx: *mut sx, file: *const ::kernel::sys::raw::c_char,
+                         line: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn _sx_slock_int(sx: *mut sx, opts: ::kernel::sys::raw::c_int,
+                         file: *const ::kernel::sys::raw::c_char,
+                         line: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn _sx_slock(sx: *mut sx, opts: ::kernel::sys::raw::c_int,
+                     file: *const ::kernel::sys::raw::c_char,
+                     line: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn _sx_xlock(sx: *mut sx, opts: ::kernel::sys::raw::c_int,
+                     file: *const ::kernel::sys::raw::c_char,
+                     line: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn _sx_sunlock_int(sx: *mut sx,
+                           file: *const ::kernel::sys::raw::c_char,
+                           line: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn _sx_sunlock(sx: *mut sx, file: *const ::kernel::sys::raw::c_char,
+                       line: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn _sx_xunlock(sx: *mut sx, file: *const ::kernel::sys::raw::c_char,
+                       line: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn _sx_xlock_hard(sx: *mut sx, x: usize,
+                          opts: ::kernel::sys::raw::c_int,
+                          file: *const ::kernel::sys::raw::c_char,
+                          line: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn _sx_xunlock_hard(sx: *mut sx, x: usize,
+                            file: *const ::kernel::sys::raw::c_char,
+                            line: ::kernel::sys::raw::c_int);
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct sx_args {
+    pub sa_sx: *mut sx,
+    pub sa_desc: *const ::kernel::sys::raw::c_char,
+    pub sa_flags: ::kernel::sys::raw::c_int,
+}
+#[test]
+fn bindgen_test_layout_sx_args() {
+    assert_eq!(::core::mem::size_of::<sx_args>() , 24usize , concat ! (
+               "Size of: " , stringify ! ( sx_args ) ));
+    assert_eq! (::core::mem::align_of::<sx_args>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( sx_args ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const sx_args ) ) . sa_sx as * const _ as usize
+                } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( sx_args ) , "::" ,
+                stringify ! ( sa_sx ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const sx_args ) ) . sa_desc as * const _ as
+                usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( sx_args ) , "::" ,
+                stringify ! ( sa_desc ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const sx_args ) ) . sa_flags as * const _ as
+                usize } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( sx_args ) , "::" ,
+                stringify ! ( sa_flags ) ));
+}
+impl Clone for sx_args {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for sx_args {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+pub type task_fn_t =
+    ::core::option::Option<unsafe extern "C" fn(context:
+                                                    *mut ::kernel::sys::raw::c_void,
+                                                pending:
+                                                    ::kernel::sys::raw::c_int)>;
+pub type gtask_fn_t =
+    ::core::option::Option<unsafe extern "C" fn(context:
+                                                    *mut ::kernel::sys::raw::c_void)>;
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct task {
+    pub ta_link: task__bindgen_ty_1,
+    pub ta_pending: u16,
+    pub ta_priority: u_short,
+    pub ta_func: task_fn_t,
+    pub ta_context: *mut ::kernel::sys::raw::c_void,
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct task__bindgen_ty_1 {
+    pub stqe_next: *mut task,
+}
+#[test]
+fn bindgen_test_layout_task__bindgen_ty_1() {
+    assert_eq!(::core::mem::size_of::<task__bindgen_ty_1>() , 8usize , concat
+               ! ( "Size of: " , stringify ! ( task__bindgen_ty_1 ) ));
+    assert_eq! (::core::mem::align_of::<task__bindgen_ty_1>() , 8usize ,
+                concat ! (
+                "Alignment of " , stringify ! ( task__bindgen_ty_1 ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const task__bindgen_ty_1 ) ) . stqe_next as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( task__bindgen_ty_1 ) ,
+                "::" , stringify ! ( stqe_next ) ));
+}
+impl Clone for task__bindgen_ty_1 {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for task__bindgen_ty_1 {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+#[test]
+fn bindgen_test_layout_task() {
+    assert_eq!(::core::mem::size_of::<task>() , 32usize , concat ! (
+               "Size of: " , stringify ! ( task ) ));
+    assert_eq! (::core::mem::align_of::<task>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( task ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const task ) ) . ta_link as * const _ as usize
+                } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( task ) , "::" ,
+                stringify ! ( ta_link ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const task ) ) . ta_pending as * const _ as
+                usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( task ) , "::" ,
+                stringify ! ( ta_pending ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const task ) ) . ta_priority as * const _ as
+                usize } , 10usize , concat ! (
+                "Alignment of field: " , stringify ! ( task ) , "::" ,
+                stringify ! ( ta_priority ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const task ) ) . ta_func as * const _ as usize
+                } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( task ) , "::" ,
+                stringify ! ( ta_func ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const task ) ) . ta_context as * const _ as
+                usize } , 24usize , concat ! (
+                "Alignment of field: " , stringify ! ( task ) , "::" ,
+                stringify ! ( ta_context ) ));
+}
+impl Clone for task {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for task {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct gtask {
+    pub ta_link: gtask__bindgen_ty_1,
+    pub ta_flags: u16,
+    pub ta_priority: u_short,
+    pub ta_func: gtask_fn_t,
+    pub ta_context: *mut ::kernel::sys::raw::c_void,
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct gtask__bindgen_ty_1 {
+    pub stqe_next: *mut gtask,
+}
+#[test]
+fn bindgen_test_layout_gtask__bindgen_ty_1() {
+    assert_eq!(::core::mem::size_of::<gtask__bindgen_ty_1>() , 8usize , concat
+               ! ( "Size of: " , stringify ! ( gtask__bindgen_ty_1 ) ));
+    assert_eq! (::core::mem::align_of::<gtask__bindgen_ty_1>() , 8usize ,
+                concat ! (
+                "Alignment of " , stringify ! ( gtask__bindgen_ty_1 ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const gtask__bindgen_ty_1 ) ) . stqe_next as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( gtask__bindgen_ty_1 ) ,
+                "::" , stringify ! ( stqe_next ) ));
+}
+impl Clone for gtask__bindgen_ty_1 {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for gtask__bindgen_ty_1 {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+#[test]
+fn bindgen_test_layout_gtask() {
+    assert_eq!(::core::mem::size_of::<gtask>() , 32usize , concat ! (
+               "Size of: " , stringify ! ( gtask ) ));
+    assert_eq! (::core::mem::align_of::<gtask>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( gtask ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const gtask ) ) . ta_link as * const _ as usize
+                } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( gtask ) , "::" ,
+                stringify ! ( ta_link ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const gtask ) ) . ta_flags as * const _ as
+                usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( gtask ) , "::" ,
+                stringify ! ( ta_flags ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const gtask ) ) . ta_priority as * const _ as
+                usize } , 10usize , concat ! (
+                "Alignment of field: " , stringify ! ( gtask ) , "::" ,
+                stringify ! ( ta_priority ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const gtask ) ) . ta_func as * const _ as usize
+                } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( gtask ) , "::" ,
+                stringify ! ( ta_func ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const gtask ) ) . ta_context as * const _ as
+                usize } , 24usize , concat ! (
+                "Alignment of field: " , stringify ! ( gtask ) , "::" ,
+                stringify ! ( ta_context ) ));
+}
+impl Clone for gtask {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for gtask {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
 }
 #[repr(C)]
 #[derive(Debug, Copy)]
@@ -14945,35 +13150,6 @@ impl Clone for kevent_copyops {
 impl Default for kevent_copyops {
     fn default() -> Self { unsafe { ::core::mem::zeroed() } }
 }
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct rwlock {
-    pub lock_object: lock_object,
-    pub rw_lock: usize,
-}
-#[test]
-fn bindgen_test_layout_rwlock() {
-    assert_eq!(::core::mem::size_of::<rwlock>() , 32usize , concat ! (
-               "Size of: " , stringify ! ( rwlock ) ));
-    assert_eq! (::core::mem::align_of::<rwlock>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( rwlock ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rwlock ) ) . lock_object as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( rwlock ) , "::" ,
-                stringify ! ( lock_object ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rwlock ) ) . rw_lock as * const _ as
-                usize } , 24usize , concat ! (
-                "Alignment of field: " , stringify ! ( rwlock ) , "::" ,
-                stringify ! ( rw_lock ) ));
-}
-impl Clone for rwlock {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for rwlock {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
 extern "C" {
     pub fn knote(list: *mut knlist, hint: ::kernel::sys::raw::c_long,
                  lockflags: ::kernel::sys::raw::c_int);
@@ -15044,5574 +13220,6 @@ extern "C" {
 extern "C" {
     pub fn kqueue_del_filteropts(filt: ::kernel::sys::raw::c_int)
      -> ::kernel::sys::raw::c_int;
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct cv_waitq {
-    pub tqh_first: *mut thread,
-    pub tqh_last: *mut *mut thread,
-}
-#[test]
-fn bindgen_test_layout_cv_waitq() {
-    assert_eq!(::core::mem::size_of::<cv_waitq>() , 16usize , concat ! (
-               "Size of: " , stringify ! ( cv_waitq ) ));
-    assert_eq! (::core::mem::align_of::<cv_waitq>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( cv_waitq ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const cv_waitq ) ) . tqh_first as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( cv_waitq ) , "::" ,
-                stringify ! ( tqh_first ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const cv_waitq ) ) . tqh_last as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( cv_waitq ) , "::" ,
-                stringify ! ( tqh_last ) ));
-}
-impl Clone for cv_waitq {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for cv_waitq {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct cv {
-    pub cv_description: *const ::kernel::sys::raw::c_char,
-    pub cv_waiters: ::kernel::sys::raw::c_int,
-}
-#[test]
-fn bindgen_test_layout_cv() {
-    assert_eq!(::core::mem::size_of::<cv>() , 16usize , concat ! (
-               "Size of: " , stringify ! ( cv ) ));
-    assert_eq! (::core::mem::align_of::<cv>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( cv ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const cv ) ) . cv_description as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( cv ) , "::" , stringify
-                ! ( cv_description ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const cv ) ) . cv_waiters as * const _ as usize
-                } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( cv ) , "::" , stringify
-                ! ( cv_waiters ) ));
-}
-impl Clone for cv {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for cv {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-extern "C" {
-    pub fn cv_init(cvp: *mut cv, desc: *const ::kernel::sys::raw::c_char);
-}
-extern "C" {
-    pub fn cv_destroy(cvp: *mut cv);
-}
-extern "C" {
-    pub fn _cv_wait(cvp: *mut cv, lock: *mut lock_object);
-}
-extern "C" {
-    pub fn _cv_wait_unlock(cvp: *mut cv, lock: *mut lock_object);
-}
-extern "C" {
-    pub fn _cv_wait_sig(cvp: *mut cv, lock: *mut lock_object)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn _cv_timedwait_sbt(cvp: *mut cv, lock: *mut lock_object,
-                             sbt: sbintime_t, pr: sbintime_t,
-                             flags: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn _cv_timedwait_sig_sbt(cvp: *mut cv, lock: *mut lock_object,
-                                 sbt: sbintime_t, pr: sbintime_t,
-                                 flags: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn cv_signal(cvp: *mut cv);
-}
-extern "C" {
-    pub fn cv_broadcastpri(cvp: *mut cv, pri: ::kernel::sys::raw::c_int);
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct lock_profile_object {
-    _unused: [u8; 0],
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct lpohead {
-    pub lh_first: *mut lock_profile_object,
-}
-#[test]
-fn bindgen_test_layout_lpohead() {
-    assert_eq!(::core::mem::size_of::<lpohead>() , 8usize , concat ! (
-               "Size of: " , stringify ! ( lpohead ) ));
-    assert_eq! (::core::mem::align_of::<lpohead>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( lpohead ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const lpohead ) ) . lh_first as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( lpohead ) , "::" ,
-                stringify ! ( lh_first ) ));
-}
-impl Clone for lpohead {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for lpohead {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct osd {
-    pub osd_nslots: u_int,
-    pub osd_slots: *mut *mut ::kernel::sys::raw::c_void,
-    pub osd_next: osd__bindgen_ty_1,
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct osd__bindgen_ty_1 {
-    pub le_next: *mut osd,
-    pub le_prev: *mut *mut osd,
-}
-#[test]
-fn bindgen_test_layout_osd__bindgen_ty_1() {
-    assert_eq!(::core::mem::size_of::<osd__bindgen_ty_1>() , 16usize , concat
-               ! ( "Size of: " , stringify ! ( osd__bindgen_ty_1 ) ));
-    assert_eq! (::core::mem::align_of::<osd__bindgen_ty_1>() , 8usize , concat
-                ! ( "Alignment of " , stringify ! ( osd__bindgen_ty_1 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const osd__bindgen_ty_1 ) ) . le_next as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( osd__bindgen_ty_1 ) ,
-                "::" , stringify ! ( le_next ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const osd__bindgen_ty_1 ) ) . le_prev as *
-                const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( osd__bindgen_ty_1 ) ,
-                "::" , stringify ! ( le_prev ) ));
-}
-impl Clone for osd__bindgen_ty_1 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for osd__bindgen_ty_1 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[test]
-fn bindgen_test_layout_osd() {
-    assert_eq!(::core::mem::size_of::<osd>() , 32usize , concat ! (
-               "Size of: " , stringify ! ( osd ) ));
-    assert_eq! (::core::mem::align_of::<osd>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( osd ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const osd ) ) . osd_nslots as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( osd ) , "::" ,
-                stringify ! ( osd_nslots ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const osd ) ) . osd_slots as * const _ as usize
-                } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( osd ) , "::" ,
-                stringify ! ( osd_slots ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const osd ) ) . osd_next as * const _ as usize
-                } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( osd ) , "::" ,
-                stringify ! ( osd_next ) ));
-}
-impl Clone for osd {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for osd {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-pub type osd_destructor_t =
-    ::core::option::Option<unsafe extern "C" fn(value:
-                                                    *mut ::kernel::sys::raw::c_void)>;
-pub type osd_method_t =
-    ::core::option::Option<unsafe extern "C" fn(obj:
-                                                    *mut ::kernel::sys::raw::c_void,
-                                                data:
-                                                    *mut ::kernel::sys::raw::c_void)
-                               -> ::kernel::sys::raw::c_int>;
-extern "C" {
-    pub fn osd_register(type_: u_int, destructor: osd_destructor_t,
-                        methods: *mut osd_method_t)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn osd_deregister(type_: u_int, slot: u_int);
-}
-extern "C" {
-    pub fn osd_set(type_: u_int, osd: *mut osd, slot: u_int,
-                   value: *mut ::kernel::sys::raw::c_void)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn osd_reserve(slot: u_int) -> *mut *mut ::kernel::sys::raw::c_void;
-}
-extern "C" {
-    pub fn osd_set_reserved(type_: u_int, osd: *mut osd, slot: u_int,
-                            rsv: *mut *mut ::kernel::sys::raw::c_void,
-                            value: *mut ::kernel::sys::raw::c_void)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn osd_free_reserved(rsv: *mut *mut ::kernel::sys::raw::c_void);
-}
-extern "C" {
-    pub fn osd_get(type_: u_int, osd: *mut osd, slot: u_int)
-     -> *mut ::kernel::sys::raw::c_void;
-}
-extern "C" {
-    pub fn osd_del(type_: u_int, osd: *mut osd, slot: u_int);
-}
-extern "C" {
-    pub fn osd_call(type_: u_int, method: u_int,
-                    obj: *mut ::kernel::sys::raw::c_void,
-                    data: *mut ::kernel::sys::raw::c_void)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn osd_exit(type_: u_int, osd: *mut osd);
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct rtprio {
-    pub type_: u_short,
-    pub prio: u_short,
-}
-#[test]
-fn bindgen_test_layout_rtprio() {
-    assert_eq!(::core::mem::size_of::<rtprio>() , 4usize , concat ! (
-               "Size of: " , stringify ! ( rtprio ) ));
-    assert_eq! (::core::mem::align_of::<rtprio>() , 2usize , concat ! (
-                "Alignment of " , stringify ! ( rtprio ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rtprio ) ) . type_ as * const _ as usize
-                } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( rtprio ) , "::" ,
-                stringify ! ( type_ ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rtprio ) ) . prio as * const _ as usize }
-                , 2usize , concat ! (
-                "Alignment of field: " , stringify ! ( rtprio ) , "::" ,
-                stringify ! ( prio ) ));
-}
-impl Clone for rtprio {
-    fn clone(&self) -> Self { *self }
-}
-extern "C" {
-    pub fn rtp_to_pri(arg1: *mut rtprio, arg2: *mut thread)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn pri_to_rtp(arg1: *mut thread, arg2: *mut rtprio);
-}
-pub type rqb_word_t = u_int64_t;
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct rqhead {
-    pub tqh_first: *mut thread,
-    pub tqh_last: *mut *mut thread,
-}
-#[test]
-fn bindgen_test_layout_rqhead() {
-    assert_eq!(::core::mem::size_of::<rqhead>() , 16usize , concat ! (
-               "Size of: " , stringify ! ( rqhead ) ));
-    assert_eq! (::core::mem::align_of::<rqhead>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( rqhead ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rqhead ) ) . tqh_first as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( rqhead ) , "::" ,
-                stringify ! ( tqh_first ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rqhead ) ) . tqh_last as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( rqhead ) , "::" ,
-                stringify ! ( tqh_last ) ));
-}
-impl Clone for rqhead {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for rqhead {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct rqbits {
-    pub rqb_bits: [rqb_word_t; 1usize],
-}
-#[test]
-fn bindgen_test_layout_rqbits() {
-    assert_eq!(::core::mem::size_of::<rqbits>() , 8usize , concat ! (
-               "Size of: " , stringify ! ( rqbits ) ));
-    assert_eq! (::core::mem::align_of::<rqbits>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( rqbits ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rqbits ) ) . rqb_bits as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( rqbits ) , "::" ,
-                stringify ! ( rqb_bits ) ));
-}
-impl Clone for rqbits {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Copy)]
-pub struct runq {
-    pub rq_status: rqbits,
-    pub rq_queues: [rqhead; 64usize],
-}
-#[test]
-fn bindgen_test_layout_runq() {
-    assert_eq!(::core::mem::size_of::<runq>() , 1032usize , concat ! (
-               "Size of: " , stringify ! ( runq ) ));
-    assert_eq! (::core::mem::align_of::<runq>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( runq ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const runq ) ) . rq_status as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( runq ) , "::" ,
-                stringify ! ( rq_status ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const runq ) ) . rq_queues as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( runq ) , "::" ,
-                stringify ! ( rq_queues ) ));
-}
-impl Clone for runq {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for runq {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for runq {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f , "runq {{ rq_status: {:?}, rq_queues: [{}] }}" , self .
-               rq_status , self . rq_queues . iter (  ) . enumerate (  ) . map
-               (
-               | ( i , v ) | format ! (
-               "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: <
-               String > (  ))
-    }
-}
-extern "C" {
-    pub fn runq_add(arg1: *mut runq, arg2: *mut thread,
-                    arg3: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn runq_add_pri(arg1: *mut runq, arg2: *mut thread, arg3: u_char,
-                        arg4: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn runq_check(arg1: *mut runq) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn runq_choose(arg1: *mut runq) -> *mut thread;
-}
-extern "C" {
-    pub fn runq_choose_from(arg1: *mut runq, arg2: u_char) -> *mut thread;
-}
-extern "C" {
-    pub fn runq_choose_fuzz(arg1: *mut runq, arg2: ::kernel::sys::raw::c_int)
-     -> *mut thread;
-}
-extern "C" {
-    pub fn runq_init(arg1: *mut runq);
-}
-extern "C" {
-    pub fn runq_remove(arg1: *mut runq, arg2: *mut thread);
-}
-extern "C" {
-    pub fn runq_remove_idx(arg1: *mut runq, arg2: *mut thread,
-                           arg3: *mut u_char);
-}
-#[repr(C)]
-#[derive(Copy)]
-pub struct sigio {
-    pub sio_u: sigio__bindgen_ty_1,
-    pub sio_pgsigio: sigio__bindgen_ty_2,
-    pub sio_myref: *mut *mut sigio,
-    pub sio_ucred: *mut ucred,
-    pub sio_pgid: pid_t,
-}
-#[repr(C)]
-#[derive(Copy)]
-pub union sigio__bindgen_ty_1 {
-    pub siu_proc: *mut proc_,
-    pub siu_pgrp: *mut pgrp,
-    _bindgen_union_align: u64,
-}
-#[test]
-fn bindgen_test_layout_sigio__bindgen_ty_1() {
-    assert_eq!(::core::mem::size_of::<sigio__bindgen_ty_1>() , 8usize , concat
-               ! ( "Size of: " , stringify ! ( sigio__bindgen_ty_1 ) ));
-    assert_eq! (::core::mem::align_of::<sigio__bindgen_ty_1>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( sigio__bindgen_ty_1 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigio__bindgen_ty_1 ) ) . siu_proc as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigio__bindgen_ty_1 ) ,
-                "::" , stringify ! ( siu_proc ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigio__bindgen_ty_1 ) ) . siu_pgrp as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigio__bindgen_ty_1 ) ,
-                "::" , stringify ! ( siu_pgrp ) ));
-}
-impl Clone for sigio__bindgen_ty_1 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for sigio__bindgen_ty_1 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for sigio__bindgen_ty_1 {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f , "sigio__bindgen_ty_1 {{ union }}")
-    }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct sigio__bindgen_ty_2 {
-    pub sle_next: *mut sigio,
-}
-#[test]
-fn bindgen_test_layout_sigio__bindgen_ty_2() {
-    assert_eq!(::core::mem::size_of::<sigio__bindgen_ty_2>() , 8usize , concat
-               ! ( "Size of: " , stringify ! ( sigio__bindgen_ty_2 ) ));
-    assert_eq! (::core::mem::align_of::<sigio__bindgen_ty_2>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( sigio__bindgen_ty_2 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigio__bindgen_ty_2 ) ) . sle_next as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigio__bindgen_ty_2 ) ,
-                "::" , stringify ! ( sle_next ) ));
-}
-impl Clone for sigio__bindgen_ty_2 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for sigio__bindgen_ty_2 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[test]
-fn bindgen_test_layout_sigio() {
-    assert_eq!(::core::mem::size_of::<sigio>() , 40usize , concat ! (
-               "Size of: " , stringify ! ( sigio ) ));
-    assert_eq! (::core::mem::align_of::<sigio>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( sigio ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigio ) ) . sio_u as * const _ as usize }
-                , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigio ) , "::" ,
-                stringify ! ( sio_u ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigio ) ) . sio_pgsigio as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigio ) , "::" ,
-                stringify ! ( sio_pgsigio ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigio ) ) . sio_myref as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigio ) , "::" ,
-                stringify ! ( sio_myref ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigio ) ) . sio_ucred as * const _ as
-                usize } , 24usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigio ) , "::" ,
-                stringify ! ( sio_ucred ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigio ) ) . sio_pgid as * const _ as
-                usize } , 32usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigio ) , "::" ,
-                stringify ! ( sio_pgid ) ));
-}
-impl Clone for sigio {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for sigio {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for sigio {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f ,
-               "sigio {{ sio_u: {:?}, sio_pgsigio: {:?}, sio_myref: {:?}, sio_ucred: {:?}, sio_pgid: {:?} }}"
-               , self . sio_u , self . sio_pgsigio , self . sio_myref , self .
-               sio_ucred , self . sio_pgid)
-    }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct sigiolst {
-    pub slh_first: *mut sigio,
-}
-#[test]
-fn bindgen_test_layout_sigiolst() {
-    assert_eq!(::core::mem::size_of::<sigiolst>() , 8usize , concat ! (
-               "Size of: " , stringify ! ( sigiolst ) ));
-    assert_eq! (::core::mem::align_of::<sigiolst>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( sigiolst ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigiolst ) ) . slh_first as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigiolst ) , "::" ,
-                stringify ! ( slh_first ) ));
-}
-impl Clone for sigiolst {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for sigiolst {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-extern "C" {
-    pub fn fgetown(sigiop: *mut *mut sigio) -> pid_t;
-}
-extern "C" {
-    pub fn fsetown(pgid: pid_t, sigiop: *mut *mut sigio)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn funsetown(sigiop: *mut *mut sigio);
-}
-extern "C" {
-    pub fn funsetownlst(sigiolst: *mut sigiolst);
-}
-pub type sig_atomic_t = ::kernel::sys::raw::c_long;
-#[repr(C)]
-#[derive(Copy)]
-pub struct sigcontext {
-    pub sc_mask: __sigset,
-    pub sc_onstack: ::kernel::sys::raw::c_long,
-    pub sc_rdi: ::kernel::sys::raw::c_long,
-    pub sc_rsi: ::kernel::sys::raw::c_long,
-    pub sc_rdx: ::kernel::sys::raw::c_long,
-    pub sc_rcx: ::kernel::sys::raw::c_long,
-    pub sc_r8: ::kernel::sys::raw::c_long,
-    pub sc_r9: ::kernel::sys::raw::c_long,
-    pub sc_rax: ::kernel::sys::raw::c_long,
-    pub sc_rbx: ::kernel::sys::raw::c_long,
-    pub sc_rbp: ::kernel::sys::raw::c_long,
-    pub sc_r10: ::kernel::sys::raw::c_long,
-    pub sc_r11: ::kernel::sys::raw::c_long,
-    pub sc_r12: ::kernel::sys::raw::c_long,
-    pub sc_r13: ::kernel::sys::raw::c_long,
-    pub sc_r14: ::kernel::sys::raw::c_long,
-    pub sc_r15: ::kernel::sys::raw::c_long,
-    pub sc_trapno: ::kernel::sys::raw::c_int,
-    pub sc_fs: ::kernel::sys::raw::c_short,
-    pub sc_gs: ::kernel::sys::raw::c_short,
-    pub sc_addr: ::kernel::sys::raw::c_long,
-    pub sc_flags: ::kernel::sys::raw::c_int,
-    pub sc_es: ::kernel::sys::raw::c_short,
-    pub sc_ds: ::kernel::sys::raw::c_short,
-    pub sc_err: ::kernel::sys::raw::c_long,
-    pub sc_rip: ::kernel::sys::raw::c_long,
-    pub sc_cs: ::kernel::sys::raw::c_long,
-    pub sc_rflags: ::kernel::sys::raw::c_long,
-    pub sc_rsp: ::kernel::sys::raw::c_long,
-    pub sc_ss: ::kernel::sys::raw::c_long,
-    pub sc_len: ::kernel::sys::raw::c_long,
-    pub sc_fpformat: ::kernel::sys::raw::c_long,
-    pub sc_ownedfp: ::kernel::sys::raw::c_long,
-    pub sc_fpstate: [::kernel::sys::raw::c_long; 64usize],
-    pub sc_fsbase: ::kernel::sys::raw::c_long,
-    pub sc_gsbase: ::kernel::sys::raw::c_long,
-    pub sc_xfpustate: ::kernel::sys::raw::c_long,
-    pub sc_xfpustate_len: ::kernel::sys::raw::c_long,
-    pub sc_spare: [::kernel::sys::raw::c_long; 4usize],
-}
-#[test]
-fn bindgen_test_layout_sigcontext() {
-    assert_eq!(::core::mem::size_of::<sigcontext>() , 816usize , concat ! (
-               "Size of: " , stringify ! ( sigcontext ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_mask as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_mask ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_onstack as * const _
-                as usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_onstack ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_rdi as * const _ as
-                usize } , 24usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_rdi ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_rsi as * const _ as
-                usize } , 32usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_rsi ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_rdx as * const _ as
-                usize } , 40usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_rdx ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_rcx as * const _ as
-                usize } , 48usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_rcx ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_r8 as * const _ as
-                usize } , 56usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_r8 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_r9 as * const _ as
-                usize } , 64usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_r9 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_rax as * const _ as
-                usize } , 72usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_rax ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_rbx as * const _ as
-                usize } , 80usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_rbx ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_rbp as * const _ as
-                usize } , 88usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_rbp ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_r10 as * const _ as
-                usize } , 96usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_r10 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_r11 as * const _ as
-                usize } , 104usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_r11 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_r12 as * const _ as
-                usize } , 112usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_r12 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_r13 as * const _ as
-                usize } , 120usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_r13 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_r14 as * const _ as
-                usize } , 128usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_r14 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_r15 as * const _ as
-                usize } , 136usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_r15 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_trapno as * const _
-                as usize } , 144usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_trapno ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_fs as * const _ as
-                usize } , 148usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_fs ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_gs as * const _ as
-                usize } , 150usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_gs ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_addr as * const _ as
-                usize } , 152usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_addr ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_flags as * const _ as
-                usize } , 160usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_flags ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_es as * const _ as
-                usize } , 164usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_es ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_ds as * const _ as
-                usize } , 166usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_ds ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_err as * const _ as
-                usize } , 168usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_err ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_rip as * const _ as
-                usize } , 176usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_rip ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_cs as * const _ as
-                usize } , 184usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_cs ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_rflags as * const _
-                as usize } , 192usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_rflags ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_rsp as * const _ as
-                usize } , 200usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_rsp ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_ss as * const _ as
-                usize } , 208usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_ss ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_len as * const _ as
-                usize } , 216usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_len ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_fpformat as * const _
-                as usize } , 224usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_fpformat ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_ownedfp as * const _
-                as usize } , 232usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_ownedfp ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_fpstate as * const _
-                as usize } , 240usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_fpstate ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_fsbase as * const _
-                as usize } , 752usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_fsbase ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_gsbase as * const _
-                as usize } , 760usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_gsbase ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_xfpustate as * const
-                _ as usize } , 768usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_xfpustate ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_xfpustate_len as *
-                const _ as usize } , 776usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_xfpustate_len ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigcontext ) ) . sc_spare as * const _ as
-                usize } , 784usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigcontext ) , "::" ,
-                stringify ! ( sc_spare ) ));
-}
-impl Clone for sigcontext {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for sigcontext {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for sigcontext {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f ,
-               "sigcontext {{ sc_mask: {:?}, sc_onstack: {:?}, sc_rdi: {:?}, sc_rsi: {:?}, sc_rdx: {:?}, sc_rcx: {:?}, sc_r8: {:?}, sc_r9: {:?}, sc_rax: {:?}, sc_rbx: {:?}, sc_rbp: {:?}, sc_r10: {:?}, sc_r11: {:?}, sc_r12: {:?}, sc_r13: {:?}, sc_r14: {:?}, sc_r15: {:?}, sc_trapno: {:?}, sc_fs: {:?}, sc_gs: {:?}, sc_addr: {:?}, sc_flags: {:?}, sc_es: {:?}, sc_ds: {:?}, sc_err: {:?}, sc_rip: {:?}, sc_cs: {:?}, sc_rflags: {:?}, sc_rsp: {:?}, sc_ss: {:?}, sc_len: {:?}, sc_fpformat: {:?}, sc_ownedfp: {:?}, sc_fpstate: [{}], sc_fsbase: {:?}, sc_gsbase: {:?}, sc_xfpustate: {:?}, sc_xfpustate_len: {:?}, sc_spare: {:?} }}"
-               , self . sc_mask , self . sc_onstack , self . sc_rdi , self .
-               sc_rsi , self . sc_rdx , self . sc_rcx , self . sc_r8 , self .
-               sc_r9 , self . sc_rax , self . sc_rbx , self . sc_rbp , self .
-               sc_r10 , self . sc_r11 , self . sc_r12 , self . sc_r13 , self .
-               sc_r14 , self . sc_r15 , self . sc_trapno , self . sc_fs , self
-               . sc_gs , self . sc_addr , self . sc_flags , self . sc_es ,
-               self . sc_ds , self . sc_err , self . sc_rip , self . sc_cs ,
-               self . sc_rflags , self . sc_rsp , self . sc_ss , self . sc_len
-               , self . sc_fpformat , self . sc_ownedfp , self . sc_fpstate .
-               iter (  ) . enumerate (  ) . map (
-               | ( i , v ) | format ! (
-               "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: <
-               String > (  ) , self . sc_fsbase , self . sc_gsbase , self .
-               sc_xfpustate , self . sc_xfpustate_len , self . sc_spare)
-    }
-}
-pub type __sighandler_t =
-    ::core::option::Option<unsafe extern "C" fn(arg1:
-                                                    ::kernel::sys::raw::c_int)>;
-#[repr(C)]
-#[derive(Copy)]
-pub union sigval {
-    pub sival_int: ::kernel::sys::raw::c_int,
-    pub sival_ptr: *mut ::kernel::sys::raw::c_void,
-    pub sigval_int: ::kernel::sys::raw::c_int,
-    pub sigval_ptr: *mut ::kernel::sys::raw::c_void,
-    _bindgen_union_align: u64,
-}
-#[test]
-fn bindgen_test_layout_sigval() {
-    assert_eq!(::core::mem::size_of::<sigval>() , 8usize , concat ! (
-               "Size of: " , stringify ! ( sigval ) ));
-    assert_eq! (::core::mem::align_of::<sigval>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( sigval ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigval ) ) . sival_int as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigval ) , "::" ,
-                stringify ! ( sival_int ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigval ) ) . sival_ptr as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigval ) , "::" ,
-                stringify ! ( sival_ptr ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigval ) ) . sigval_int as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigval ) , "::" ,
-                stringify ! ( sigval_int ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigval ) ) . sigval_ptr as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigval ) , "::" ,
-                stringify ! ( sigval_ptr ) ));
-}
-impl Clone for sigval {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for sigval {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for sigval {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f , "sigval {{ union }}")
-    }
-}
-#[repr(C)]
-#[derive(Copy)]
-pub union sigval32 {
-    pub sival_int: ::kernel::sys::raw::c_int,
-    pub sival_ptr: u32,
-    pub sigval_int: ::kernel::sys::raw::c_int,
-    pub sigval_ptr: u32,
-    _bindgen_union_align: u32,
-}
-#[test]
-fn bindgen_test_layout_sigval32() {
-    assert_eq!(::core::mem::size_of::<sigval32>() , 4usize , concat ! (
-               "Size of: " , stringify ! ( sigval32 ) ));
-    assert_eq! (::core::mem::align_of::<sigval32>() , 4usize , concat ! (
-                "Alignment of " , stringify ! ( sigval32 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigval32 ) ) . sival_int as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigval32 ) , "::" ,
-                stringify ! ( sival_int ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigval32 ) ) . sival_ptr as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigval32 ) , "::" ,
-                stringify ! ( sival_ptr ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigval32 ) ) . sigval_int as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigval32 ) , "::" ,
-                stringify ! ( sigval_int ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigval32 ) ) . sigval_ptr as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigval32 ) , "::" ,
-                stringify ! ( sigval_ptr ) ));
-}
-impl Clone for sigval32 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for sigval32 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for sigval32 {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f , "sigval32 {{ union }}")
-    }
-}
-#[repr(C)]
-#[derive(Copy)]
-pub struct sigevent {
-    pub sigev_notify: ::kernel::sys::raw::c_int,
-    pub sigev_signo: ::kernel::sys::raw::c_int,
-    pub sigev_value: sigval,
-    pub _sigev_un: sigevent__bindgen_ty_1,
-}
-#[repr(C)]
-#[derive(Copy)]
-pub union sigevent__bindgen_ty_1 {
-    pub _threadid: __lwpid_t,
-    pub _sigev_thread: sigevent__bindgen_ty_1__bindgen_ty_1,
-    pub _kevent_flags: ::kernel::sys::raw::c_ushort,
-    pub __spare__: [::kernel::sys::raw::c_long; 8usize],
-    _bindgen_union_align: [u64; 8usize],
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct sigevent__bindgen_ty_1__bindgen_ty_1 {
-    pub _function: ::core::option::Option<unsafe extern "C" fn(arg1: sigval)>,
-    pub _attribute: *mut *mut pthread_attr,
-}
-#[test]
-fn bindgen_test_layout_sigevent__bindgen_ty_1__bindgen_ty_1() {
-    assert_eq!(::core::mem::size_of::<sigevent__bindgen_ty_1__bindgen_ty_1>()
-               , 16usize , concat ! (
-               "Size of: " , stringify ! (
-               sigevent__bindgen_ty_1__bindgen_ty_1 ) ));
-    assert_eq! (::core::mem::align_of::<sigevent__bindgen_ty_1__bindgen_ty_1>()
-                , 8usize , concat ! (
-                "Alignment of " , stringify ! (
-                sigevent__bindgen_ty_1__bindgen_ty_1 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigevent__bindgen_ty_1__bindgen_ty_1 ) )
-                . _function as * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! (
-                sigevent__bindgen_ty_1__bindgen_ty_1 ) , "::" , stringify ! (
-                _function ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigevent__bindgen_ty_1__bindgen_ty_1 ) )
-                . _attribute as * const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! (
-                sigevent__bindgen_ty_1__bindgen_ty_1 ) , "::" , stringify ! (
-                _attribute ) ));
-}
-impl Clone for sigevent__bindgen_ty_1__bindgen_ty_1 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for sigevent__bindgen_ty_1__bindgen_ty_1 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[test]
-fn bindgen_test_layout_sigevent__bindgen_ty_1() {
-    assert_eq!(::core::mem::size_of::<sigevent__bindgen_ty_1>() , 64usize ,
-               concat ! ( "Size of: " , stringify ! ( sigevent__bindgen_ty_1 )
-               ));
-    assert_eq! (::core::mem::align_of::<sigevent__bindgen_ty_1>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( sigevent__bindgen_ty_1 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigevent__bindgen_ty_1 ) ) . _threadid as
-                * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigevent__bindgen_ty_1
-                ) , "::" , stringify ! ( _threadid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigevent__bindgen_ty_1 ) ) .
-                _sigev_thread as * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigevent__bindgen_ty_1
-                ) , "::" , stringify ! ( _sigev_thread ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigevent__bindgen_ty_1 ) ) .
-                _kevent_flags as * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigevent__bindgen_ty_1
-                ) , "::" , stringify ! ( _kevent_flags ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigevent__bindgen_ty_1 ) ) . __spare__ as
-                * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigevent__bindgen_ty_1
-                ) , "::" , stringify ! ( __spare__ ) ));
-}
-impl Clone for sigevent__bindgen_ty_1 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for sigevent__bindgen_ty_1 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for sigevent__bindgen_ty_1 {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f , "sigevent__bindgen_ty_1 {{ union }}")
-    }
-}
-#[test]
-fn bindgen_test_layout_sigevent() {
-    assert_eq!(::core::mem::size_of::<sigevent>() , 80usize , concat ! (
-               "Size of: " , stringify ! ( sigevent ) ));
-    assert_eq! (::core::mem::align_of::<sigevent>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( sigevent ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigevent ) ) . sigev_notify as * const _
-                as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigevent ) , "::" ,
-                stringify ! ( sigev_notify ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigevent ) ) . sigev_signo as * const _
-                as usize } , 4usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigevent ) , "::" ,
-                stringify ! ( sigev_signo ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigevent ) ) . sigev_value as * const _
-                as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigevent ) , "::" ,
-                stringify ! ( sigev_value ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigevent ) ) . _sigev_un as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigevent ) , "::" ,
-                stringify ! ( _sigev_un ) ));
-}
-impl Clone for sigevent {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for sigevent {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for sigevent {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f ,
-               "sigevent {{ sigev_notify: {:?}, sigev_signo: {:?}, sigev_value: {:?}, _sigev_un: {:?} }}"
-               , self . sigev_notify , self . sigev_signo , self . sigev_value
-               , self . _sigev_un)
-    }
-}
-#[repr(C)]
-#[derive(Copy)]
-pub struct __siginfo {
-    pub si_signo: ::kernel::sys::raw::c_int,
-    pub si_errno: ::kernel::sys::raw::c_int,
-    pub si_code: ::kernel::sys::raw::c_int,
-    pub si_pid: __pid_t,
-    pub si_uid: __uid_t,
-    pub si_status: ::kernel::sys::raw::c_int,
-    pub si_addr: *mut ::kernel::sys::raw::c_void,
-    pub si_value: sigval,
-    pub _reason: __siginfo__bindgen_ty_1,
-}
-#[repr(C)]
-#[derive(Copy)]
-pub union __siginfo__bindgen_ty_1 {
-    pub _fault: __siginfo__bindgen_ty_1__bindgen_ty_1,
-    pub _timer: __siginfo__bindgen_ty_1__bindgen_ty_2,
-    pub _mesgq: __siginfo__bindgen_ty_1__bindgen_ty_3,
-    pub _poll: __siginfo__bindgen_ty_1__bindgen_ty_4,
-    pub __spare__: __siginfo__bindgen_ty_1__bindgen_ty_5,
-    _bindgen_union_align: [u64; 5usize],
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct __siginfo__bindgen_ty_1__bindgen_ty_1 {
-    pub _trapno: ::kernel::sys::raw::c_int,
-}
-#[test]
-fn bindgen_test_layout___siginfo__bindgen_ty_1__bindgen_ty_1() {
-    assert_eq!(::core::mem::size_of::<__siginfo__bindgen_ty_1__bindgen_ty_1>()
-               , 4usize , concat ! (
-               "Size of: " , stringify ! (
-               __siginfo__bindgen_ty_1__bindgen_ty_1 ) ));
-    assert_eq! (::core::mem::align_of::<__siginfo__bindgen_ty_1__bindgen_ty_1>()
-                , 4usize , concat ! (
-                "Alignment of " , stringify ! (
-                __siginfo__bindgen_ty_1__bindgen_ty_1 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __siginfo__bindgen_ty_1__bindgen_ty_1 ) )
-                . _trapno as * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! (
-                __siginfo__bindgen_ty_1__bindgen_ty_1 ) , "::" , stringify ! (
-                _trapno ) ));
-}
-impl Clone for __siginfo__bindgen_ty_1__bindgen_ty_1 {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct __siginfo__bindgen_ty_1__bindgen_ty_2 {
-    pub _timerid: ::kernel::sys::raw::c_int,
-    pub _overrun: ::kernel::sys::raw::c_int,
-}
-#[test]
-fn bindgen_test_layout___siginfo__bindgen_ty_1__bindgen_ty_2() {
-    assert_eq!(::core::mem::size_of::<__siginfo__bindgen_ty_1__bindgen_ty_2>()
-               , 8usize , concat ! (
-               "Size of: " , stringify ! (
-               __siginfo__bindgen_ty_1__bindgen_ty_2 ) ));
-    assert_eq! (::core::mem::align_of::<__siginfo__bindgen_ty_1__bindgen_ty_2>()
-                , 4usize , concat ! (
-                "Alignment of " , stringify ! (
-                __siginfo__bindgen_ty_1__bindgen_ty_2 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __siginfo__bindgen_ty_1__bindgen_ty_2 ) )
-                . _timerid as * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! (
-                __siginfo__bindgen_ty_1__bindgen_ty_2 ) , "::" , stringify ! (
-                _timerid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __siginfo__bindgen_ty_1__bindgen_ty_2 ) )
-                . _overrun as * const _ as usize } , 4usize , concat ! (
-                "Alignment of field: " , stringify ! (
-                __siginfo__bindgen_ty_1__bindgen_ty_2 ) , "::" , stringify ! (
-                _overrun ) ));
-}
-impl Clone for __siginfo__bindgen_ty_1__bindgen_ty_2 {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct __siginfo__bindgen_ty_1__bindgen_ty_3 {
-    pub _mqd: ::kernel::sys::raw::c_int,
-}
-#[test]
-fn bindgen_test_layout___siginfo__bindgen_ty_1__bindgen_ty_3() {
-    assert_eq!(::core::mem::size_of::<__siginfo__bindgen_ty_1__bindgen_ty_3>()
-               , 4usize , concat ! (
-               "Size of: " , stringify ! (
-               __siginfo__bindgen_ty_1__bindgen_ty_3 ) ));
-    assert_eq! (::core::mem::align_of::<__siginfo__bindgen_ty_1__bindgen_ty_3>()
-                , 4usize , concat ! (
-                "Alignment of " , stringify ! (
-                __siginfo__bindgen_ty_1__bindgen_ty_3 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __siginfo__bindgen_ty_1__bindgen_ty_3 ) )
-                . _mqd as * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! (
-                __siginfo__bindgen_ty_1__bindgen_ty_3 ) , "::" , stringify ! (
-                _mqd ) ));
-}
-impl Clone for __siginfo__bindgen_ty_1__bindgen_ty_3 {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct __siginfo__bindgen_ty_1__bindgen_ty_4 {
-    pub _band: ::kernel::sys::raw::c_long,
-}
-#[test]
-fn bindgen_test_layout___siginfo__bindgen_ty_1__bindgen_ty_4() {
-    assert_eq!(::core::mem::size_of::<__siginfo__bindgen_ty_1__bindgen_ty_4>()
-               , 8usize , concat ! (
-               "Size of: " , stringify ! (
-               __siginfo__bindgen_ty_1__bindgen_ty_4 ) ));
-    assert_eq! (::core::mem::align_of::<__siginfo__bindgen_ty_1__bindgen_ty_4>()
-                , 8usize , concat ! (
-                "Alignment of " , stringify ! (
-                __siginfo__bindgen_ty_1__bindgen_ty_4 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __siginfo__bindgen_ty_1__bindgen_ty_4 ) )
-                . _band as * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! (
-                __siginfo__bindgen_ty_1__bindgen_ty_4 ) , "::" , stringify ! (
-                _band ) ));
-}
-impl Clone for __siginfo__bindgen_ty_1__bindgen_ty_4 {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct __siginfo__bindgen_ty_1__bindgen_ty_5 {
-    pub __spare1__: ::kernel::sys::raw::c_long,
-    pub __spare2__: [::kernel::sys::raw::c_int; 7usize],
-}
-#[test]
-fn bindgen_test_layout___siginfo__bindgen_ty_1__bindgen_ty_5() {
-    assert_eq!(::core::mem::size_of::<__siginfo__bindgen_ty_1__bindgen_ty_5>()
-               , 40usize , concat ! (
-               "Size of: " , stringify ! (
-               __siginfo__bindgen_ty_1__bindgen_ty_5 ) ));
-    assert_eq! (::core::mem::align_of::<__siginfo__bindgen_ty_1__bindgen_ty_5>()
-                , 8usize , concat ! (
-                "Alignment of " , stringify ! (
-                __siginfo__bindgen_ty_1__bindgen_ty_5 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __siginfo__bindgen_ty_1__bindgen_ty_5 ) )
-                . __spare1__ as * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! (
-                __siginfo__bindgen_ty_1__bindgen_ty_5 ) , "::" , stringify ! (
-                __spare1__ ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __siginfo__bindgen_ty_1__bindgen_ty_5 ) )
-                . __spare2__ as * const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! (
-                __siginfo__bindgen_ty_1__bindgen_ty_5 ) , "::" , stringify ! (
-                __spare2__ ) ));
-}
-impl Clone for __siginfo__bindgen_ty_1__bindgen_ty_5 {
-    fn clone(&self) -> Self { *self }
-}
-#[test]
-fn bindgen_test_layout___siginfo__bindgen_ty_1() {
-    assert_eq!(::core::mem::size_of::<__siginfo__bindgen_ty_1>() , 40usize ,
-               concat ! (
-               "Size of: " , stringify ! ( __siginfo__bindgen_ty_1 ) ));
-    assert_eq! (::core::mem::align_of::<__siginfo__bindgen_ty_1>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( __siginfo__bindgen_ty_1 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __siginfo__bindgen_ty_1 ) ) . _fault as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( __siginfo__bindgen_ty_1
-                ) , "::" , stringify ! ( _fault ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __siginfo__bindgen_ty_1 ) ) . _timer as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( __siginfo__bindgen_ty_1
-                ) , "::" , stringify ! ( _timer ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __siginfo__bindgen_ty_1 ) ) . _mesgq as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( __siginfo__bindgen_ty_1
-                ) , "::" , stringify ! ( _mesgq ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __siginfo__bindgen_ty_1 ) ) . _poll as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( __siginfo__bindgen_ty_1
-                ) , "::" , stringify ! ( _poll ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __siginfo__bindgen_ty_1 ) ) . __spare__
-                as * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( __siginfo__bindgen_ty_1
-                ) , "::" , stringify ! ( __spare__ ) ));
-}
-impl Clone for __siginfo__bindgen_ty_1 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for __siginfo__bindgen_ty_1 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for __siginfo__bindgen_ty_1 {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f , "__siginfo__bindgen_ty_1 {{ union }}")
-    }
-}
-#[test]
-fn bindgen_test_layout___siginfo() {
-    assert_eq!(::core::mem::size_of::<__siginfo>() , 80usize , concat ! (
-               "Size of: " , stringify ! ( __siginfo ) ));
-    assert_eq! (::core::mem::align_of::<__siginfo>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( __siginfo ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __siginfo ) ) . si_signo as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( __siginfo ) , "::" ,
-                stringify ! ( si_signo ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __siginfo ) ) . si_errno as * const _ as
-                usize } , 4usize , concat ! (
-                "Alignment of field: " , stringify ! ( __siginfo ) , "::" ,
-                stringify ! ( si_errno ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __siginfo ) ) . si_code as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( __siginfo ) , "::" ,
-                stringify ! ( si_code ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __siginfo ) ) . si_pid as * const _ as
-                usize } , 12usize , concat ! (
-                "Alignment of field: " , stringify ! ( __siginfo ) , "::" ,
-                stringify ! ( si_pid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __siginfo ) ) . si_uid as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( __siginfo ) , "::" ,
-                stringify ! ( si_uid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __siginfo ) ) . si_status as * const _ as
-                usize } , 20usize , concat ! (
-                "Alignment of field: " , stringify ! ( __siginfo ) , "::" ,
-                stringify ! ( si_status ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __siginfo ) ) . si_addr as * const _ as
-                usize } , 24usize , concat ! (
-                "Alignment of field: " , stringify ! ( __siginfo ) , "::" ,
-                stringify ! ( si_addr ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __siginfo ) ) . si_value as * const _ as
-                usize } , 32usize , concat ! (
-                "Alignment of field: " , stringify ! ( __siginfo ) , "::" ,
-                stringify ! ( si_value ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __siginfo ) ) . _reason as * const _ as
-                usize } , 40usize , concat ! (
-                "Alignment of field: " , stringify ! ( __siginfo ) , "::" ,
-                stringify ! ( _reason ) ));
-}
-impl Clone for __siginfo {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for __siginfo {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for __siginfo {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f ,
-               "__siginfo {{ si_signo: {:?}, si_errno: {:?}, si_code: {:?}, si_pid: {:?}, si_uid: {:?}, si_status: {:?}, si_addr: {:?}, si_value: {:?}, _reason: {:?} }}"
-               , self . si_signo , self . si_errno , self . si_code , self .
-               si_pid , self . si_uid , self . si_status , self . si_addr ,
-               self . si_value , self . _reason)
-    }
-}
-pub type siginfo_t = __siginfo;
-#[repr(C)]
-#[derive(Copy)]
-pub struct siginfo32 {
-    pub si_signo: ::kernel::sys::raw::c_int,
-    pub si_errno: ::kernel::sys::raw::c_int,
-    pub si_code: ::kernel::sys::raw::c_int,
-    pub si_pid: __pid_t,
-    pub si_uid: __uid_t,
-    pub si_status: ::kernel::sys::raw::c_int,
-    pub si_addr: u32,
-    pub si_value: sigval32,
-    pub _reason: siginfo32__bindgen_ty_1,
-}
-#[repr(C)]
-#[derive(Copy)]
-pub union siginfo32__bindgen_ty_1 {
-    pub _fault: siginfo32__bindgen_ty_1__bindgen_ty_1,
-    pub _timer: siginfo32__bindgen_ty_1__bindgen_ty_2,
-    pub _mesgq: siginfo32__bindgen_ty_1__bindgen_ty_3,
-    pub _poll: siginfo32__bindgen_ty_1__bindgen_ty_4,
-    pub __spare__: siginfo32__bindgen_ty_1__bindgen_ty_5,
-    _bindgen_union_align: [u32; 8usize],
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct siginfo32__bindgen_ty_1__bindgen_ty_1 {
-    pub _trapno: ::kernel::sys::raw::c_int,
-}
-#[test]
-fn bindgen_test_layout_siginfo32__bindgen_ty_1__bindgen_ty_1() {
-    assert_eq!(::core::mem::size_of::<siginfo32__bindgen_ty_1__bindgen_ty_1>()
-               , 4usize , concat ! (
-               "Size of: " , stringify ! (
-               siginfo32__bindgen_ty_1__bindgen_ty_1 ) ));
-    assert_eq! (::core::mem::align_of::<siginfo32__bindgen_ty_1__bindgen_ty_1>()
-                , 4usize , concat ! (
-                "Alignment of " , stringify ! (
-                siginfo32__bindgen_ty_1__bindgen_ty_1 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const siginfo32__bindgen_ty_1__bindgen_ty_1 ) )
-                . _trapno as * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! (
-                siginfo32__bindgen_ty_1__bindgen_ty_1 ) , "::" , stringify ! (
-                _trapno ) ));
-}
-impl Clone for siginfo32__bindgen_ty_1__bindgen_ty_1 {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct siginfo32__bindgen_ty_1__bindgen_ty_2 {
-    pub _timerid: ::kernel::sys::raw::c_int,
-    pub _overrun: ::kernel::sys::raw::c_int,
-}
-#[test]
-fn bindgen_test_layout_siginfo32__bindgen_ty_1__bindgen_ty_2() {
-    assert_eq!(::core::mem::size_of::<siginfo32__bindgen_ty_1__bindgen_ty_2>()
-               , 8usize , concat ! (
-               "Size of: " , stringify ! (
-               siginfo32__bindgen_ty_1__bindgen_ty_2 ) ));
-    assert_eq! (::core::mem::align_of::<siginfo32__bindgen_ty_1__bindgen_ty_2>()
-                , 4usize , concat ! (
-                "Alignment of " , stringify ! (
-                siginfo32__bindgen_ty_1__bindgen_ty_2 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const siginfo32__bindgen_ty_1__bindgen_ty_2 ) )
-                . _timerid as * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! (
-                siginfo32__bindgen_ty_1__bindgen_ty_2 ) , "::" , stringify ! (
-                _timerid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const siginfo32__bindgen_ty_1__bindgen_ty_2 ) )
-                . _overrun as * const _ as usize } , 4usize , concat ! (
-                "Alignment of field: " , stringify ! (
-                siginfo32__bindgen_ty_1__bindgen_ty_2 ) , "::" , stringify ! (
-                _overrun ) ));
-}
-impl Clone for siginfo32__bindgen_ty_1__bindgen_ty_2 {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct siginfo32__bindgen_ty_1__bindgen_ty_3 {
-    pub _mqd: ::kernel::sys::raw::c_int,
-}
-#[test]
-fn bindgen_test_layout_siginfo32__bindgen_ty_1__bindgen_ty_3() {
-    assert_eq!(::core::mem::size_of::<siginfo32__bindgen_ty_1__bindgen_ty_3>()
-               , 4usize , concat ! (
-               "Size of: " , stringify ! (
-               siginfo32__bindgen_ty_1__bindgen_ty_3 ) ));
-    assert_eq! (::core::mem::align_of::<siginfo32__bindgen_ty_1__bindgen_ty_3>()
-                , 4usize , concat ! (
-                "Alignment of " , stringify ! (
-                siginfo32__bindgen_ty_1__bindgen_ty_3 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const siginfo32__bindgen_ty_1__bindgen_ty_3 ) )
-                . _mqd as * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! (
-                siginfo32__bindgen_ty_1__bindgen_ty_3 ) , "::" , stringify ! (
-                _mqd ) ));
-}
-impl Clone for siginfo32__bindgen_ty_1__bindgen_ty_3 {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct siginfo32__bindgen_ty_1__bindgen_ty_4 {
-    pub _band: i32,
-}
-#[test]
-fn bindgen_test_layout_siginfo32__bindgen_ty_1__bindgen_ty_4() {
-    assert_eq!(::core::mem::size_of::<siginfo32__bindgen_ty_1__bindgen_ty_4>()
-               , 4usize , concat ! (
-               "Size of: " , stringify ! (
-               siginfo32__bindgen_ty_1__bindgen_ty_4 ) ));
-    assert_eq! (::core::mem::align_of::<siginfo32__bindgen_ty_1__bindgen_ty_4>()
-                , 4usize , concat ! (
-                "Alignment of " , stringify ! (
-                siginfo32__bindgen_ty_1__bindgen_ty_4 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const siginfo32__bindgen_ty_1__bindgen_ty_4 ) )
-                . _band as * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! (
-                siginfo32__bindgen_ty_1__bindgen_ty_4 ) , "::" , stringify ! (
-                _band ) ));
-}
-impl Clone for siginfo32__bindgen_ty_1__bindgen_ty_4 {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct siginfo32__bindgen_ty_1__bindgen_ty_5 {
-    pub __spare1__: i32,
-    pub __spare2__: [::kernel::sys::raw::c_int; 7usize],
-}
-#[test]
-fn bindgen_test_layout_siginfo32__bindgen_ty_1__bindgen_ty_5() {
-    assert_eq!(::core::mem::size_of::<siginfo32__bindgen_ty_1__bindgen_ty_5>()
-               , 32usize , concat ! (
-               "Size of: " , stringify ! (
-               siginfo32__bindgen_ty_1__bindgen_ty_5 ) ));
-    assert_eq! (::core::mem::align_of::<siginfo32__bindgen_ty_1__bindgen_ty_5>()
-                , 4usize , concat ! (
-                "Alignment of " , stringify ! (
-                siginfo32__bindgen_ty_1__bindgen_ty_5 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const siginfo32__bindgen_ty_1__bindgen_ty_5 ) )
-                . __spare1__ as * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! (
-                siginfo32__bindgen_ty_1__bindgen_ty_5 ) , "::" , stringify ! (
-                __spare1__ ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const siginfo32__bindgen_ty_1__bindgen_ty_5 ) )
-                . __spare2__ as * const _ as usize } , 4usize , concat ! (
-                "Alignment of field: " , stringify ! (
-                siginfo32__bindgen_ty_1__bindgen_ty_5 ) , "::" , stringify ! (
-                __spare2__ ) ));
-}
-impl Clone for siginfo32__bindgen_ty_1__bindgen_ty_5 {
-    fn clone(&self) -> Self { *self }
-}
-#[test]
-fn bindgen_test_layout_siginfo32__bindgen_ty_1() {
-    assert_eq!(::core::mem::size_of::<siginfo32__bindgen_ty_1>() , 32usize ,
-               concat ! (
-               "Size of: " , stringify ! ( siginfo32__bindgen_ty_1 ) ));
-    assert_eq! (::core::mem::align_of::<siginfo32__bindgen_ty_1>() , 4usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( siginfo32__bindgen_ty_1 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const siginfo32__bindgen_ty_1 ) ) . _fault as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( siginfo32__bindgen_ty_1
-                ) , "::" , stringify ! ( _fault ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const siginfo32__bindgen_ty_1 ) ) . _timer as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( siginfo32__bindgen_ty_1
-                ) , "::" , stringify ! ( _timer ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const siginfo32__bindgen_ty_1 ) ) . _mesgq as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( siginfo32__bindgen_ty_1
-                ) , "::" , stringify ! ( _mesgq ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const siginfo32__bindgen_ty_1 ) ) . _poll as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( siginfo32__bindgen_ty_1
-                ) , "::" , stringify ! ( _poll ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const siginfo32__bindgen_ty_1 ) ) . __spare__
-                as * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( siginfo32__bindgen_ty_1
-                ) , "::" , stringify ! ( __spare__ ) ));
-}
-impl Clone for siginfo32__bindgen_ty_1 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for siginfo32__bindgen_ty_1 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for siginfo32__bindgen_ty_1 {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f , "siginfo32__bindgen_ty_1 {{ union }}")
-    }
-}
-#[test]
-fn bindgen_test_layout_siginfo32() {
-    assert_eq!(::core::mem::size_of::<siginfo32>() , 64usize , concat ! (
-               "Size of: " , stringify ! ( siginfo32 ) ));
-    assert_eq! (::core::mem::align_of::<siginfo32>() , 4usize , concat ! (
-                "Alignment of " , stringify ! ( siginfo32 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const siginfo32 ) ) . si_signo as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( siginfo32 ) , "::" ,
-                stringify ! ( si_signo ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const siginfo32 ) ) . si_errno as * const _ as
-                usize } , 4usize , concat ! (
-                "Alignment of field: " , stringify ! ( siginfo32 ) , "::" ,
-                stringify ! ( si_errno ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const siginfo32 ) ) . si_code as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( siginfo32 ) , "::" ,
-                stringify ! ( si_code ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const siginfo32 ) ) . si_pid as * const _ as
-                usize } , 12usize , concat ! (
-                "Alignment of field: " , stringify ! ( siginfo32 ) , "::" ,
-                stringify ! ( si_pid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const siginfo32 ) ) . si_uid as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( siginfo32 ) , "::" ,
-                stringify ! ( si_uid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const siginfo32 ) ) . si_status as * const _ as
-                usize } , 20usize , concat ! (
-                "Alignment of field: " , stringify ! ( siginfo32 ) , "::" ,
-                stringify ! ( si_status ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const siginfo32 ) ) . si_addr as * const _ as
-                usize } , 24usize , concat ! (
-                "Alignment of field: " , stringify ! ( siginfo32 ) , "::" ,
-                stringify ! ( si_addr ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const siginfo32 ) ) . si_value as * const _ as
-                usize } , 28usize , concat ! (
-                "Alignment of field: " , stringify ! ( siginfo32 ) , "::" ,
-                stringify ! ( si_value ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const siginfo32 ) ) . _reason as * const _ as
-                usize } , 32usize , concat ! (
-                "Alignment of field: " , stringify ! ( siginfo32 ) , "::" ,
-                stringify ! ( _reason ) ));
-}
-impl Clone for siginfo32 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for siginfo32 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for siginfo32 {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f ,
-               "siginfo32 {{ si_signo: {:?}, si_errno: {:?}, si_code: {:?}, si_pid: {:?}, si_uid: {:?}, si_status: {:?}, si_addr: {:?}, si_value: {:?}, _reason: {:?} }}"
-               , self . si_signo , self . si_errno , self . si_code , self .
-               si_pid , self . si_uid , self . si_status , self . si_addr ,
-               self . si_value , self . _reason)
-    }
-}
-#[repr(C)]
-#[derive(Copy)]
-pub struct sigaction {
-    pub __sigaction_u: sigaction__bindgen_ty_1,
-    pub sa_flags: ::kernel::sys::raw::c_int,
-    pub sa_mask: sigset_t,
-}
-#[repr(C)]
-#[derive(Copy)]
-pub union sigaction__bindgen_ty_1 {
-    pub __sa_handler: ::core::option::Option<unsafe extern "C" fn(arg1:
-                                                                      ::kernel::sys::raw::c_int)>,
-    pub __sa_sigaction: ::core::option::Option<unsafe extern "C" fn(arg1:
-                                                                        ::kernel::sys::raw::c_int,
-                                                                    arg2:
-                                                                        *mut __siginfo,
-                                                                    arg3:
-                                                                        *mut ::kernel::sys::raw::c_void)>,
-    _bindgen_union_align: u64,
-}
-#[test]
-fn bindgen_test_layout_sigaction__bindgen_ty_1() {
-    assert_eq!(::core::mem::size_of::<sigaction__bindgen_ty_1>() , 8usize ,
-               concat ! (
-               "Size of: " , stringify ! ( sigaction__bindgen_ty_1 ) ));
-    assert_eq! (::core::mem::align_of::<sigaction__bindgen_ty_1>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( sigaction__bindgen_ty_1 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigaction__bindgen_ty_1 ) ) .
-                __sa_handler as * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigaction__bindgen_ty_1
-                ) , "::" , stringify ! ( __sa_handler ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigaction__bindgen_ty_1 ) ) .
-                __sa_sigaction as * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigaction__bindgen_ty_1
-                ) , "::" , stringify ! ( __sa_sigaction ) ));
-}
-impl Clone for sigaction__bindgen_ty_1 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for sigaction__bindgen_ty_1 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for sigaction__bindgen_ty_1 {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f , "sigaction__bindgen_ty_1 {{ union }}")
-    }
-}
-#[test]
-fn bindgen_test_layout_sigaction() {
-    assert_eq!(::core::mem::size_of::<sigaction>() , 32usize , concat ! (
-               "Size of: " , stringify ! ( sigaction ) ));
-    assert_eq! (::core::mem::align_of::<sigaction>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( sigaction ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigaction ) ) . __sigaction_u as * const
-                _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigaction ) , "::" ,
-                stringify ! ( __sigaction_u ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigaction ) ) . sa_flags as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigaction ) , "::" ,
-                stringify ! ( sa_flags ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigaction ) ) . sa_mask as * const _ as
-                usize } , 12usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigaction ) , "::" ,
-                stringify ! ( sa_mask ) ));
-}
-impl Clone for sigaction {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for sigaction {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for sigaction {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f ,
-               "sigaction {{ __sigaction_u: {:?}, sa_flags: {:?}, sa_mask: {:?} }}"
-               , self . __sigaction_u , self . sa_flags , self . sa_mask)
-    }
-}
-pub type sig_t = __sighandler_t;
-pub type __siginfohandler_t =
-    ::core::option::Option<unsafe extern "C" fn(arg1:
-                                                    ::kernel::sys::raw::c_int,
-                                                arg2: *mut __siginfo,
-                                                arg3:
-                                                    *mut ::kernel::sys::raw::c_void)>;
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct sigaltstack {
-    pub ss_sp: *mut ::kernel::sys::raw::c_void,
-    pub ss_size: __size_t,
-    pub ss_flags: ::kernel::sys::raw::c_int,
-}
-#[test]
-fn bindgen_test_layout_sigaltstack() {
-    assert_eq!(::core::mem::size_of::<sigaltstack>() , 24usize , concat ! (
-               "Size of: " , stringify ! ( sigaltstack ) ));
-    assert_eq! (::core::mem::align_of::<sigaltstack>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( sigaltstack ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigaltstack ) ) . ss_sp as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigaltstack ) , "::" ,
-                stringify ! ( ss_sp ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigaltstack ) ) . ss_size as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigaltstack ) , "::" ,
-                stringify ! ( ss_size ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigaltstack ) ) . ss_flags as * const _
-                as usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigaltstack ) , "::" ,
-                stringify ! ( ss_flags ) ));
-}
-impl Clone for sigaltstack {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for sigaltstack {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-pub type stack_t = sigaltstack;
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct sigvec {
-    pub sv_handler: __sighandler_t,
-    pub sv_mask: ::kernel::sys::raw::c_int,
-    pub sv_flags: ::kernel::sys::raw::c_int,
-}
-#[test]
-fn bindgen_test_layout_sigvec() {
-    assert_eq!(::core::mem::size_of::<sigvec>() , 16usize , concat ! (
-               "Size of: " , stringify ! ( sigvec ) ));
-    assert_eq! (::core::mem::align_of::<sigvec>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( sigvec ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigvec ) ) . sv_handler as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigvec ) , "::" ,
-                stringify ! ( sv_handler ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigvec ) ) . sv_mask as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigvec ) , "::" ,
-                stringify ! ( sv_mask ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigvec ) ) . sv_flags as * const _ as
-                usize } , 12usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigvec ) , "::" ,
-                stringify ! ( sv_flags ) ));
-}
-impl Clone for sigvec {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for sigvec {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct sigstack {
-    pub ss_sp: *mut ::kernel::sys::raw::c_void,
-    pub ss_onstack: ::kernel::sys::raw::c_int,
-}
-#[test]
-fn bindgen_test_layout_sigstack() {
-    assert_eq!(::core::mem::size_of::<sigstack>() , 16usize , concat ! (
-               "Size of: " , stringify ! ( sigstack ) ));
-    assert_eq! (::core::mem::align_of::<sigstack>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( sigstack ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigstack ) ) . ss_sp as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigstack ) , "::" ,
-                stringify ! ( ss_sp ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigstack ) ) . ss_onstack as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigstack ) , "::" ,
-                stringify ! ( ss_onstack ) ));
-}
-impl Clone for sigstack {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for sigstack {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-extern "C" {
-    pub fn signal(arg1: ::kernel::sys::raw::c_int, arg2: __sighandler_t)
-     -> __sighandler_t;
-}
-#[repr(C)]
-#[derive(Copy)]
-pub struct sigacts {
-    pub ps_sigact: [sig_t; 128usize],
-    pub ps_catchmask: [sigset_t; 128usize],
-    pub ps_sigonstack: sigset_t,
-    pub ps_sigintr: sigset_t,
-    pub ps_sigreset: sigset_t,
-    pub ps_signodefer: sigset_t,
-    pub ps_siginfo: sigset_t,
-    pub ps_sigignore: sigset_t,
-    pub ps_sigcatch: sigset_t,
-    pub ps_freebsd4: sigset_t,
-    pub ps_osigset: sigset_t,
-    pub ps_usertramp: sigset_t,
-    pub ps_flag: ::kernel::sys::raw::c_int,
-    pub ps_refcnt: u_int,
-    pub ps_mtx: mtx,
-}
-#[test]
-fn bindgen_test_layout_sigacts() {
-    assert_eq!(::core::mem::size_of::<sigacts>() , 3272usize , concat ! (
-               "Size of: " , stringify ! ( sigacts ) ));
-    assert_eq! (::core::mem::align_of::<sigacts>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( sigacts ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigacts ) ) . ps_sigact as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigacts ) , "::" ,
-                stringify ! ( ps_sigact ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigacts ) ) . ps_catchmask as * const _
-                as usize } , 1024usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigacts ) , "::" ,
-                stringify ! ( ps_catchmask ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigacts ) ) . ps_sigonstack as * const _
-                as usize } , 3072usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigacts ) , "::" ,
-                stringify ! ( ps_sigonstack ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigacts ) ) . ps_sigintr as * const _ as
-                usize } , 3088usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigacts ) , "::" ,
-                stringify ! ( ps_sigintr ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigacts ) ) . ps_sigreset as * const _ as
-                usize } , 3104usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigacts ) , "::" ,
-                stringify ! ( ps_sigreset ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigacts ) ) . ps_signodefer as * const _
-                as usize } , 3120usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigacts ) , "::" ,
-                stringify ! ( ps_signodefer ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigacts ) ) . ps_siginfo as * const _ as
-                usize } , 3136usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigacts ) , "::" ,
-                stringify ! ( ps_siginfo ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigacts ) ) . ps_sigignore as * const _
-                as usize } , 3152usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigacts ) , "::" ,
-                stringify ! ( ps_sigignore ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigacts ) ) . ps_sigcatch as * const _ as
-                usize } , 3168usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigacts ) , "::" ,
-                stringify ! ( ps_sigcatch ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigacts ) ) . ps_freebsd4 as * const _ as
-                usize } , 3184usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigacts ) , "::" ,
-                stringify ! ( ps_freebsd4 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigacts ) ) . ps_osigset as * const _ as
-                usize } , 3200usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigacts ) , "::" ,
-                stringify ! ( ps_osigset ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigacts ) ) . ps_usertramp as * const _
-                as usize } , 3216usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigacts ) , "::" ,
-                stringify ! ( ps_usertramp ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigacts ) ) . ps_flag as * const _ as
-                usize } , 3232usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigacts ) , "::" ,
-                stringify ! ( ps_flag ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigacts ) ) . ps_refcnt as * const _ as
-                usize } , 3236usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigacts ) , "::" ,
-                stringify ! ( ps_refcnt ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigacts ) ) . ps_mtx as * const _ as
-                usize } , 3240usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigacts ) , "::" ,
-                stringify ! ( ps_mtx ) ));
-}
-impl Clone for sigacts {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for sigacts {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for sigacts {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f ,
-               "sigacts {{ ps_sigact: [{}], ps_catchmask: [{}], ps_sigonstack: {:?}, ps_sigintr: {:?}, ps_sigreset: {:?}, ps_signodefer: {:?}, ps_siginfo: {:?}, ps_sigignore: {:?}, ps_sigcatch: {:?}, ps_freebsd4: {:?}, ps_osigset: {:?}, ps_usertramp: {:?}, ps_flag: {:?}, ps_refcnt: {:?}, ps_mtx: {:?} }}"
-               , self . ps_sigact . iter (  ) . enumerate (  ) . map (
-               | ( i , v ) | format ! (
-               "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: <
-               String > (  ) , self . ps_catchmask . iter (  ) . enumerate (
-               ) . map (
-               | ( i , v ) | format ! (
-               "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: <
-               String > (  ) , self . ps_sigonstack , self . ps_sigintr , self
-               . ps_sigreset , self . ps_signodefer , self . ps_siginfo , self
-               . ps_sigignore , self . ps_sigcatch , self . ps_freebsd4 , self
-               . ps_osigset , self . ps_usertramp , self . ps_flag , self .
-               ps_refcnt , self . ps_mtx)
-    }
-}
-#[repr(C)]
-#[derive(Copy)]
-pub struct ksiginfo {
-    pub ksi_link: ksiginfo__bindgen_ty_1,
-    pub ksi_info: siginfo_t,
-    pub ksi_flags: ::kernel::sys::raw::c_int,
-    pub ksi_sigq: *mut sigqueue,
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct ksiginfo__bindgen_ty_1 {
-    pub tqe_next: *mut ksiginfo,
-    pub tqe_prev: *mut *mut ksiginfo,
-}
-#[test]
-fn bindgen_test_layout_ksiginfo__bindgen_ty_1() {
-    assert_eq!(::core::mem::size_of::<ksiginfo__bindgen_ty_1>() , 16usize ,
-               concat ! ( "Size of: " , stringify ! ( ksiginfo__bindgen_ty_1 )
-               ));
-    assert_eq! (::core::mem::align_of::<ksiginfo__bindgen_ty_1>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( ksiginfo__bindgen_ty_1 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const ksiginfo__bindgen_ty_1 ) ) . tqe_next as
-                * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( ksiginfo__bindgen_ty_1
-                ) , "::" , stringify ! ( tqe_next ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const ksiginfo__bindgen_ty_1 ) ) . tqe_prev as
-                * const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( ksiginfo__bindgen_ty_1
-                ) , "::" , stringify ! ( tqe_prev ) ));
-}
-impl Clone for ksiginfo__bindgen_ty_1 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for ksiginfo__bindgen_ty_1 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[test]
-fn bindgen_test_layout_ksiginfo() {
-    assert_eq!(::core::mem::size_of::<ksiginfo>() , 112usize , concat ! (
-               "Size of: " , stringify ! ( ksiginfo ) ));
-    assert_eq! (::core::mem::align_of::<ksiginfo>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( ksiginfo ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const ksiginfo ) ) . ksi_link as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( ksiginfo ) , "::" ,
-                stringify ! ( ksi_link ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const ksiginfo ) ) . ksi_info as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( ksiginfo ) , "::" ,
-                stringify ! ( ksi_info ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const ksiginfo ) ) . ksi_flags as * const _ as
-                usize } , 96usize , concat ! (
-                "Alignment of field: " , stringify ! ( ksiginfo ) , "::" ,
-                stringify ! ( ksi_flags ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const ksiginfo ) ) . ksi_sigq as * const _ as
-                usize } , 104usize , concat ! (
-                "Alignment of field: " , stringify ! ( ksiginfo ) , "::" ,
-                stringify ! ( ksi_sigq ) ));
-}
-impl Clone for ksiginfo {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for ksiginfo {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for ksiginfo {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f ,
-               "ksiginfo {{ ksi_link: {:?}, ksi_info: {:?}, ksi_flags: {:?}, ksi_sigq: {:?} }}"
-               , self . ksi_link , self . ksi_info , self . ksi_flags , self .
-               ksi_sigq)
-    }
-}
-pub type ksiginfo_t = ksiginfo;
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct sigqueue {
-    pub sq_signals: sigset_t,
-    pub sq_kill: sigset_t,
-    pub sq_ptrace: sigset_t,
-    pub sq_list: sigqueue__bindgen_ty_1,
-    pub sq_proc: *mut proc_,
-    pub sq_flags: ::kernel::sys::raw::c_int,
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct sigqueue__bindgen_ty_1 {
-    pub tqh_first: *mut ksiginfo,
-    pub tqh_last: *mut *mut ksiginfo,
-}
-#[test]
-fn bindgen_test_layout_sigqueue__bindgen_ty_1() {
-    assert_eq!(::core::mem::size_of::<sigqueue__bindgen_ty_1>() , 16usize ,
-               concat ! ( "Size of: " , stringify ! ( sigqueue__bindgen_ty_1 )
-               ));
-    assert_eq! (::core::mem::align_of::<sigqueue__bindgen_ty_1>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( sigqueue__bindgen_ty_1 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigqueue__bindgen_ty_1 ) ) . tqh_first as
-                * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigqueue__bindgen_ty_1
-                ) , "::" , stringify ! ( tqh_first ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigqueue__bindgen_ty_1 ) ) . tqh_last as
-                * const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigqueue__bindgen_ty_1
-                ) , "::" , stringify ! ( tqh_last ) ));
-}
-impl Clone for sigqueue__bindgen_ty_1 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for sigqueue__bindgen_ty_1 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[test]
-fn bindgen_test_layout_sigqueue() {
-    assert_eq!(::core::mem::size_of::<sigqueue>() , 80usize , concat ! (
-               "Size of: " , stringify ! ( sigqueue ) ));
-    assert_eq! (::core::mem::align_of::<sigqueue>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( sigqueue ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigqueue ) ) . sq_signals as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigqueue ) , "::" ,
-                stringify ! ( sq_signals ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigqueue ) ) . sq_kill as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigqueue ) , "::" ,
-                stringify ! ( sq_kill ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigqueue ) ) . sq_ptrace as * const _ as
-                usize } , 32usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigqueue ) , "::" ,
-                stringify ! ( sq_ptrace ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigqueue ) ) . sq_list as * const _ as
-                usize } , 48usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigqueue ) , "::" ,
-                stringify ! ( sq_list ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigqueue ) ) . sq_proc as * const _ as
-                usize } , 64usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigqueue ) , "::" ,
-                stringify ! ( sq_proc ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sigqueue ) ) . sq_flags as * const _ as
-                usize } , 72usize , concat ! (
-                "Alignment of field: " , stringify ! ( sigqueue ) , "::" ,
-                stringify ! ( sq_flags ) ));
-}
-impl Clone for sigqueue {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for sigqueue {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-pub type sigqueue_t = sigqueue;
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct pgrp {
-    pub pg_hash: pgrp__bindgen_ty_1,
-    pub pg_members: pgrp__bindgen_ty_2,
-    pub pg_session: *mut session,
-    pub pg_sigiolst: sigiolst,
-    pub pg_id: pid_t,
-    pub pg_jobc: ::kernel::sys::raw::c_int,
-    pub pg_mtx: mtx,
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct pgrp__bindgen_ty_1 {
-    pub le_next: *mut pgrp,
-    pub le_prev: *mut *mut pgrp,
-}
-#[test]
-fn bindgen_test_layout_pgrp__bindgen_ty_1() {
-    assert_eq!(::core::mem::size_of::<pgrp__bindgen_ty_1>() , 16usize , concat
-               ! ( "Size of: " , stringify ! ( pgrp__bindgen_ty_1 ) ));
-    assert_eq! (::core::mem::align_of::<pgrp__bindgen_ty_1>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( pgrp__bindgen_ty_1 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pgrp__bindgen_ty_1 ) ) . le_next as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( pgrp__bindgen_ty_1 ) ,
-                "::" , stringify ! ( le_next ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pgrp__bindgen_ty_1 ) ) . le_prev as *
-                const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( pgrp__bindgen_ty_1 ) ,
-                "::" , stringify ! ( le_prev ) ));
-}
-impl Clone for pgrp__bindgen_ty_1 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for pgrp__bindgen_ty_1 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct pgrp__bindgen_ty_2 {
-    pub lh_first: *mut proc_,
-}
-#[test]
-fn bindgen_test_layout_pgrp__bindgen_ty_2() {
-    assert_eq!(::core::mem::size_of::<pgrp__bindgen_ty_2>() , 8usize , concat
-               ! ( "Size of: " , stringify ! ( pgrp__bindgen_ty_2 ) ));
-    assert_eq! (::core::mem::align_of::<pgrp__bindgen_ty_2>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( pgrp__bindgen_ty_2 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pgrp__bindgen_ty_2 ) ) . lh_first as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( pgrp__bindgen_ty_2 ) ,
-                "::" , stringify ! ( lh_first ) ));
-}
-impl Clone for pgrp__bindgen_ty_2 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for pgrp__bindgen_ty_2 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[test]
-fn bindgen_test_layout_pgrp() {
-    assert_eq!(::core::mem::size_of::<pgrp>() , 80usize , concat ! (
-               "Size of: " , stringify ! ( pgrp ) ));
-    assert_eq! (::core::mem::align_of::<pgrp>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( pgrp ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pgrp ) ) . pg_hash as * const _ as usize
-                } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( pgrp ) , "::" ,
-                stringify ! ( pg_hash ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pgrp ) ) . pg_members as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( pgrp ) , "::" ,
-                stringify ! ( pg_members ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pgrp ) ) . pg_session as * const _ as
-                usize } , 24usize , concat ! (
-                "Alignment of field: " , stringify ! ( pgrp ) , "::" ,
-                stringify ! ( pg_session ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pgrp ) ) . pg_sigiolst as * const _ as
-                usize } , 32usize , concat ! (
-                "Alignment of field: " , stringify ! ( pgrp ) , "::" ,
-                stringify ! ( pg_sigiolst ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pgrp ) ) . pg_id as * const _ as usize }
-                , 40usize , concat ! (
-                "Alignment of field: " , stringify ! ( pgrp ) , "::" ,
-                stringify ! ( pg_id ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pgrp ) ) . pg_jobc as * const _ as usize
-                } , 44usize , concat ! (
-                "Alignment of field: " , stringify ! ( pgrp ) , "::" ,
-                stringify ! ( pg_jobc ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pgrp ) ) . pg_mtx as * const _ as usize }
-                , 48usize , concat ! (
-                "Alignment of field: " , stringify ! ( pgrp ) , "::" ,
-                stringify ! ( pg_mtx ) ));
-}
-impl Clone for pgrp {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for pgrp {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-extern "C" {
-    #[link_name = "sigio_lock"]
-    pub static mut sigio_lock: mtx;
-}
-extern "C" {
-    pub fn sigdeferstop_impl(mode: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn sigallowstop_impl(prev: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn cursig(td: *mut thread) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn execsigs(p: *mut proc_);
-}
-extern "C" {
-    pub fn gsignal(pgid: ::kernel::sys::raw::c_int,
-                   sig: ::kernel::sys::raw::c_int, ksi: *mut ksiginfo_t);
-}
-extern "C" {
-    pub fn killproc(p: *mut proc_, why: *mut ::kernel::sys::raw::c_char);
-}
-extern "C" {
-    pub fn ksiginfo_alloc(wait: ::kernel::sys::raw::c_int) -> *mut ksiginfo_t;
-}
-extern "C" {
-    pub fn ksiginfo_free(ksi: *mut ksiginfo_t);
-}
-extern "C" {
-    pub fn pksignal(p: *mut proc_, sig: ::kernel::sys::raw::c_int,
-                    ksi: *mut ksiginfo_t) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn pgsigio(sigiop: *mut *mut sigio, sig: ::kernel::sys::raw::c_int,
-                   checkctty: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn pgsignal(pgrp: *mut pgrp, sig: ::kernel::sys::raw::c_int,
-                    checkctty: ::kernel::sys::raw::c_int,
-                    ksi: *mut ksiginfo_t);
-}
-extern "C" {
-    pub fn postsig(sig: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn kern_psignal(p: *mut proc_, sig: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn ptracestop(td: *mut thread, sig: ::kernel::sys::raw::c_int,
-                      si: *mut ksiginfo_t) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn sendsig(catcher: sig_t, ksi: *mut ksiginfo_t,
-                   retmask: *mut sigset_t);
-}
-extern "C" {
-    pub fn sigacts_alloc() -> *mut sigacts;
-}
-extern "C" {
-    pub fn sigacts_copy(dest: *mut sigacts, src: *mut sigacts);
-}
-extern "C" {
-    pub fn sigacts_free(ps: *mut sigacts);
-}
-extern "C" {
-    pub fn sigacts_hold(ps: *mut sigacts) -> *mut sigacts;
-}
-extern "C" {
-    pub fn sigacts_shared(ps: *mut sigacts) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn sigexit(td: *mut thread, sig: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn sigev_findtd(p: *mut proc_, sigev: *mut sigevent,
-                        arg1: *mut *mut thread) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn sig_ffs(set: *mut sigset_t) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn siginit(p: *mut proc_);
-}
-extern "C" {
-    pub fn signotify(td: *mut thread);
-}
-extern "C" {
-    pub fn sigqueue_delete(queue: *mut sigqueue,
-                           sig: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn sigqueue_delete_proc(p: *mut proc_,
-                                sig: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn sigqueue_flush(queue: *mut sigqueue);
-}
-extern "C" {
-    pub fn sigqueue_init(queue: *mut sigqueue, p: *mut proc_);
-}
-extern "C" {
-    pub fn sigqueue_take(ksi: *mut ksiginfo_t);
-}
-extern "C" {
-    pub fn tdksignal(td: *mut thread, sig: ::kernel::sys::raw::c_int,
-                     ksi: *mut ksiginfo_t);
-}
-extern "C" {
-    pub fn tdsendsignal(p: *mut proc_, td: *mut thread,
-                        sig: ::kernel::sys::raw::c_int, ksi: *mut ksiginfo_t)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn tdsigcleanup(td: *mut thread);
-}
-extern "C" {
-    pub fn tdsignal(td: *mut thread, sig: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn trapsignal(td: *mut thread, ksi: *mut ksiginfo_t);
-}
-#[repr(C)]
-#[derive(Copy)]
-pub struct __mcontext {
-    pub mc_onstack: __register_t,
-    pub mc_rdi: __register_t,
-    pub mc_rsi: __register_t,
-    pub mc_rdx: __register_t,
-    pub mc_rcx: __register_t,
-    pub mc_r8: __register_t,
-    pub mc_r9: __register_t,
-    pub mc_rax: __register_t,
-    pub mc_rbx: __register_t,
-    pub mc_rbp: __register_t,
-    pub mc_r10: __register_t,
-    pub mc_r11: __register_t,
-    pub mc_r12: __register_t,
-    pub mc_r13: __register_t,
-    pub mc_r14: __register_t,
-    pub mc_r15: __register_t,
-    pub mc_trapno: __uint32_t,
-    pub mc_fs: __uint16_t,
-    pub mc_gs: __uint16_t,
-    pub mc_addr: __register_t,
-    pub mc_flags: __uint32_t,
-    pub mc_es: __uint16_t,
-    pub mc_ds: __uint16_t,
-    pub mc_err: __register_t,
-    pub mc_rip: __register_t,
-    pub mc_cs: __register_t,
-    pub mc_rflags: __register_t,
-    pub mc_rsp: __register_t,
-    pub mc_ss: __register_t,
-    pub mc_len: ::kernel::sys::raw::c_long,
-    pub mc_fpformat: ::kernel::sys::raw::c_long,
-    pub mc_ownedfp: ::kernel::sys::raw::c_long,
-    pub mc_fpstate: [::kernel::sys::raw::c_long; 64usize],
-    pub mc_fsbase: __register_t,
-    pub mc_gsbase: __register_t,
-    pub mc_xfpustate: __register_t,
-    pub mc_xfpustate_len: __register_t,
-    pub mc_spare: [::kernel::sys::raw::c_long; 4usize],
-}
-#[test]
-fn bindgen_test_layout___mcontext() {
-    assert_eq!(::core::mem::size_of::<__mcontext>() , 800usize , concat ! (
-               "Size of: " , stringify ! ( __mcontext ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_onstack as * const _
-                as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_onstack ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_rdi as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_rdi ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_rsi as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_rsi ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_rdx as * const _ as
-                usize } , 24usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_rdx ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_rcx as * const _ as
-                usize } , 32usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_rcx ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_r8 as * const _ as
-                usize } , 40usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_r8 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_r9 as * const _ as
-                usize } , 48usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_r9 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_rax as * const _ as
-                usize } , 56usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_rax ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_rbx as * const _ as
-                usize } , 64usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_rbx ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_rbp as * const _ as
-                usize } , 72usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_rbp ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_r10 as * const _ as
-                usize } , 80usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_r10 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_r11 as * const _ as
-                usize } , 88usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_r11 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_r12 as * const _ as
-                usize } , 96usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_r12 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_r13 as * const _ as
-                usize } , 104usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_r13 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_r14 as * const _ as
-                usize } , 112usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_r14 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_r15 as * const _ as
-                usize } , 120usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_r15 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_trapno as * const _
-                as usize } , 128usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_trapno ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_fs as * const _ as
-                usize } , 132usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_fs ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_gs as * const _ as
-                usize } , 134usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_gs ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_addr as * const _ as
-                usize } , 136usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_addr ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_flags as * const _ as
-                usize } , 144usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_flags ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_es as * const _ as
-                usize } , 148usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_es ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_ds as * const _ as
-                usize } , 150usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_ds ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_err as * const _ as
-                usize } , 152usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_err ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_rip as * const _ as
-                usize } , 160usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_rip ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_cs as * const _ as
-                usize } , 168usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_cs ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_rflags as * const _
-                as usize } , 176usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_rflags ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_rsp as * const _ as
-                usize } , 184usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_rsp ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_ss as * const _ as
-                usize } , 192usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_ss ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_len as * const _ as
-                usize } , 200usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_len ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_fpformat as * const _
-                as usize } , 208usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_fpformat ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_ownedfp as * const _
-                as usize } , 216usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_ownedfp ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_fpstate as * const _
-                as usize } , 224usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_fpstate ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_fsbase as * const _
-                as usize } , 736usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_fsbase ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_gsbase as * const _
-                as usize } , 744usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_gsbase ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_xfpustate as * const
-                _ as usize } , 752usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_xfpustate ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_xfpustate_len as *
-                const _ as usize } , 760usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_xfpustate_len ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __mcontext ) ) . mc_spare as * const _ as
-                usize } , 768usize , concat ! (
-                "Alignment of field: " , stringify ! ( __mcontext ) , "::" ,
-                stringify ! ( mc_spare ) ));
-}
-impl Clone for __mcontext {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for __mcontext {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for __mcontext {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f ,
-               "__mcontext {{ mc_onstack: {:?}, mc_rdi: {:?}, mc_rsi: {:?}, mc_rdx: {:?}, mc_rcx: {:?}, mc_r8: {:?}, mc_r9: {:?}, mc_rax: {:?}, mc_rbx: {:?}, mc_rbp: {:?}, mc_r10: {:?}, mc_r11: {:?}, mc_r12: {:?}, mc_r13: {:?}, mc_r14: {:?}, mc_r15: {:?}, mc_trapno: {:?}, mc_fs: {:?}, mc_gs: {:?}, mc_addr: {:?}, mc_flags: {:?}, mc_es: {:?}, mc_ds: {:?}, mc_err: {:?}, mc_rip: {:?}, mc_cs: {:?}, mc_rflags: {:?}, mc_rsp: {:?}, mc_ss: {:?}, mc_len: {:?}, mc_fpformat: {:?}, mc_ownedfp: {:?}, mc_fpstate: [{}], mc_fsbase: {:?}, mc_gsbase: {:?}, mc_xfpustate: {:?}, mc_xfpustate_len: {:?}, mc_spare: {:?} }}"
-               , self . mc_onstack , self . mc_rdi , self . mc_rsi , self .
-               mc_rdx , self . mc_rcx , self . mc_r8 , self . mc_r9 , self .
-               mc_rax , self . mc_rbx , self . mc_rbp , self . mc_r10 , self .
-               mc_r11 , self . mc_r12 , self . mc_r13 , self . mc_r14 , self .
-               mc_r15 , self . mc_trapno , self . mc_fs , self . mc_gs , self
-               . mc_addr , self . mc_flags , self . mc_es , self . mc_ds ,
-               self . mc_err , self . mc_rip , self . mc_cs , self . mc_rflags
-               , self . mc_rsp , self . mc_ss , self . mc_len , self .
-               mc_fpformat , self . mc_ownedfp , self . mc_fpstate . iter (  )
-               . enumerate (  ) . map (
-               | ( i , v ) | format ! (
-               "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: <
-               String > (  ) , self . mc_fsbase , self . mc_gsbase , self .
-               mc_xfpustate , self . mc_xfpustate_len , self . mc_spare)
-    }
-}
-pub type mcontext_t = __mcontext;
-#[repr(C)]
-#[derive(Copy)]
-pub struct __ucontext {
-    pub uc_sigmask: __sigset_t,
-    pub uc_mcontext: mcontext_t,
-    pub uc_link: *mut __ucontext,
-    pub uc_stack: sigaltstack,
-    pub uc_flags: ::kernel::sys::raw::c_int,
-    pub __spare__: [::kernel::sys::raw::c_int; 4usize],
-    pub __bindgen_padding_0: [u32; 3usize],
-}
-#[test]
-fn bindgen_test_layout___ucontext() {
-    assert_eq!(::core::mem::size_of::<__ucontext>() , 880usize , concat ! (
-               "Size of: " , stringify ! ( __ucontext ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __ucontext ) ) . uc_sigmask as * const _
-                as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( __ucontext ) , "::" ,
-                stringify ! ( uc_sigmask ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __ucontext ) ) . uc_mcontext as * const _
-                as usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( __ucontext ) , "::" ,
-                stringify ! ( uc_mcontext ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __ucontext ) ) . uc_link as * const _ as
-                usize } , 816usize , concat ! (
-                "Alignment of field: " , stringify ! ( __ucontext ) , "::" ,
-                stringify ! ( uc_link ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __ucontext ) ) . uc_stack as * const _ as
-                usize } , 824usize , concat ! (
-                "Alignment of field: " , stringify ! ( __ucontext ) , "::" ,
-                stringify ! ( uc_stack ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __ucontext ) ) . uc_flags as * const _ as
-                usize } , 848usize , concat ! (
-                "Alignment of field: " , stringify ! ( __ucontext ) , "::" ,
-                stringify ! ( uc_flags ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const __ucontext ) ) . __spare__ as * const _
-                as usize } , 852usize , concat ! (
-                "Alignment of field: " , stringify ! ( __ucontext ) , "::" ,
-                stringify ! ( __spare__ ) ));
-}
-impl Clone for __ucontext {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for __ucontext {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for __ucontext {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f ,
-               "__ucontext {{ uc_sigmask: {:?}, uc_mcontext: {:?}, uc_link: {:?}, uc_stack: {:?}, uc_flags: {:?}, __spare__: {:?} }}"
-               , self . uc_sigmask , self . uc_mcontext , self . uc_link ,
-               self . uc_stack , self . uc_flags , self . __spare__)
-    }
-}
-pub type ucontext_t = __ucontext;
-extern "C" {
-    pub fn get_mcontext(arg1: *mut thread, arg2: *mut mcontext_t,
-                        arg3: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn set_mcontext(arg1: *mut thread, arg2: *mut mcontext_t)
-     -> ::kernel::sys::raw::c_int;
-}
-pub type au_id_t = uid_t;
-pub type au_asid_t = pid_t;
-pub type au_event_t = u_int16_t;
-pub type au_emod_t = u_int16_t;
-pub type au_class_t = u_int32_t;
-pub type au_asflgs_t = u_int64_t;
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct au_tid {
-    pub port: u_int32_t,
-    pub machine: u_int32_t,
-}
-#[test]
-fn bindgen_test_layout_au_tid() {
-    assert_eq!(::core::mem::size_of::<au_tid>() , 8usize , concat ! (
-               "Size of: " , stringify ! ( au_tid ) ));
-    assert_eq! (::core::mem::align_of::<au_tid>() , 4usize , concat ! (
-                "Alignment of " , stringify ! ( au_tid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const au_tid ) ) . port as * const _ as usize }
-                , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( au_tid ) , "::" ,
-                stringify ! ( port ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const au_tid ) ) . machine as * const _ as
-                usize } , 4usize , concat ! (
-                "Alignment of field: " , stringify ! ( au_tid ) , "::" ,
-                stringify ! ( machine ) ));
-}
-impl Clone for au_tid {
-    fn clone(&self) -> Self { *self }
-}
-pub type au_tid_t = au_tid;
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct au_tid_addr {
-    pub at_port: u_int32_t,
-    pub at_type: u_int32_t,
-    pub at_addr: [u_int32_t; 4usize],
-}
-#[test]
-fn bindgen_test_layout_au_tid_addr() {
-    assert_eq!(::core::mem::size_of::<au_tid_addr>() , 24usize , concat ! (
-               "Size of: " , stringify ! ( au_tid_addr ) ));
-    assert_eq! (::core::mem::align_of::<au_tid_addr>() , 4usize , concat ! (
-                "Alignment of " , stringify ! ( au_tid_addr ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const au_tid_addr ) ) . at_port as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( au_tid_addr ) , "::" ,
-                stringify ! ( at_port ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const au_tid_addr ) ) . at_type as * const _ as
-                usize } , 4usize , concat ! (
-                "Alignment of field: " , stringify ! ( au_tid_addr ) , "::" ,
-                stringify ! ( at_type ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const au_tid_addr ) ) . at_addr as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( au_tid_addr ) , "::" ,
-                stringify ! ( at_addr ) ));
-}
-impl Clone for au_tid_addr {
-    fn clone(&self) -> Self { *self }
-}
-pub type au_tid_addr_t = au_tid_addr;
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct au_mask {
-    pub am_success: ::kernel::sys::raw::c_uint,
-    pub am_failure: ::kernel::sys::raw::c_uint,
-}
-#[test]
-fn bindgen_test_layout_au_mask() {
-    assert_eq!(::core::mem::size_of::<au_mask>() , 8usize , concat ! (
-               "Size of: " , stringify ! ( au_mask ) ));
-    assert_eq! (::core::mem::align_of::<au_mask>() , 4usize , concat ! (
-                "Alignment of " , stringify ! ( au_mask ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const au_mask ) ) . am_success as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( au_mask ) , "::" ,
-                stringify ! ( am_success ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const au_mask ) ) . am_failure as * const _ as
-                usize } , 4usize , concat ! (
-                "Alignment of field: " , stringify ! ( au_mask ) , "::" ,
-                stringify ! ( am_failure ) ));
-}
-impl Clone for au_mask {
-    fn clone(&self) -> Self { *self }
-}
-pub type au_mask_t = au_mask;
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct auditinfo {
-    pub ai_auid: au_id_t,
-    pub ai_mask: au_mask_t,
-    pub ai_termid: au_tid_t,
-    pub ai_asid: au_asid_t,
-}
-#[test]
-fn bindgen_test_layout_auditinfo() {
-    assert_eq!(::core::mem::size_of::<auditinfo>() , 24usize , concat ! (
-               "Size of: " , stringify ! ( auditinfo ) ));
-    assert_eq! (::core::mem::align_of::<auditinfo>() , 4usize , concat ! (
-                "Alignment of " , stringify ! ( auditinfo ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const auditinfo ) ) . ai_auid as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( auditinfo ) , "::" ,
-                stringify ! ( ai_auid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const auditinfo ) ) . ai_mask as * const _ as
-                usize } , 4usize , concat ! (
-                "Alignment of field: " , stringify ! ( auditinfo ) , "::" ,
-                stringify ! ( ai_mask ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const auditinfo ) ) . ai_termid as * const _ as
-                usize } , 12usize , concat ! (
-                "Alignment of field: " , stringify ! ( auditinfo ) , "::" ,
-                stringify ! ( ai_termid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const auditinfo ) ) . ai_asid as * const _ as
-                usize } , 20usize , concat ! (
-                "Alignment of field: " , stringify ! ( auditinfo ) , "::" ,
-                stringify ! ( ai_asid ) ));
-}
-impl Clone for auditinfo {
-    fn clone(&self) -> Self { *self }
-}
-pub type auditinfo_t = auditinfo;
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct auditinfo_addr {
-    pub ai_auid: au_id_t,
-    pub ai_mask: au_mask_t,
-    pub ai_termid: au_tid_addr_t,
-    pub ai_asid: au_asid_t,
-    pub ai_flags: au_asflgs_t,
-}
-#[test]
-fn bindgen_test_layout_auditinfo_addr() {
-    assert_eq!(::core::mem::size_of::<auditinfo_addr>() , 48usize , concat ! (
-               "Size of: " , stringify ! ( auditinfo_addr ) ));
-    assert_eq! (::core::mem::align_of::<auditinfo_addr>() , 8usize , concat !
-                ( "Alignment of " , stringify ! ( auditinfo_addr ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const auditinfo_addr ) ) . ai_auid as * const _
-                as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( auditinfo_addr ) , "::"
-                , stringify ! ( ai_auid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const auditinfo_addr ) ) . ai_mask as * const _
-                as usize } , 4usize , concat ! (
-                "Alignment of field: " , stringify ! ( auditinfo_addr ) , "::"
-                , stringify ! ( ai_mask ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const auditinfo_addr ) ) . ai_termid as * const
-                _ as usize } , 12usize , concat ! (
-                "Alignment of field: " , stringify ! ( auditinfo_addr ) , "::"
-                , stringify ! ( ai_termid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const auditinfo_addr ) ) . ai_asid as * const _
-                as usize } , 36usize , concat ! (
-                "Alignment of field: " , stringify ! ( auditinfo_addr ) , "::"
-                , stringify ! ( ai_asid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const auditinfo_addr ) ) . ai_flags as * const
-                _ as usize } , 40usize , concat ! (
-                "Alignment of field: " , stringify ! ( auditinfo_addr ) , "::"
-                , stringify ! ( ai_flags ) ));
-}
-impl Clone for auditinfo_addr {
-    fn clone(&self) -> Self { *self }
-}
-pub type auditinfo_addr_t = auditinfo_addr;
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct auditpinfo {
-    pub ap_pid: pid_t,
-    pub ap_auid: au_id_t,
-    pub ap_mask: au_mask_t,
-    pub ap_termid: au_tid_t,
-    pub ap_asid: au_asid_t,
-}
-#[test]
-fn bindgen_test_layout_auditpinfo() {
-    assert_eq!(::core::mem::size_of::<auditpinfo>() , 28usize , concat ! (
-               "Size of: " , stringify ! ( auditpinfo ) ));
-    assert_eq! (::core::mem::align_of::<auditpinfo>() , 4usize , concat ! (
-                "Alignment of " , stringify ! ( auditpinfo ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const auditpinfo ) ) . ap_pid as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( auditpinfo ) , "::" ,
-                stringify ! ( ap_pid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const auditpinfo ) ) . ap_auid as * const _ as
-                usize } , 4usize , concat ! (
-                "Alignment of field: " , stringify ! ( auditpinfo ) , "::" ,
-                stringify ! ( ap_auid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const auditpinfo ) ) . ap_mask as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( auditpinfo ) , "::" ,
-                stringify ! ( ap_mask ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const auditpinfo ) ) . ap_termid as * const _
-                as usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( auditpinfo ) , "::" ,
-                stringify ! ( ap_termid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const auditpinfo ) ) . ap_asid as * const _ as
-                usize } , 24usize , concat ! (
-                "Alignment of field: " , stringify ! ( auditpinfo ) , "::" ,
-                stringify ! ( ap_asid ) ));
-}
-impl Clone for auditpinfo {
-    fn clone(&self) -> Self { *self }
-}
-pub type auditpinfo_t = auditpinfo;
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct auditpinfo_addr {
-    pub ap_pid: pid_t,
-    pub ap_auid: au_id_t,
-    pub ap_mask: au_mask_t,
-    pub ap_termid: au_tid_addr_t,
-    pub ap_asid: au_asid_t,
-    pub ap_flags: au_asflgs_t,
-}
-#[test]
-fn bindgen_test_layout_auditpinfo_addr() {
-    assert_eq!(::core::mem::size_of::<auditpinfo_addr>() , 56usize , concat !
-               ( "Size of: " , stringify ! ( auditpinfo_addr ) ));
-    assert_eq! (::core::mem::align_of::<auditpinfo_addr>() , 8usize , concat !
-                ( "Alignment of " , stringify ! ( auditpinfo_addr ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const auditpinfo_addr ) ) . ap_pid as * const _
-                as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( auditpinfo_addr ) ,
-                "::" , stringify ! ( ap_pid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const auditpinfo_addr ) ) . ap_auid as * const
-                _ as usize } , 4usize , concat ! (
-                "Alignment of field: " , stringify ! ( auditpinfo_addr ) ,
-                "::" , stringify ! ( ap_auid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const auditpinfo_addr ) ) . ap_mask as * const
-                _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( auditpinfo_addr ) ,
-                "::" , stringify ! ( ap_mask ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const auditpinfo_addr ) ) . ap_termid as *
-                const _ as usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( auditpinfo_addr ) ,
-                "::" , stringify ! ( ap_termid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const auditpinfo_addr ) ) . ap_asid as * const
-                _ as usize } , 40usize , concat ! (
-                "Alignment of field: " , stringify ! ( auditpinfo_addr ) ,
-                "::" , stringify ! ( ap_asid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const auditpinfo_addr ) ) . ap_flags as * const
-                _ as usize } , 48usize , concat ! (
-                "Alignment of field: " , stringify ! ( auditpinfo_addr ) ,
-                "::" , stringify ! ( ap_flags ) ));
-}
-impl Clone for auditpinfo_addr {
-    fn clone(&self) -> Self { *self }
-}
-pub type auditpinfo_addr_t = auditpinfo_addr;
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct au_session {
-    pub as_aia_p: *mut auditinfo_addr_t,
-    pub as_mask: au_mask_t,
-}
-#[test]
-fn bindgen_test_layout_au_session() {
-    assert_eq!(::core::mem::size_of::<au_session>() , 16usize , concat ! (
-               "Size of: " , stringify ! ( au_session ) ));
-    assert_eq! (::core::mem::align_of::<au_session>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( au_session ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const au_session ) ) . as_aia_p as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( au_session ) , "::" ,
-                stringify ! ( as_aia_p ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const au_session ) ) . as_mask as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( au_session ) , "::" ,
-                stringify ! ( as_mask ) ));
-}
-impl Clone for au_session {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for au_session {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-pub type au_session_t = au_session;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct au_token {
-    _unused: [u8; 0],
-}
-pub type token_t = au_token;
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct au_qctrl {
-    pub aq_hiwater: ::kernel::sys::raw::c_int,
-    pub aq_lowater: ::kernel::sys::raw::c_int,
-    pub aq_bufsz: ::kernel::sys::raw::c_int,
-    pub aq_delay: ::kernel::sys::raw::c_int,
-    pub aq_minfree: ::kernel::sys::raw::c_int,
-}
-#[test]
-fn bindgen_test_layout_au_qctrl() {
-    assert_eq!(::core::mem::size_of::<au_qctrl>() , 20usize , concat ! (
-               "Size of: " , stringify ! ( au_qctrl ) ));
-    assert_eq! (::core::mem::align_of::<au_qctrl>() , 4usize , concat ! (
-                "Alignment of " , stringify ! ( au_qctrl ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const au_qctrl ) ) . aq_hiwater as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( au_qctrl ) , "::" ,
-                stringify ! ( aq_hiwater ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const au_qctrl ) ) . aq_lowater as * const _ as
-                usize } , 4usize , concat ! (
-                "Alignment of field: " , stringify ! ( au_qctrl ) , "::" ,
-                stringify ! ( aq_lowater ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const au_qctrl ) ) . aq_bufsz as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( au_qctrl ) , "::" ,
-                stringify ! ( aq_bufsz ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const au_qctrl ) ) . aq_delay as * const _ as
-                usize } , 12usize , concat ! (
-                "Alignment of field: " , stringify ! ( au_qctrl ) , "::" ,
-                stringify ! ( aq_delay ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const au_qctrl ) ) . aq_minfree as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( au_qctrl ) , "::" ,
-                stringify ! ( aq_minfree ) ));
-}
-impl Clone for au_qctrl {
-    fn clone(&self) -> Self { *self }
-}
-pub type au_qctrl_t = au_qctrl;
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct audit_stat {
-    pub as_version: ::kernel::sys::raw::c_uint,
-    pub as_numevent: ::kernel::sys::raw::c_uint,
-    pub as_generated: ::kernel::sys::raw::c_int,
-    pub as_nonattrib: ::kernel::sys::raw::c_int,
-    pub as_kernel: ::kernel::sys::raw::c_int,
-    pub as_audit: ::kernel::sys::raw::c_int,
-    pub as_auditctl: ::kernel::sys::raw::c_int,
-    pub as_enqueue: ::kernel::sys::raw::c_int,
-    pub as_written: ::kernel::sys::raw::c_int,
-    pub as_wblocked: ::kernel::sys::raw::c_int,
-    pub as_rblocked: ::kernel::sys::raw::c_int,
-    pub as_dropped: ::kernel::sys::raw::c_int,
-    pub as_totalsize: ::kernel::sys::raw::c_int,
-    pub as_memused: ::kernel::sys::raw::c_uint,
-}
-#[test]
-fn bindgen_test_layout_audit_stat() {
-    assert_eq!(::core::mem::size_of::<audit_stat>() , 56usize , concat ! (
-               "Size of: " , stringify ! ( audit_stat ) ));
-    assert_eq! (::core::mem::align_of::<audit_stat>() , 4usize , concat ! (
-                "Alignment of " , stringify ! ( audit_stat ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const audit_stat ) ) . as_version as * const _
-                as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( audit_stat ) , "::" ,
-                stringify ! ( as_version ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const audit_stat ) ) . as_numevent as * const _
-                as usize } , 4usize , concat ! (
-                "Alignment of field: " , stringify ! ( audit_stat ) , "::" ,
-                stringify ! ( as_numevent ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const audit_stat ) ) . as_generated as * const
-                _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( audit_stat ) , "::" ,
-                stringify ! ( as_generated ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const audit_stat ) ) . as_nonattrib as * const
-                _ as usize } , 12usize , concat ! (
-                "Alignment of field: " , stringify ! ( audit_stat ) , "::" ,
-                stringify ! ( as_nonattrib ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const audit_stat ) ) . as_kernel as * const _
-                as usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( audit_stat ) , "::" ,
-                stringify ! ( as_kernel ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const audit_stat ) ) . as_audit as * const _ as
-                usize } , 20usize , concat ! (
-                "Alignment of field: " , stringify ! ( audit_stat ) , "::" ,
-                stringify ! ( as_audit ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const audit_stat ) ) . as_auditctl as * const _
-                as usize } , 24usize , concat ! (
-                "Alignment of field: " , stringify ! ( audit_stat ) , "::" ,
-                stringify ! ( as_auditctl ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const audit_stat ) ) . as_enqueue as * const _
-                as usize } , 28usize , concat ! (
-                "Alignment of field: " , stringify ! ( audit_stat ) , "::" ,
-                stringify ! ( as_enqueue ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const audit_stat ) ) . as_written as * const _
-                as usize } , 32usize , concat ! (
-                "Alignment of field: " , stringify ! ( audit_stat ) , "::" ,
-                stringify ! ( as_written ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const audit_stat ) ) . as_wblocked as * const _
-                as usize } , 36usize , concat ! (
-                "Alignment of field: " , stringify ! ( audit_stat ) , "::" ,
-                stringify ! ( as_wblocked ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const audit_stat ) ) . as_rblocked as * const _
-                as usize } , 40usize , concat ! (
-                "Alignment of field: " , stringify ! ( audit_stat ) , "::" ,
-                stringify ! ( as_rblocked ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const audit_stat ) ) . as_dropped as * const _
-                as usize } , 44usize , concat ! (
-                "Alignment of field: " , stringify ! ( audit_stat ) , "::" ,
-                stringify ! ( as_dropped ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const audit_stat ) ) . as_totalsize as * const
-                _ as usize } , 48usize , concat ! (
-                "Alignment of field: " , stringify ! ( audit_stat ) , "::" ,
-                stringify ! ( as_totalsize ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const audit_stat ) ) . as_memused as * const _
-                as usize } , 52usize , concat ! (
-                "Alignment of field: " , stringify ! ( audit_stat ) , "::" ,
-                stringify ! ( as_memused ) ));
-}
-impl Clone for audit_stat {
-    fn clone(&self) -> Self { *self }
-}
-pub type au_stat_t = audit_stat;
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct audit_fstat {
-    pub af_filesz: u_int64_t,
-    pub af_currsz: u_int64_t,
-}
-#[test]
-fn bindgen_test_layout_audit_fstat() {
-    assert_eq!(::core::mem::size_of::<audit_fstat>() , 16usize , concat ! (
-               "Size of: " , stringify ! ( audit_fstat ) ));
-    assert_eq! (::core::mem::align_of::<audit_fstat>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( audit_fstat ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const audit_fstat ) ) . af_filesz as * const _
-                as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( audit_fstat ) , "::" ,
-                stringify ! ( af_filesz ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const audit_fstat ) ) . af_currsz as * const _
-                as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( audit_fstat ) , "::" ,
-                stringify ! ( af_currsz ) ));
-}
-impl Clone for audit_fstat {
-    fn clone(&self) -> Self { *self }
-}
-pub type au_fstat_t = audit_fstat;
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct au_evclass_map {
-    pub ec_number: au_event_t,
-    pub ec_class: au_class_t,
-}
-#[test]
-fn bindgen_test_layout_au_evclass_map() {
-    assert_eq!(::core::mem::size_of::<au_evclass_map>() , 8usize , concat ! (
-               "Size of: " , stringify ! ( au_evclass_map ) ));
-    assert_eq! (::core::mem::align_of::<au_evclass_map>() , 4usize , concat !
-                ( "Alignment of " , stringify ! ( au_evclass_map ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const au_evclass_map ) ) . ec_number as * const
-                _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( au_evclass_map ) , "::"
-                , stringify ! ( ec_number ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const au_evclass_map ) ) . ec_class as * const
-                _ as usize } , 4usize , concat ! (
-                "Alignment of field: " , stringify ! ( au_evclass_map ) , "::"
-                , stringify ! ( ec_class ) ));
-}
-impl Clone for au_evclass_map {
-    fn clone(&self) -> Self { *self }
-}
-pub type au_evclass_map_t = au_evclass_map;
-#[repr(C)]
-#[derive(Copy)]
-pub struct au_evname_map {
-    pub en_number: au_event_t,
-    pub en_name: [::kernel::sys::raw::c_char; 64usize],
-}
-#[test]
-fn bindgen_test_layout_au_evname_map() {
-    assert_eq!(::core::mem::size_of::<au_evname_map>() , 66usize , concat ! (
-               "Size of: " , stringify ! ( au_evname_map ) ));
-    assert_eq! (::core::mem::align_of::<au_evname_map>() , 2usize , concat ! (
-                "Alignment of " , stringify ! ( au_evname_map ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const au_evname_map ) ) . en_number as * const
-                _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( au_evname_map ) , "::"
-                , stringify ! ( en_number ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const au_evname_map ) ) . en_name as * const _
-                as usize } , 2usize , concat ! (
-                "Alignment of field: " , stringify ! ( au_evname_map ) , "::"
-                , stringify ! ( en_name ) ));
-}
-impl Clone for au_evname_map {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for au_evname_map {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for au_evname_map {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f , "au_evname_map {{ en_number: {:?}, en_name: [{}] }}" , self
-               . en_number , self . en_name . iter (  ) . enumerate (  ) . map
-               (
-               | ( i , v ) | format ! (
-               "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: <
-               String > (  ))
-    }
-}
-pub type au_evname_map_t = au_evname_map;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct loginclass {
-    _unused: [u8; 0],
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct xucred {
-    pub cr_version: u_int,
-    pub cr_uid: uid_t,
-    pub cr_ngroups: ::kernel::sys::raw::c_short,
-    pub cr_groups: [gid_t; 16usize],
-    pub _cr_unused1: *mut ::kernel::sys::raw::c_void,
-}
-#[test]
-fn bindgen_test_layout_xucred() {
-    assert_eq!(::core::mem::size_of::<xucred>() , 88usize , concat ! (
-               "Size of: " , stringify ! ( xucred ) ));
-    assert_eq! (::core::mem::align_of::<xucred>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( xucred ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const xucred ) ) . cr_version as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( xucred ) , "::" ,
-                stringify ! ( cr_version ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const xucred ) ) . cr_uid as * const _ as usize
-                } , 4usize , concat ! (
-                "Alignment of field: " , stringify ! ( xucred ) , "::" ,
-                stringify ! ( cr_uid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const xucred ) ) . cr_ngroups as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( xucred ) , "::" ,
-                stringify ! ( cr_ngroups ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const xucred ) ) . cr_groups as * const _ as
-                usize } , 12usize , concat ! (
-                "Alignment of field: " , stringify ! ( xucred ) , "::" ,
-                stringify ! ( cr_groups ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const xucred ) ) . _cr_unused1 as * const _ as
-                usize } , 80usize , concat ! (
-                "Alignment of field: " , stringify ! ( xucred ) , "::" ,
-                stringify ! ( _cr_unused1 ) ));
-}
-impl Clone for xucred {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for xucred {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-extern "C" {
-    pub fn change_egid(newcred: *mut ucred, egid: gid_t);
-}
-extern "C" {
-    pub fn change_euid(newcred: *mut ucred, euip: *mut uidinfo);
-}
-extern "C" {
-    pub fn change_rgid(newcred: *mut ucred, rgid: gid_t);
-}
-extern "C" {
-    pub fn change_ruid(newcred: *mut ucred, ruip: *mut uidinfo);
-}
-extern "C" {
-    pub fn change_svgid(newcred: *mut ucred, svgid: gid_t);
-}
-extern "C" {
-    pub fn change_svuid(newcred: *mut ucred, svuid: uid_t);
-}
-extern "C" {
-    pub fn crcopy(dest: *mut ucred, src: *mut ucred);
-}
-extern "C" {
-    pub fn crcopysafe(p: *mut proc_, cr: *mut ucred) -> *mut ucred;
-}
-extern "C" {
-    pub fn crdup(cr: *mut ucred) -> *mut ucred;
-}
-extern "C" {
-    pub fn crextend(cr: *mut ucred, n: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn proc_set_cred_init(p: *mut proc_, cr: *mut ucred);
-}
-extern "C" {
-    pub fn proc_set_cred(p: *mut proc_, cr: *mut ucred) -> *mut ucred;
-}
-extern "C" {
-    pub fn crfree(cr: *mut ucred);
-}
-extern "C" {
-    pub fn crget() -> *mut ucred;
-}
-extern "C" {
-    pub fn crhold(cr: *mut ucred) -> *mut ucred;
-}
-extern "C" {
-    pub fn cru2x(cr: *mut ucred, xcr: *mut xucred);
-}
-extern "C" {
-    pub fn crsetgroups(cr: *mut ucred, n: ::kernel::sys::raw::c_int,
-                       groups: *mut gid_t);
-}
-extern "C" {
-    pub fn groupmember(gid: gid_t, cred: *mut ucred)
-     -> ::kernel::sys::raw::c_int;
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct _domainset {
-    pub __bits: [::kernel::sys::raw::c_long; 1usize],
-}
-#[test]
-fn bindgen_test_layout__domainset() {
-    assert_eq!(::core::mem::size_of::<_domainset>() , 8usize , concat ! (
-               "Size of: " , stringify ! ( _domainset ) ));
-    assert_eq! (::core::mem::align_of::<_domainset>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( _domainset ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const _domainset ) ) . __bits as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( _domainset ) , "::" ,
-                stringify ! ( __bits ) ));
-}
-impl Clone for _domainset {
-    fn clone(&self) -> Self { *self }
-}
-pub type domainset_t = _domainset;
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct domainset {
-    _unused: [u8; 0],
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct domainset_ref {
-    pub dr_policy: *mut domainset,
-    pub dr_iterator: ::kernel::sys::raw::c_int,
-}
-#[test]
-fn bindgen_test_layout_domainset_ref() {
-    assert_eq!(::core::mem::size_of::<domainset_ref>() , 16usize , concat ! (
-               "Size of: " , stringify ! ( domainset_ref ) ));
-    assert_eq! (::core::mem::align_of::<domainset_ref>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( domainset_ref ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const domainset_ref ) ) . dr_policy as * const
-                _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( domainset_ref ) , "::"
-                , stringify ! ( dr_policy ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const domainset_ref ) ) . dr_iterator as *
-                const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( domainset_ref ) , "::"
-                , stringify ! ( dr_iterator ) ));
-}
-impl Clone for domainset_ref {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for domainset_ref {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct proc_ldt {
-    pub ldt_base: caddr_t,
-    pub ldt_refcnt: ::kernel::sys::raw::c_int,
-}
-#[test]
-fn bindgen_test_layout_proc_ldt() {
-    assert_eq!(::core::mem::size_of::<proc_ldt>() , 16usize , concat ! (
-               "Size of: " , stringify ! ( proc_ldt ) ));
-    assert_eq! (::core::mem::align_of::<proc_ldt>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( proc_ldt ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ldt ) ) . ldt_base as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ldt ) , "::" ,
-                stringify ! ( ldt_base ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proc_ldt ) ) . ldt_refcnt as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( proc_ldt ) , "::" ,
-                stringify ! ( ldt_refcnt ) ));
-}
-impl Clone for proc_ldt {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for proc_ldt {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct pmap_invl_gen {
-    pub gen: u_long,
-    pub link: pmap_invl_gen__bindgen_ty_1,
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct pmap_invl_gen__bindgen_ty_1 {
-    pub le_next: *mut pmap_invl_gen,
-    pub le_prev: *mut *mut pmap_invl_gen,
-}
-#[test]
-fn bindgen_test_layout_pmap_invl_gen__bindgen_ty_1() {
-    assert_eq!(::core::mem::size_of::<pmap_invl_gen__bindgen_ty_1>() , 16usize
-               , concat ! (
-               "Size of: " , stringify ! ( pmap_invl_gen__bindgen_ty_1 ) ));
-    assert_eq! (::core::mem::align_of::<pmap_invl_gen__bindgen_ty_1>() ,
-                8usize , concat ! (
-                "Alignment of " , stringify ! ( pmap_invl_gen__bindgen_ty_1 )
-                ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pmap_invl_gen__bindgen_ty_1 ) ) . le_next
-                as * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! (
-                pmap_invl_gen__bindgen_ty_1 ) , "::" , stringify ! ( le_next )
-                ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pmap_invl_gen__bindgen_ty_1 ) ) . le_prev
-                as * const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! (
-                pmap_invl_gen__bindgen_ty_1 ) , "::" , stringify ! ( le_prev )
-                ));
-}
-impl Clone for pmap_invl_gen__bindgen_ty_1 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for pmap_invl_gen__bindgen_ty_1 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[test]
-fn bindgen_test_layout_pmap_invl_gen() {
-    assert_eq!(::core::mem::size_of::<pmap_invl_gen>() , 24usize , concat ! (
-               "Size of: " , stringify ! ( pmap_invl_gen ) ));
-    assert_eq! (::core::mem::align_of::<pmap_invl_gen>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( pmap_invl_gen ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pmap_invl_gen ) ) . gen as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( pmap_invl_gen ) , "::"
-                , stringify ! ( gen ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pmap_invl_gen ) ) . link as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( pmap_invl_gen ) , "::"
-                , stringify ! ( link ) ));
-}
-impl Clone for pmap_invl_gen {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for pmap_invl_gen {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct mdthread {
-    pub md_spinlock_count: ::kernel::sys::raw::c_int,
-    pub md_saved_flags: register_t,
-    pub md_spurflt_addr: register_t,
-    pub md_invl_gen: pmap_invl_gen,
-}
-#[test]
-fn bindgen_test_layout_mdthread() {
-    assert_eq!(::core::mem::size_of::<mdthread>() , 48usize , concat ! (
-               "Size of: " , stringify ! ( mdthread ) ));
-    assert_eq! (::core::mem::align_of::<mdthread>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( mdthread ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const mdthread ) ) . md_spinlock_count as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( mdthread ) , "::" ,
-                stringify ! ( md_spinlock_count ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const mdthread ) ) . md_saved_flags as * const
-                _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( mdthread ) , "::" ,
-                stringify ! ( md_saved_flags ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const mdthread ) ) . md_spurflt_addr as * const
-                _ as usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( mdthread ) , "::" ,
-                stringify ! ( md_spurflt_addr ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const mdthread ) ) . md_invl_gen as * const _
-                as usize } , 24usize , concat ! (
-                "Alignment of field: " , stringify ! ( mdthread ) , "::" ,
-                stringify ! ( md_invl_gen ) ));
-}
-impl Clone for mdthread {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for mdthread {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct mdproc {
-    pub md_ldt: *mut proc_ldt,
-    pub md_ldt_sd: system_segment_descriptor,
-}
-#[test]
-fn bindgen_test_layout_mdproc() {
-    assert_eq!(::core::mem::size_of::<mdproc>() , 24usize , concat ! (
-               "Size of: " , stringify ! ( mdproc ) ));
-    assert_eq! (::core::mem::align_of::<mdproc>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( mdproc ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const mdproc ) ) . md_ldt as * const _ as usize
-                } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( mdproc ) , "::" ,
-                stringify ! ( md_ldt ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const mdproc ) ) . md_ldt_sd as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( mdproc ) , "::" ,
-                stringify ! ( md_ldt_sd ) ));
-}
-impl Clone for mdproc {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for mdproc {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct syscall_args {
-    pub code: u_int,
-    pub callp: *mut sysent,
-    pub args: [register_t; 8usize],
-    pub narg: ::kernel::sys::raw::c_int,
-}
-#[test]
-fn bindgen_test_layout_syscall_args() {
-    assert_eq!(::core::mem::size_of::<syscall_args>() , 88usize , concat ! (
-               "Size of: " , stringify ! ( syscall_args ) ));
-    assert_eq! (::core::mem::align_of::<syscall_args>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( syscall_args ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const syscall_args ) ) . code as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( syscall_args ) , "::" ,
-                stringify ! ( code ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const syscall_args ) ) . callp as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( syscall_args ) , "::" ,
-                stringify ! ( callp ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const syscall_args ) ) . args as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( syscall_args ) , "::" ,
-                stringify ! ( args ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const syscall_args ) ) . narg as * const _ as
-                usize } , 80usize , concat ! (
-                "Alignment of field: " , stringify ! ( syscall_args ) , "::" ,
-                stringify ! ( narg ) ));
-}
-impl Clone for syscall_args {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for syscall_args {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-extern "C" {
-    pub fn user_ldt_alloc(arg1: *mut proc_, arg2: ::kernel::sys::raw::c_int)
-     -> *mut proc_ldt;
-}
-extern "C" {
-    pub fn user_ldt_free(arg1: *mut thread);
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct sysarch_args {
-    _unused: [u8; 0],
-}
-extern "C" {
-    pub fn sysarch_ldt(td: *mut thread, uap: *mut sysarch_args,
-                       uap_space: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn amd64_set_ldt_data(td: *mut thread,
-                              start: ::kernel::sys::raw::c_int,
-                              num: ::kernel::sys::raw::c_int,
-                              descs: *mut user_segment_descriptor)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    #[link_name = "dt_lock"]
-    pub static mut dt_lock: mtx;
-}
-extern "C" {
-    #[link_name = "max_ldt_segment"]
-    pub static mut max_ldt_segment: ::kernel::sys::raw::c_int;
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct epoch_section {
-    pub bucket: ::kernel::sys::raw::c_uint,
-}
-#[test]
-fn bindgen_test_layout_epoch_section() {
-    assert_eq!(::core::mem::size_of::<epoch_section>() , 4usize , concat ! (
-               "Size of: " , stringify ! ( epoch_section ) ));
-    assert_eq! (::core::mem::align_of::<epoch_section>() , 4usize , concat ! (
-                "Alignment of " , stringify ! ( epoch_section ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const epoch_section ) ) . bucket as * const _
-                as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( epoch_section ) , "::"
-                , stringify ! ( bucket ) ));
-}
-impl Clone for epoch_section {
-    fn clone(&self) -> Self { *self }
-}
-pub type epoch_section_t = epoch_section;
-#[repr(C)]
-#[derive(Copy)]
-pub struct session {
-    pub s_count: u_int,
-    pub s_leader: *mut proc_,
-    pub s_ttyvp: *mut vnode,
-    pub s_ttydp: *mut cdev_priv,
-    pub s_ttyp: *mut tty,
-    pub s_sid: pid_t,
-    pub s_login: [::kernel::sys::raw::c_char; 40usize],
-    pub s_mtx: mtx,
-}
-#[test]
-fn bindgen_test_layout_session() {
-    assert_eq!(::core::mem::size_of::<session>() , 120usize , concat ! (
-               "Size of: " , stringify ! ( session ) ));
-    assert_eq! (::core::mem::align_of::<session>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( session ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const session ) ) . s_count as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( session ) , "::" ,
-                stringify ! ( s_count ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const session ) ) . s_leader as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( session ) , "::" ,
-                stringify ! ( s_leader ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const session ) ) . s_ttyvp as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( session ) , "::" ,
-                stringify ! ( s_ttyvp ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const session ) ) . s_ttydp as * const _ as
-                usize } , 24usize , concat ! (
-                "Alignment of field: " , stringify ! ( session ) , "::" ,
-                stringify ! ( s_ttydp ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const session ) ) . s_ttyp as * const _ as
-                usize } , 32usize , concat ! (
-                "Alignment of field: " , stringify ! ( session ) , "::" ,
-                stringify ! ( s_ttyp ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const session ) ) . s_sid as * const _ as usize
-                } , 40usize , concat ! (
-                "Alignment of field: " , stringify ! ( session ) , "::" ,
-                stringify ! ( s_sid ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const session ) ) . s_login as * const _ as
-                usize } , 44usize , concat ! (
-                "Alignment of field: " , stringify ! ( session ) , "::" ,
-                stringify ! ( s_login ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const session ) ) . s_mtx as * const _ as usize
-                } , 88usize , concat ! (
-                "Alignment of field: " , stringify ! ( session ) , "::" ,
-                stringify ! ( s_mtx ) ));
-}
-impl Clone for session {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for session {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for session {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f ,
-               "session {{ s_count: {:?}, s_leader: {:?}, s_ttyvp: {:?}, s_ttydp: {:?}, s_ttyp: {:?}, s_sid: {:?}, s_login: [{}], s_mtx: {:?} }}"
-               , self . s_count , self . s_leader , self . s_ttyvp , self .
-               s_ttydp , self . s_ttyp , self . s_sid , self . s_login . iter
-               (  ) . enumerate (  ) . map (
-               | ( i , v ) | format ! (
-               "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: <
-               String > (  ) , self . s_mtx)
-    }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct pargs {
-    pub ar_ref: u_int,
-    pub ar_length: u_int,
-    pub ar_args: [u_char; 1usize],
-}
-#[test]
-fn bindgen_test_layout_pargs() {
-    assert_eq!(::core::mem::size_of::<pargs>() , 12usize , concat ! (
-               "Size of: " , stringify ! ( pargs ) ));
-    assert_eq! (::core::mem::align_of::<pargs>() , 4usize , concat ! (
-                "Alignment of " , stringify ! ( pargs ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pargs ) ) . ar_ref as * const _ as usize
-                } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( pargs ) , "::" ,
-                stringify ! ( ar_ref ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pargs ) ) . ar_length as * const _ as
-                usize } , 4usize , concat ! (
-                "Alignment of field: " , stringify ! ( pargs ) , "::" ,
-                stringify ! ( ar_length ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pargs ) ) . ar_args as * const _ as usize
-                } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( pargs ) , "::" ,
-                stringify ! ( ar_args ) ));
-}
-impl Clone for pargs {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct cpuset {
-    pub cs_mask: cpuset_t,
-    pub cs_domain: *mut domainset,
-    pub cs_ref: u_int,
-    pub cs_flags: ::kernel::sys::raw::c_int,
-    pub cs_id: cpusetid_t,
-    pub cs_parent: *mut cpuset,
-    pub cs_link: cpuset__bindgen_ty_1,
-    pub cs_siblings: cpuset__bindgen_ty_2,
-    pub cs_children: setlist,
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct cpuset__bindgen_ty_1 {
-    pub le_next: *mut cpuset,
-    pub le_prev: *mut *mut cpuset,
-}
-#[test]
-fn bindgen_test_layout_cpuset__bindgen_ty_1() {
-    assert_eq!(::core::mem::size_of::<cpuset__bindgen_ty_1>() , 16usize ,
-               concat ! ( "Size of: " , stringify ! ( cpuset__bindgen_ty_1 )
-               ));
-    assert_eq! (::core::mem::align_of::<cpuset__bindgen_ty_1>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( cpuset__bindgen_ty_1 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const cpuset__bindgen_ty_1 ) ) . le_next as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( cpuset__bindgen_ty_1 )
-                , "::" , stringify ! ( le_next ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const cpuset__bindgen_ty_1 ) ) . le_prev as *
-                const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( cpuset__bindgen_ty_1 )
-                , "::" , stringify ! ( le_prev ) ));
-}
-impl Clone for cpuset__bindgen_ty_1 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for cpuset__bindgen_ty_1 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct cpuset__bindgen_ty_2 {
-    pub le_next: *mut cpuset,
-    pub le_prev: *mut *mut cpuset,
-}
-#[test]
-fn bindgen_test_layout_cpuset__bindgen_ty_2() {
-    assert_eq!(::core::mem::size_of::<cpuset__bindgen_ty_2>() , 16usize ,
-               concat ! ( "Size of: " , stringify ! ( cpuset__bindgen_ty_2 )
-               ));
-    assert_eq! (::core::mem::align_of::<cpuset__bindgen_ty_2>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( cpuset__bindgen_ty_2 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const cpuset__bindgen_ty_2 ) ) . le_next as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( cpuset__bindgen_ty_2 )
-                , "::" , stringify ! ( le_next ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const cpuset__bindgen_ty_2 ) ) . le_prev as *
-                const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( cpuset__bindgen_ty_2 )
-                , "::" , stringify ! ( le_prev ) ));
-}
-impl Clone for cpuset__bindgen_ty_2 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for cpuset__bindgen_ty_2 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[test]
-fn bindgen_test_layout_cpuset() {
-    assert_eq!(::core::mem::size_of::<cpuset>() , 104usize , concat ! (
-               "Size of: " , stringify ! ( cpuset ) ));
-    assert_eq! (::core::mem::align_of::<cpuset>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( cpuset ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const cpuset ) ) . cs_mask as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( cpuset ) , "::" ,
-                stringify ! ( cs_mask ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const cpuset ) ) . cs_domain as * const _ as
-                usize } , 32usize , concat ! (
-                "Alignment of field: " , stringify ! ( cpuset ) , "::" ,
-                stringify ! ( cs_domain ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const cpuset ) ) . cs_ref as * const _ as usize
-                } , 40usize , concat ! (
-                "Alignment of field: " , stringify ! ( cpuset ) , "::" ,
-                stringify ! ( cs_ref ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const cpuset ) ) . cs_flags as * const _ as
-                usize } , 44usize , concat ! (
-                "Alignment of field: " , stringify ! ( cpuset ) , "::" ,
-                stringify ! ( cs_flags ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const cpuset ) ) . cs_id as * const _ as usize
-                } , 48usize , concat ! (
-                "Alignment of field: " , stringify ! ( cpuset ) , "::" ,
-                stringify ! ( cs_id ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const cpuset ) ) . cs_parent as * const _ as
-                usize } , 56usize , concat ! (
-                "Alignment of field: " , stringify ! ( cpuset ) , "::" ,
-                stringify ! ( cs_parent ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const cpuset ) ) . cs_link as * const _ as
-                usize } , 64usize , concat ! (
-                "Alignment of field: " , stringify ! ( cpuset ) , "::" ,
-                stringify ! ( cs_link ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const cpuset ) ) . cs_siblings as * const _ as
-                usize } , 80usize , concat ! (
-                "Alignment of field: " , stringify ! ( cpuset ) , "::" ,
-                stringify ! ( cs_siblings ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const cpuset ) ) . cs_children as * const _ as
-                usize } , 96usize , concat ! (
-                "Alignment of field: " , stringify ! ( cpuset ) , "::" ,
-                stringify ! ( cs_children ) ));
-}
-impl Clone for cpuset {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for cpuset {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct filecaps {
-    _unused: [u8; 0],
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct filemon {
-    _unused: [u8; 0],
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct kaioinfo {
-    _unused: [u8; 0],
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct kaudit_record {
-    _unused: [u8; 0],
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct kdtrace_proc {
-    _unused: [u8; 0],
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct kdtrace_thread {
-    _unused: [u8; 0],
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct mqueue_notifier {
-    _unused: [u8; 0],
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct nlminfo {
-    _unused: [u8; 0],
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct p_sched {
-    _unused: [u8; 0],
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct procdesc {
-    _unused: [u8; 0],
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct racct {
-    _unused: [u8; 0],
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct sbuf {
-    _unused: [u8; 0],
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct sleepqueue {
-    _unused: [u8; 0],
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct td_sched {
-    _unused: [u8; 0],
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct turnstile {
-    _unused: [u8; 0],
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct vm_map {
-    _unused: [u8; 0],
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct vm_map_entry {
-    _unused: [u8; 0],
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct rusage_ext {
-    pub rux_runtime: u64,
-    pub rux_uticks: u64,
-    pub rux_sticks: u64,
-    pub rux_iticks: u64,
-    pub rux_uu: u64,
-    pub rux_su: u64,
-    pub rux_tu: u64,
-}
-#[test]
-fn bindgen_test_layout_rusage_ext() {
-    assert_eq!(::core::mem::size_of::<rusage_ext>() , 56usize , concat ! (
-               "Size of: " , stringify ! ( rusage_ext ) ));
-    assert_eq! (::core::mem::align_of::<rusage_ext>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( rusage_ext ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rusage_ext ) ) . rux_runtime as * const _
-                as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( rusage_ext ) , "::" ,
-                stringify ! ( rux_runtime ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rusage_ext ) ) . rux_uticks as * const _
-                as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( rusage_ext ) , "::" ,
-                stringify ! ( rux_uticks ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rusage_ext ) ) . rux_sticks as * const _
-                as usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( rusage_ext ) , "::" ,
-                stringify ! ( rux_sticks ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rusage_ext ) ) . rux_iticks as * const _
-                as usize } , 24usize , concat ! (
-                "Alignment of field: " , stringify ! ( rusage_ext ) , "::" ,
-                stringify ! ( rux_iticks ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rusage_ext ) ) . rux_uu as * const _ as
-                usize } , 32usize , concat ! (
-                "Alignment of field: " , stringify ! ( rusage_ext ) , "::" ,
-                stringify ! ( rux_uu ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rusage_ext ) ) . rux_su as * const _ as
-                usize } , 40usize , concat ! (
-                "Alignment of field: " , stringify ! ( rusage_ext ) , "::" ,
-                stringify ! ( rux_su ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rusage_ext ) ) . rux_tu as * const _ as
-                usize } , 48usize , concat ! (
-                "Alignment of field: " , stringify ! ( rusage_ext ) , "::" ,
-                stringify ! ( rux_tu ) ));
-}
-impl Clone for rusage_ext {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Copy)]
-pub struct thread0_storage {
-    pub t0st_thread: thread,
-    pub t0st_sched: [u64; 10usize],
-}
-#[test]
-fn bindgen_test_layout_thread0_storage() {
-    assert_eq!(::core::mem::size_of::<thread0_storage>() , 1432usize , concat
-               ! ( "Size of: " , stringify ! ( thread0_storage ) ));
-    assert_eq! (::core::mem::align_of::<thread0_storage>() , 8usize , concat !
-                ( "Alignment of " , stringify ! ( thread0_storage ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread0_storage ) ) . t0st_thread as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread0_storage ) ,
-                "::" , stringify ! ( t0st_thread ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const thread0_storage ) ) . t0st_sched as *
-                const _ as usize } , 1352usize , concat ! (
-                "Alignment of field: " , stringify ! ( thread0_storage ) ,
-                "::" , stringify ! ( t0st_sched ) ));
-}
-impl Clone for thread0_storage {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for thread0_storage {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for thread0_storage {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f , "thread0_storage {{ t0st_thread: {:?}, t0st_sched: {:?} }}"
-               , self . t0st_thread , self . t0st_sched)
-    }
-}
-extern "C" {
-    pub fn thread_lock_block(arg1: *mut thread) -> *mut mtx;
-}
-extern "C" {
-    pub fn thread_lock_unblock(arg1: *mut thread, arg2: *mut mtx);
-}
-extern "C" {
-    pub fn thread_lock_set(arg1: *mut thread, arg2: *mut mtx);
-}
-extern "C" {
-    #[link_name = "M_PARGS"]
-    pub static mut M_PARGS: [malloc_type; 1usize];
-}
-extern "C" {
-    #[link_name = "M_PGRP"]
-    pub static mut M_PGRP: [malloc_type; 1usize];
-}
-extern "C" {
-    #[link_name = "M_SESSION"]
-    pub static mut M_SESSION: [malloc_type; 1usize];
-}
-extern "C" {
-    #[link_name = "M_SUBPROC"]
-    pub static mut M_SUBPROC: [malloc_type; 1usize];
-}
-extern "C" {
-    #[link_name = "pid_max"]
-    pub static mut pid_max: pid_t;
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct pidhashhead {
-    pub lh_first: *mut proc_,
-}
-#[test]
-fn bindgen_test_layout_pidhashhead() {
-    assert_eq!(::core::mem::size_of::<pidhashhead>() , 8usize , concat ! (
-               "Size of: " , stringify ! ( pidhashhead ) ));
-    assert_eq! (::core::mem::align_of::<pidhashhead>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( pidhashhead ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pidhashhead ) ) . lh_first as * const _
-                as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( pidhashhead ) , "::" ,
-                stringify ! ( lh_first ) ));
-}
-impl Clone for pidhashhead {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for pidhashhead {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-extern "C" {
-    #[link_name = "pidhashtbl"]
-    pub static mut pidhashtbl: *mut pidhashhead;
-}
-extern "C" {
-    #[link_name = "pidhash"]
-    pub static mut pidhash: u_long;
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct tidhashhead {
-    pub lh_first: *mut thread,
-}
-#[test]
-fn bindgen_test_layout_tidhashhead() {
-    assert_eq!(::core::mem::size_of::<tidhashhead>() , 8usize , concat ! (
-               "Size of: " , stringify ! ( tidhashhead ) ));
-    assert_eq! (::core::mem::align_of::<tidhashhead>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( tidhashhead ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const tidhashhead ) ) . lh_first as * const _
-                as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( tidhashhead ) , "::" ,
-                stringify ! ( lh_first ) ));
-}
-impl Clone for tidhashhead {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for tidhashhead {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-extern "C" {
-    #[link_name = "tidhashtbl"]
-    pub static mut tidhashtbl: *mut tidhashhead;
-}
-extern "C" {
-    #[link_name = "tidhash"]
-    pub static mut tidhash: u_long;
-}
-extern "C" {
-    #[link_name = "tidhash_lock"]
-    pub static mut tidhash_lock: rwlock;
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct pgrphashhead {
-    pub lh_first: *mut pgrp,
-}
-#[test]
-fn bindgen_test_layout_pgrphashhead() {
-    assert_eq!(::core::mem::size_of::<pgrphashhead>() , 8usize , concat ! (
-               "Size of: " , stringify ! ( pgrphashhead ) ));
-    assert_eq! (::core::mem::align_of::<pgrphashhead>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( pgrphashhead ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const pgrphashhead ) ) . lh_first as * const _
-                as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( pgrphashhead ) , "::" ,
-                stringify ! ( lh_first ) ));
-}
-impl Clone for pgrphashhead {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for pgrphashhead {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-extern "C" {
-    #[link_name = "pgrphashtbl"]
-    pub static mut pgrphashtbl: *mut pgrphashhead;
-}
-extern "C" {
-    #[link_name = "pgrphash"]
-    pub static mut pgrphash: u_long;
-}
-extern "C" {
-    #[link_name = "allproc_lock"]
-    pub static mut allproc_lock: sx;
-}
-extern "C" {
-    #[link_name = "allproc_gen"]
-    pub static mut allproc_gen: ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    #[link_name = "proctree_lock"]
-    pub static mut proctree_lock: sx;
-}
-extern "C" {
-    #[link_name = "ppeers_lock"]
-    pub static mut ppeers_lock: mtx;
-}
-extern "C" {
-    #[link_name = "proc0"]
-    pub static mut proc0: proc_;
-}
-extern "C" {
-    #[link_name = "thread0_st"]
-    pub static mut thread0_st: thread0_storage;
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct vmspace {
-    pub _address: u8,
-}
-impl Clone for vmspace {
-    fn clone(&self) -> Self { *self }
-}
-extern "C" {
-    #[link_name = "vmspace0"]
-    pub static mut vmspace0: vmspace;
-}
-extern "C" {
-    #[link_name = "hogticks"]
-    pub static mut hogticks: ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    #[link_name = "lastpid"]
-    pub static mut lastpid: ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    #[link_name = "nprocs"]
-    pub static mut nprocs: ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    #[link_name = "maxproc"]
-    pub static mut maxproc: ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    #[link_name = "maxprocperuid"]
-    pub static mut maxprocperuid: ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    #[link_name = "ps_arg_cache_limit"]
-    pub static mut ps_arg_cache_limit: u_long;
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct proclist {
-    pub lh_first: *mut proc_,
-}
-#[test]
-fn bindgen_test_layout_proclist() {
-    assert_eq!(::core::mem::size_of::<proclist>() , 8usize , concat ! (
-               "Size of: " , stringify ! ( proclist ) ));
-    assert_eq! (::core::mem::align_of::<proclist>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( proclist ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const proclist ) ) . lh_first as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( proclist ) , "::" ,
-                stringify ! ( lh_first ) ));
-}
-impl Clone for proclist {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for proclist {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct procqueue {
-    pub tqh_first: *mut proc_,
-    pub tqh_last: *mut *mut proc_,
-}
-#[test]
-fn bindgen_test_layout_procqueue() {
-    assert_eq!(::core::mem::size_of::<procqueue>() , 16usize , concat ! (
-               "Size of: " , stringify ! ( procqueue ) ));
-    assert_eq! (::core::mem::align_of::<procqueue>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( procqueue ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const procqueue ) ) . tqh_first as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( procqueue ) , "::" ,
-                stringify ! ( tqh_first ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const procqueue ) ) . tqh_last as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( procqueue ) , "::" ,
-                stringify ! ( tqh_last ) ));
-}
-impl Clone for procqueue {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for procqueue {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct threadqueue {
-    pub tqh_first: *mut thread,
-    pub tqh_last: *mut *mut thread,
-}
-#[test]
-fn bindgen_test_layout_threadqueue() {
-    assert_eq!(::core::mem::size_of::<threadqueue>() , 16usize , concat ! (
-               "Size of: " , stringify ! ( threadqueue ) ));
-    assert_eq! (::core::mem::align_of::<threadqueue>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( threadqueue ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const threadqueue ) ) . tqh_first as * const _
-                as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( threadqueue ) , "::" ,
-                stringify ! ( tqh_first ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const threadqueue ) ) . tqh_last as * const _
-                as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( threadqueue ) , "::" ,
-                stringify ! ( tqh_last ) ));
-}
-impl Clone for threadqueue {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for threadqueue {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-extern "C" {
-    #[link_name = "allproc"]
-    pub static mut allproc: proclist;
-}
-extern "C" {
-    #[link_name = "zombproc"]
-    pub static mut zombproc: proclist;
-}
-extern "C" {
-    #[link_name = "initproc"]
-    pub static mut initproc: *mut proc_;
-}
-extern "C" {
-    #[link_name = "pageproc"]
-    pub static mut pageproc: *mut proc_;
-}
-extern "C" {
-    #[link_name = "proc_zone"]
-    pub static mut proc_zone: *mut uma_zone;
-}
-extern "C" {
-    pub fn pfind(arg1: pid_t) -> *mut proc_;
-}
-extern "C" {
-    pub fn pfind_any(arg1: pid_t) -> *mut proc_;
-}
-extern "C" {
-    pub fn pfind_locked(pid: pid_t) -> *mut proc_;
-}
-extern "C" {
-    pub fn pgfind(arg1: pid_t) -> *mut pgrp;
-}
-extern "C" {
-    pub fn zpfind(arg1: pid_t) -> *mut proc_;
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct fork_req {
-    pub fr_flags: ::kernel::sys::raw::c_int,
-    pub fr_pages: ::kernel::sys::raw::c_int,
-    pub fr_pidp: *mut ::kernel::sys::raw::c_int,
-    pub fr_procp: *mut *mut proc_,
-    pub fr_pd_fd: *mut ::kernel::sys::raw::c_int,
-    pub fr_pd_flags: ::kernel::sys::raw::c_int,
-    pub fr_pd_fcaps: *mut filecaps,
-}
-#[test]
-fn bindgen_test_layout_fork_req() {
-    assert_eq!(::core::mem::size_of::<fork_req>() , 48usize , concat ! (
-               "Size of: " , stringify ! ( fork_req ) ));
-    assert_eq! (::core::mem::align_of::<fork_req>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( fork_req ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const fork_req ) ) . fr_flags as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( fork_req ) , "::" ,
-                stringify ! ( fr_flags ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const fork_req ) ) . fr_pages as * const _ as
-                usize } , 4usize , concat ! (
-                "Alignment of field: " , stringify ! ( fork_req ) , "::" ,
-                stringify ! ( fr_pages ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const fork_req ) ) . fr_pidp as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( fork_req ) , "::" ,
-                stringify ! ( fr_pidp ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const fork_req ) ) . fr_procp as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( fork_req ) , "::" ,
-                stringify ! ( fr_procp ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const fork_req ) ) . fr_pd_fd as * const _ as
-                usize } , 24usize , concat ! (
-                "Alignment of field: " , stringify ! ( fork_req ) , "::" ,
-                stringify ! ( fr_pd_fd ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const fork_req ) ) . fr_pd_flags as * const _
-                as usize } , 32usize , concat ! (
-                "Alignment of field: " , stringify ! ( fork_req ) , "::" ,
-                stringify ! ( fr_pd_flags ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const fork_req ) ) . fr_pd_fcaps as * const _
-                as usize } , 40usize , concat ! (
-                "Alignment of field: " , stringify ! ( fork_req ) , "::" ,
-                stringify ! ( fr_pd_fcaps ) ));
-}
-impl Clone for fork_req {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for fork_req {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-extern "C" {
-    pub fn pget(pid: pid_t, flags: ::kernel::sys::raw::c_int,
-                pp: *mut *mut proc_) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn ast(framep: *mut trapframe);
-}
-extern "C" {
-    pub fn choosethread() -> *mut thread;
-}
-extern "C" {
-    pub fn cr_cansee(u1: *mut ucred, u2: *mut ucred)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn cr_canseesocket(cred: *mut ucred, so: *mut socket)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn cr_canseeothergids(u1: *mut ucred, u2: *mut ucred)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn cr_canseeotheruids(u1: *mut ucred, u2: *mut ucred)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn cr_canseejailproc(u1: *mut ucred, u2: *mut ucred)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn cr_cansignal(cred: *mut ucred, proc_: *mut proc_,
-                        signum: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn enterpgrp(p: *mut proc_, pgid: pid_t, pgrp: *mut pgrp,
-                     sess: *mut session) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn enterthispgrp(p: *mut proc_, pgrp: *mut pgrp)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn faultin(p: *mut proc_);
-}
-extern "C" {
-    pub fn fixjobc(p: *mut proc_, pgrp: *mut pgrp,
-                   entering: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn fork1(arg1: *mut thread, arg2: *mut fork_req)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn fork_exit(arg1:
-                         ::core::option::Option<unsafe extern "C" fn(arg1:
-                                                                         *mut ::kernel::sys::raw::c_void,
-                                                                     arg2:
-                                                                         *mut trapframe)>,
-                     arg2: *mut ::kernel::sys::raw::c_void,
-                     arg3: *mut trapframe);
-}
-extern "C" {
-    pub fn fork_return(arg1: *mut thread, arg2: *mut trapframe);
-}
-extern "C" {
-    pub fn inferior(p: *mut proc_) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn kern_proc_vmmap_resident(map: *mut vm_map,
-                                    entry: *mut vm_map_entry,
-                                    resident_count:
-                                        *mut ::kernel::sys::raw::c_int,
-                                    super_: *mut bool_);
-}
-extern "C" {
-    pub fn kern_yield(arg1: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn kick_proc0();
-}
-extern "C" {
-    pub fn killjobc();
-}
-extern "C" {
-    pub fn leavepgrp(p: *mut proc_) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn maybe_preempt(td: *mut thread) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn maybe_yield();
-}
-extern "C" {
-    pub fn mi_switch(flags: ::kernel::sys::raw::c_int, newtd: *mut thread);
-}
-extern "C" {
-    pub fn p_candebug(td: *mut thread, p: *mut proc_)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn p_cansee(td: *mut thread, p: *mut proc_)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn p_cansched(td: *mut thread, p: *mut proc_)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn p_cansignal(td: *mut thread, p: *mut proc_,
-                       signum: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn p_canwait(td: *mut thread, p: *mut proc_)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn pargs_alloc(len: ::kernel::sys::raw::c_int) -> *mut pargs;
-}
-extern "C" {
-    pub fn pargs_drop(pa: *mut pargs);
-}
-extern "C" {
-    pub fn pargs_hold(pa: *mut pargs);
-}
-extern "C" {
-    pub fn proc_getargv(td: *mut thread, p: *mut proc_, sb: *mut sbuf)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn proc_getauxv(td: *mut thread, p: *mut proc_, sb: *mut sbuf)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn proc_getenvv(td: *mut thread, p: *mut proc_, sb: *mut sbuf)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn procinit();
-}
-extern "C" {
-    pub fn proc_linkup0(p: *mut proc_, td: *mut thread);
-}
-extern "C" {
-    pub fn proc_linkup(p: *mut proc_, td: *mut thread);
-}
-extern "C" {
-    pub fn proc_realparent(child: *mut proc_) -> *mut proc_;
-}
-extern "C" {
-    pub fn proc_reap(td: *mut thread, p: *mut proc_,
-                     status: *mut ::kernel::sys::raw::c_int,
-                     options: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn proc_reparent(child: *mut proc_, newparent: *mut proc_);
-}
-extern "C" {
-    pub fn proc_set_traced(p: *mut proc_, stop: bool_);
-}
-extern "C" {
-    pub fn pstats_alloc() -> *mut pstats;
-}
-extern "C" {
-    pub fn pstats_fork(src: *mut pstats, dst: *mut pstats);
-}
-extern "C" {
-    pub fn pstats_free(ps: *mut pstats);
-}
-extern "C" {
-    pub fn reaper_abandon_children(p: *mut proc_, exiting: bool_);
-}
-extern "C" {
-    pub fn securelevel_ge(cr: *mut ucred, level: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn securelevel_gt(cr: *mut ucred, level: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn sess_hold(arg1: *mut session);
-}
-extern "C" {
-    pub fn sess_release(arg1: *mut session);
-}
-extern "C" {
-    pub fn setrunnable(arg1: *mut thread) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn setsugid(p: *mut proc_);
-}
-extern "C" {
-    pub fn should_yield() -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn sigonstack(sp: usize) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn stopevent(arg1: *mut proc_, arg2: u_int, arg3: u_int);
-}
-extern "C" {
-    pub fn tdfind(arg1: lwpid_t, arg2: pid_t) -> *mut thread;
-}
-extern "C" {
-    pub fn threadinit();
-}
-extern "C" {
-    pub fn tidhash_add(arg1: *mut thread);
-}
-extern "C" {
-    pub fn tidhash_remove(arg1: *mut thread);
-}
-extern "C" {
-    pub fn cpu_idle(arg1: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn cpu_idle_wakeup(arg1: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    #[link_name = "cpu_idle_hook"]
-    pub static mut cpu_idle_hook:
-               ::core::option::Option<unsafe extern "C" fn(arg1: sbintime_t)>;
-}
-extern "C" {
-    pub fn cpu_switch(arg1: *mut thread, arg2: *mut thread, arg3: *mut mtx);
-}
-extern "C" {
-    pub fn cpu_throw(arg1: *mut thread, arg2: *mut thread);
-}
-extern "C" {
-    pub fn unsleep(arg1: *mut thread);
-}
-extern "C" {
-    pub fn userret(arg1: *mut thread, arg2: *mut trapframe);
-}
-extern "C" {
-    pub fn cpu_exit(arg1: *mut thread);
-}
-extern "C" {
-    pub fn exit1(arg1: *mut thread, arg2: ::kernel::sys::raw::c_int,
-                 arg3: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn cpu_copy_thread(td: *mut thread, td0: *mut thread);
-}
-extern "C" {
-    pub fn cpu_fetch_syscall_args(td: *mut thread)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn cpu_fork(arg1: *mut thread, arg2: *mut proc_, arg3: *mut thread,
-                    arg4: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn cpu_fork_kthread_handler(arg1: *mut thread,
-                                    arg2:
-                                        ::core::option::Option<unsafe extern "C" fn(arg1:
-                                                                                        *mut ::kernel::sys::raw::c_void)>,
-                                    arg3: *mut ::kernel::sys::raw::c_void);
-}
-extern "C" {
-    pub fn cpu_set_syscall_retval(arg1: *mut thread,
-                                  arg2: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn cpu_set_upcall(arg1: *mut thread,
-                          arg2:
-                              ::core::option::Option<unsafe extern "C" fn(arg1:
-                                                                              *mut ::kernel::sys::raw::c_void)>,
-                          arg3: *mut ::kernel::sys::raw::c_void,
-                          arg4: *mut stack_t);
-}
-extern "C" {
-    pub fn cpu_set_user_tls(arg1: *mut thread,
-                            tls_base: *mut ::kernel::sys::raw::c_void)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn cpu_thread_alloc(arg1: *mut thread);
-}
-extern "C" {
-    pub fn cpu_thread_clean(arg1: *mut thread);
-}
-extern "C" {
-    pub fn cpu_thread_exit(arg1: *mut thread);
-}
-extern "C" {
-    pub fn cpu_thread_free(arg1: *mut thread);
-}
-extern "C" {
-    pub fn cpu_thread_swapin(arg1: *mut thread);
-}
-extern "C" {
-    pub fn cpu_thread_swapout(arg1: *mut thread);
-}
-extern "C" {
-    pub fn thread_alloc(pages: ::kernel::sys::raw::c_int) -> *mut thread;
-}
-extern "C" {
-    pub fn thread_alloc_stack(arg1: *mut thread,
-                              pages: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn thread_cow_get_proc(newtd: *mut thread, p: *mut proc_);
-}
-extern "C" {
-    pub fn thread_cow_get(newtd: *mut thread, td: *mut thread);
-}
-extern "C" {
-    pub fn thread_cow_free(td: *mut thread);
-}
-extern "C" {
-    pub fn thread_cow_update(td: *mut thread);
-}
-extern "C" {
-    pub fn thread_create(td: *mut thread, rtp: *mut rtprio,
-                         initialize_thread:
-                             ::core::option::Option<unsafe extern "C" fn(arg1:
-                                                                             *mut thread,
-                                                                         arg2:
-                                                                             *mut ::kernel::sys::raw::c_void)
-                                                        ->
-                                                            ::kernel::sys::raw::c_int>,
-                         thunk: *mut ::kernel::sys::raw::c_void)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn thread_exit();
-}
-extern "C" {
-    pub fn thread_free(td: *mut thread);
-}
-extern "C" {
-    pub fn thread_link(td: *mut thread, p: *mut proc_);
-}
-extern "C" {
-    pub fn thread_reap();
-}
-extern "C" {
-    pub fn thread_single(p: *mut proc_, how: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn thread_single_end(p: *mut proc_, how: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn thread_stash(td: *mut thread);
-}
-extern "C" {
-    pub fn thread_stopped(p: *mut proc_);
-}
-extern "C" {
-    pub fn childproc_stopped(child: *mut proc_,
-                             reason: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn childproc_continued(child: *mut proc_);
-}
-extern "C" {
-    pub fn childproc_exited(child: *mut proc_);
-}
-extern "C" {
-    pub fn thread_suspend_check(how: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn thread_suspend_check_needed() -> bool_;
-}
-extern "C" {
-    pub fn thread_suspend_switch(arg1: *mut thread, p: *mut proc_);
-}
-extern "C" {
-    pub fn thread_suspend_one(td: *mut thread);
-}
-extern "C" {
-    pub fn thread_unlink(td: *mut thread);
-}
-extern "C" {
-    pub fn thread_unsuspend(p: *mut proc_);
-}
-extern "C" {
-    pub fn thread_wait(p: *mut proc_);
-}
-extern "C" {
-    pub fn thread_find(p: *mut proc_, tid: lwpid_t) -> *mut thread;
-}
-extern "C" {
-    pub fn stop_all_proc();
-}
-extern "C" {
-    pub fn resume_all_proc();
-}
-extern "C" {
-    #[link_name = "softdep_ast_cleanup"]
-    pub static mut softdep_ast_cleanup:
-               ::core::option::Option<unsafe extern "C" fn(arg1:
-                                                               *mut thread)>;
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct epoch {
-    _unused: [u8; 0],
-}
-pub type epoch_t = *mut epoch;
-extern "C" {
-    #[link_name = "global_epoch"]
-    pub static mut global_epoch: epoch_t;
-}
-extern "C" {
-    #[link_name = "global_epoch_preempt"]
-    pub static mut global_epoch_preempt: epoch_t;
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct epoch_context {
-    pub data: [*mut ::kernel::sys::raw::c_void; 2usize],
-}
-#[test]
-fn bindgen_test_layout_epoch_context() {
-    assert_eq!(::core::mem::size_of::<epoch_context>() , 16usize , concat ! (
-               "Size of: " , stringify ! ( epoch_context ) ));
-    assert_eq! (::core::mem::align_of::<epoch_context>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( epoch_context ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const epoch_context ) ) . data as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( epoch_context ) , "::"
-                , stringify ! ( data ) ));
-}
-impl Clone for epoch_context {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for epoch_context {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-pub type epoch_context_t = *mut epoch_context;
-extern "C" {
-    pub fn epoch_alloc(flags: ::kernel::sys::raw::c_int) -> epoch_t;
-}
-extern "C" {
-    pub fn epoch_free(epoch: epoch_t);
-}
-extern "C" {
-    pub fn epoch_enter(epoch: epoch_t);
-}
-extern "C" {
-    pub fn epoch_enter_preempt_internal(epoch: epoch_t, td: *mut thread);
-}
-extern "C" {
-    pub fn epoch_exit(epoch: epoch_t);
-}
-extern "C" {
-    pub fn epoch_exit_preempt_internal(epoch: epoch_t, td: *mut thread);
-}
-extern "C" {
-    pub fn epoch_wait(epoch: epoch_t);
-}
-extern "C" {
-    pub fn epoch_wait_preempt(epoch: epoch_t);
-}
-extern "C" {
-    pub fn epoch_call(epoch: epoch_t, ctx: epoch_context_t,
-                      callback:
-                          ::core::option::Option<unsafe extern "C" fn(arg1:
-                                                                          epoch_context_t)>);
-}
-extern "C" {
-    pub fn in_epoch() -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    #[link_name = "pcpu_entry_epoch_cb_count"]
-    pub static mut pcpu_entry_epoch_cb_count: ::kernel::sys::raw::c_int;
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct grouptask {
-    pub gt_task: gtask,
-    pub gt_taskqueue: *mut ::kernel::sys::raw::c_void,
-    pub gt_list: grouptask__bindgen_ty_1,
-    pub gt_uniq: *mut ::kernel::sys::raw::c_void,
-    pub gt_name: [::kernel::sys::raw::c_char; 32usize],
-    pub gt_irq: i16,
-    pub gt_cpu: i16,
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct grouptask__bindgen_ty_1 {
-    pub le_next: *mut grouptask,
-    pub le_prev: *mut *mut grouptask,
-}
-#[test]
-fn bindgen_test_layout_grouptask__bindgen_ty_1() {
-    assert_eq!(::core::mem::size_of::<grouptask__bindgen_ty_1>() , 16usize ,
-               concat ! (
-               "Size of: " , stringify ! ( grouptask__bindgen_ty_1 ) ));
-    assert_eq! (::core::mem::align_of::<grouptask__bindgen_ty_1>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( grouptask__bindgen_ty_1 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const grouptask__bindgen_ty_1 ) ) . le_next as
-                * const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( grouptask__bindgen_ty_1
-                ) , "::" , stringify ! ( le_next ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const grouptask__bindgen_ty_1 ) ) . le_prev as
-                * const _ as usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( grouptask__bindgen_ty_1
-                ) , "::" , stringify ! ( le_prev ) ));
-}
-impl Clone for grouptask__bindgen_ty_1 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for grouptask__bindgen_ty_1 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[test]
-fn bindgen_test_layout_grouptask() {
-    assert_eq!(::core::mem::size_of::<grouptask>() , 104usize , concat ! (
-               "Size of: " , stringify ! ( grouptask ) ));
-    assert_eq! (::core::mem::align_of::<grouptask>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( grouptask ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const grouptask ) ) . gt_task as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( grouptask ) , "::" ,
-                stringify ! ( gt_task ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const grouptask ) ) . gt_taskqueue as * const _
-                as usize } , 32usize , concat ! (
-                "Alignment of field: " , stringify ! ( grouptask ) , "::" ,
-                stringify ! ( gt_taskqueue ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const grouptask ) ) . gt_list as * const _ as
-                usize } , 40usize , concat ! (
-                "Alignment of field: " , stringify ! ( grouptask ) , "::" ,
-                stringify ! ( gt_list ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const grouptask ) ) . gt_uniq as * const _ as
-                usize } , 56usize , concat ! (
-                "Alignment of field: " , stringify ! ( grouptask ) , "::" ,
-                stringify ! ( gt_uniq ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const grouptask ) ) . gt_name as * const _ as
-                usize } , 64usize , concat ! (
-                "Alignment of field: " , stringify ! ( grouptask ) , "::" ,
-                stringify ! ( gt_name ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const grouptask ) ) . gt_irq as * const _ as
-                usize } , 96usize , concat ! (
-                "Alignment of field: " , stringify ! ( grouptask ) , "::" ,
-                stringify ! ( gt_irq ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const grouptask ) ) . gt_cpu as * const _ as
-                usize } , 98usize , concat ! (
-                "Alignment of field: " , stringify ! ( grouptask ) , "::" ,
-                stringify ! ( gt_cpu ) ));
-}
-impl Clone for grouptask {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for grouptask {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-extern "C" {
-    #[link_name = "pcpu_entry_epoch_cb_task"]
-    pub static mut pcpu_entry_epoch_cb_task: grouptask;
-}
-extern "C" {
-    #[link_name = "lockstat_enabled"]
-    pub static mut lockstat_enabled: bool_;
-}
-extern "C" {
-    pub fn _mtx_init(c: *mut usize, name: *const ::kernel::sys::raw::c_char,
-                     type_: *const ::kernel::sys::raw::c_char,
-                     opts: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn _mtx_destroy(c: *mut usize);
-}
-extern "C" {
-    pub fn mtx_sysinit(arg: *mut ::kernel::sys::raw::c_void);
-}
-extern "C" {
-    pub fn _mtx_trylock_flags_int(m: *mut mtx,
-                                  opts: ::kernel::sys::raw::c_int,
-                                  file: *const ::kernel::sys::raw::c_char,
-                                  line: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn _mtx_trylock_flags_(c: *mut usize, opts: ::kernel::sys::raw::c_int,
-                               file: *const ::kernel::sys::raw::c_char,
-                               line: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn mutex_init();
-}
-extern "C" {
-    pub fn __mtx_lock_sleep(c: *mut usize, v: usize,
-                            opts: ::kernel::sys::raw::c_int,
-                            file: *const ::kernel::sys::raw::c_char,
-                            line: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn __mtx_unlock_sleep(c: *mut usize, v: usize,
-                              opts: ::kernel::sys::raw::c_int,
-                              file: *const ::kernel::sys::raw::c_char,
-                              line: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn __mtx_lock_flags(c: *mut usize, opts: ::kernel::sys::raw::c_int,
-                            file: *const ::kernel::sys::raw::c_char,
-                            line: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn __mtx_unlock_flags(c: *mut usize, opts: ::kernel::sys::raw::c_int,
-                              file: *const ::kernel::sys::raw::c_char,
-                              line: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn __mtx_lock_spin_flags(c: *mut usize,
-                                 opts: ::kernel::sys::raw::c_int,
-                                 file: *const ::kernel::sys::raw::c_char,
-                                 line: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn __mtx_trylock_spin_flags(c: *mut usize,
-                                    opts: ::kernel::sys::raw::c_int,
-                                    file: *const ::kernel::sys::raw::c_char,
-                                    line: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn __mtx_unlock_spin_flags(c: *mut usize,
-                                   opts: ::kernel::sys::raw::c_int,
-                                   file: *const ::kernel::sys::raw::c_char,
-                                   line: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn mtx_spin_wait_unlocked(m: *mut mtx);
-}
-extern "C" {
-    pub fn thread_lock_flags_(arg1: *mut thread,
-                              arg2: ::kernel::sys::raw::c_int,
-                              arg3: *const ::kernel::sys::raw::c_char,
-                              arg4: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn _thread_lock(td: *mut thread, opts: ::kernel::sys::raw::c_int,
-                        file: *const ::kernel::sys::raw::c_char,
-                        line: ::kernel::sys::raw::c_int);
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct mtx_pool {
-    _unused: [u8; 0],
-}
-extern "C" {
-    pub fn mtx_pool_create(mtx_name: *const ::kernel::sys::raw::c_char,
-                           pool_size: ::kernel::sys::raw::c_int,
-                           opts: ::kernel::sys::raw::c_int) -> *mut mtx_pool;
-}
-extern "C" {
-    pub fn mtx_pool_destroy(poolp: *mut *mut mtx_pool);
-}
-extern "C" {
-    pub fn mtx_pool_find(pool: *mut mtx_pool,
-                         ptr: *mut ::kernel::sys::raw::c_void) -> *mut mtx;
-}
-extern "C" {
-    pub fn mtx_pool_alloc(pool: *mut mtx_pool) -> *mut mtx;
-}
-extern "C" {
-    #[link_name = "mtxpool_sleep"]
-    pub static mut mtxpool_sleep: *mut mtx_pool;
-}
-extern "C" {
-    #[link_name = "Giant"]
-    pub static mut Giant: mtx;
-}
-extern "C" {
-    #[link_name = "blocked_lock"]
-    pub static mut blocked_lock: mtx;
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct mtx_args {
-    pub ma_mtx: *mut ::kernel::sys::raw::c_void,
-    pub ma_desc: *const ::kernel::sys::raw::c_char,
-    pub ma_opts: ::kernel::sys::raw::c_int,
-}
-#[test]
-fn bindgen_test_layout_mtx_args() {
-    assert_eq!(::core::mem::size_of::<mtx_args>() , 24usize , concat ! (
-               "Size of: " , stringify ! ( mtx_args ) ));
-    assert_eq! (::core::mem::align_of::<mtx_args>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( mtx_args ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const mtx_args ) ) . ma_mtx as * const _ as
-                usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( mtx_args ) , "::" ,
-                stringify ! ( ma_mtx ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const mtx_args ) ) . ma_desc as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( mtx_args ) , "::" ,
-                stringify ! ( ma_desc ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const mtx_args ) ) . ma_opts as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( mtx_args ) , "::" ,
-                stringify ! ( ma_opts ) ));
-}
-impl Clone for mtx_args {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for mtx_args {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Copy)]
-pub struct rwlock_padalign {
-    pub lock_object: lock_object,
-    pub rw_lock: usize,
-    pub __bindgen_padding_0: [u64; 4usize],
-}
-#[test]
-fn bindgen_test_layout_rwlock_padalign() {
-    assert_eq!(::core::mem::size_of::<rwlock_padalign>() , 64usize , concat !
-               ( "Size of: " , stringify ! ( rwlock_padalign ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rwlock_padalign ) ) . lock_object as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( rwlock_padalign ) ,
-                "::" , stringify ! ( lock_object ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rwlock_padalign ) ) . rw_lock as * const
-                _ as usize } , 24usize , concat ! (
-                "Alignment of field: " , stringify ! ( rwlock_padalign ) ,
-                "::" , stringify ! ( rw_lock ) ));
-}
-impl Clone for rwlock_padalign {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for rwlock_padalign {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-impl ::kernel::fmt::Debug for rwlock_padalign {
-    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
-        write!(f , "rwlock_padalign {{ lock_object: {:?}, rw_lock: {:?} }}" ,
-               self . lock_object , self . rw_lock)
-    }
-}
-extern "C" {
-    pub fn _rw_init_flags(c: *mut usize,
-                          name: *const ::kernel::sys::raw::c_char,
-                          opts: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn _rw_destroy(c: *mut usize);
-}
-extern "C" {
-    pub fn rw_sysinit(arg: *mut ::kernel::sys::raw::c_void);
-}
-extern "C" {
-    pub fn rw_sysinit_flags(arg: *mut ::kernel::sys::raw::c_void);
-}
-extern "C" {
-    pub fn _rw_wowned(c: *const usize) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn _rw_wlock_cookie(c: *mut usize,
-                            file: *const ::kernel::sys::raw::c_char,
-                            line: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn __rw_try_wlock_int(rw: *mut rwlock,
-                              file: *const ::kernel::sys::raw::c_char,
-                              line: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn __rw_try_wlock(c: *mut usize,
-                          file: *const ::kernel::sys::raw::c_char,
-                          line: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn _rw_wunlock_cookie(c: *mut usize,
-                              file: *const ::kernel::sys::raw::c_char,
-                              line: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn __rw_rlock_int(rw: *mut rwlock,
-                          file: *const ::kernel::sys::raw::c_char,
-                          line: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn __rw_rlock(c: *mut usize, file: *const ::kernel::sys::raw::c_char,
-                      line: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn __rw_try_rlock_int(rw: *mut rwlock,
-                              file: *const ::kernel::sys::raw::c_char,
-                              line: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn __rw_try_rlock(c: *mut usize,
-                          file: *const ::kernel::sys::raw::c_char,
-                          line: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn _rw_runlock_cookie_int(rw: *mut rwlock,
-                                  file: *const ::kernel::sys::raw::c_char,
-                                  line: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn _rw_runlock_cookie(c: *mut usize,
-                              file: *const ::kernel::sys::raw::c_char,
-                              line: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn __rw_wlock_hard(c: *mut usize, v: usize,
-                           file: *const ::kernel::sys::raw::c_char,
-                           line: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn __rw_wunlock_hard(c: *mut usize, v: usize,
-                             file: *const ::kernel::sys::raw::c_char,
-                             line: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn __rw_try_upgrade_int(rw: *mut rwlock,
-                                file: *const ::kernel::sys::raw::c_char,
-                                line: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn __rw_try_upgrade(c: *mut usize,
-                            file: *const ::kernel::sys::raw::c_char,
-                            line: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn __rw_downgrade_int(rw: *mut rwlock,
-                              file: *const ::kernel::sys::raw::c_char,
-                              line: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn __rw_downgrade(c: *mut usize,
-                          file: *const ::kernel::sys::raw::c_char,
-                          line: ::kernel::sys::raw::c_int);
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct rw_args {
-    pub ra_rw: *mut ::kernel::sys::raw::c_void,
-    pub ra_desc: *const ::kernel::sys::raw::c_char,
-    pub ra_flags: ::kernel::sys::raw::c_int,
-}
-#[test]
-fn bindgen_test_layout_rw_args() {
-    assert_eq!(::core::mem::size_of::<rw_args>() , 24usize , concat ! (
-               "Size of: " , stringify ! ( rw_args ) ));
-    assert_eq! (::core::mem::align_of::<rw_args>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( rw_args ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rw_args ) ) . ra_rw as * const _ as usize
-                } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( rw_args ) , "::" ,
-                stringify ! ( ra_rw ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rw_args ) ) . ra_desc as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( rw_args ) , "::" ,
-                stringify ! ( ra_desc ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const rw_args ) ) . ra_flags as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( rw_args ) , "::" ,
-                stringify ! ( ra_flags ) ));
-}
-impl Clone for rw_args {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for rw_args {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-extern "C" {
-    pub fn sx_sysinit(arg: *mut ::kernel::sys::raw::c_void);
-}
-extern "C" {
-    pub fn sx_init_flags(sx: *mut sx,
-                         description: *const ::kernel::sys::raw::c_char,
-                         opts: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn sx_destroy(sx: *mut sx);
-}
-extern "C" {
-    pub fn sx_try_slock_int(sx: *mut sx,
-                            file: *const ::kernel::sys::raw::c_char,
-                            line: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn sx_try_slock_(sx: *mut sx, file: *const ::kernel::sys::raw::c_char,
-                         line: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn sx_try_xlock_int(sx: *mut sx,
-                            file: *const ::kernel::sys::raw::c_char,
-                            line: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn sx_try_xlock_(sx: *mut sx, file: *const ::kernel::sys::raw::c_char,
-                         line: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn sx_try_upgrade_int(sx: *mut sx,
-                              file: *const ::kernel::sys::raw::c_char,
-                              line: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn sx_try_upgrade_(sx: *mut sx,
-                           file: *const ::kernel::sys::raw::c_char,
-                           line: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn sx_downgrade_int(sx: *mut sx,
-                            file: *const ::kernel::sys::raw::c_char,
-                            line: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn sx_downgrade_(sx: *mut sx, file: *const ::kernel::sys::raw::c_char,
-                         line: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn _sx_slock_int(sx: *mut sx, opts: ::kernel::sys::raw::c_int,
-                         file: *const ::kernel::sys::raw::c_char,
-                         line: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn _sx_slock(sx: *mut sx, opts: ::kernel::sys::raw::c_int,
-                     file: *const ::kernel::sys::raw::c_char,
-                     line: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn _sx_xlock(sx: *mut sx, opts: ::kernel::sys::raw::c_int,
-                     file: *const ::kernel::sys::raw::c_char,
-                     line: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn _sx_sunlock_int(sx: *mut sx,
-                           file: *const ::kernel::sys::raw::c_char,
-                           line: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn _sx_sunlock(sx: *mut sx, file: *const ::kernel::sys::raw::c_char,
-                       line: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn _sx_xunlock(sx: *mut sx, file: *const ::kernel::sys::raw::c_char,
-                       line: ::kernel::sys::raw::c_int);
-}
-extern "C" {
-    pub fn _sx_xlock_hard(sx: *mut sx, x: usize,
-                          opts: ::kernel::sys::raw::c_int,
-                          file: *const ::kernel::sys::raw::c_char,
-                          line: ::kernel::sys::raw::c_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn _sx_xunlock_hard(sx: *mut sx, x: usize,
-                            file: *const ::kernel::sys::raw::c_char,
-                            line: ::kernel::sys::raw::c_int);
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct sx_args {
-    pub sa_sx: *mut sx,
-    pub sa_desc: *const ::kernel::sys::raw::c_char,
-    pub sa_flags: ::kernel::sys::raw::c_int,
-}
-#[test]
-fn bindgen_test_layout_sx_args() {
-    assert_eq!(::core::mem::size_of::<sx_args>() , 24usize , concat ! (
-               "Size of: " , stringify ! ( sx_args ) ));
-    assert_eq! (::core::mem::align_of::<sx_args>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( sx_args ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sx_args ) ) . sa_sx as * const _ as usize
-                } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( sx_args ) , "::" ,
-                stringify ! ( sa_sx ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sx_args ) ) . sa_desc as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( sx_args ) , "::" ,
-                stringify ! ( sa_desc ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const sx_args ) ) . sa_flags as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( sx_args ) , "::" ,
-                stringify ! ( sa_flags ) ));
-}
-impl Clone for sx_args {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for sx_args {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-pub type task_fn_t =
-    ::core::option::Option<unsafe extern "C" fn(context:
-                                                    *mut ::kernel::sys::raw::c_void,
-                                                pending:
-                                                    ::kernel::sys::raw::c_int)>;
-pub type gtask_fn_t =
-    ::core::option::Option<unsafe extern "C" fn(context:
-                                                    *mut ::kernel::sys::raw::c_void)>;
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct task {
-    pub ta_link: task__bindgen_ty_1,
-    pub ta_pending: u16,
-    pub ta_priority: u_short,
-    pub ta_func: task_fn_t,
-    pub ta_context: *mut ::kernel::sys::raw::c_void,
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct task__bindgen_ty_1 {
-    pub stqe_next: *mut task,
-}
-#[test]
-fn bindgen_test_layout_task__bindgen_ty_1() {
-    assert_eq!(::core::mem::size_of::<task__bindgen_ty_1>() , 8usize , concat
-               ! ( "Size of: " , stringify ! ( task__bindgen_ty_1 ) ));
-    assert_eq! (::core::mem::align_of::<task__bindgen_ty_1>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( task__bindgen_ty_1 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const task__bindgen_ty_1 ) ) . stqe_next as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( task__bindgen_ty_1 ) ,
-                "::" , stringify ! ( stqe_next ) ));
-}
-impl Clone for task__bindgen_ty_1 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for task__bindgen_ty_1 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[test]
-fn bindgen_test_layout_task() {
-    assert_eq!(::core::mem::size_of::<task>() , 32usize , concat ! (
-               "Size of: " , stringify ! ( task ) ));
-    assert_eq! (::core::mem::align_of::<task>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( task ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const task ) ) . ta_link as * const _ as usize
-                } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( task ) , "::" ,
-                stringify ! ( ta_link ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const task ) ) . ta_pending as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( task ) , "::" ,
-                stringify ! ( ta_pending ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const task ) ) . ta_priority as * const _ as
-                usize } , 10usize , concat ! (
-                "Alignment of field: " , stringify ! ( task ) , "::" ,
-                stringify ! ( ta_priority ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const task ) ) . ta_func as * const _ as usize
-                } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( task ) , "::" ,
-                stringify ! ( ta_func ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const task ) ) . ta_context as * const _ as
-                usize } , 24usize , concat ! (
-                "Alignment of field: " , stringify ! ( task ) , "::" ,
-                stringify ! ( ta_context ) ));
-}
-impl Clone for task {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for task {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct gtask {
-    pub ta_link: gtask__bindgen_ty_1,
-    pub ta_flags: u16,
-    pub ta_priority: u_short,
-    pub ta_func: gtask_fn_t,
-    pub ta_context: *mut ::kernel::sys::raw::c_void,
-}
-#[repr(C)]
-#[derive(Debug, Copy)]
-pub struct gtask__bindgen_ty_1 {
-    pub stqe_next: *mut gtask,
-}
-#[test]
-fn bindgen_test_layout_gtask__bindgen_ty_1() {
-    assert_eq!(::core::mem::size_of::<gtask__bindgen_ty_1>() , 8usize , concat
-               ! ( "Size of: " , stringify ! ( gtask__bindgen_ty_1 ) ));
-    assert_eq! (::core::mem::align_of::<gtask__bindgen_ty_1>() , 8usize ,
-                concat ! (
-                "Alignment of " , stringify ! ( gtask__bindgen_ty_1 ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const gtask__bindgen_ty_1 ) ) . stqe_next as *
-                const _ as usize } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( gtask__bindgen_ty_1 ) ,
-                "::" , stringify ! ( stqe_next ) ));
-}
-impl Clone for gtask__bindgen_ty_1 {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for gtask__bindgen_ty_1 {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[test]
-fn bindgen_test_layout_gtask() {
-    assert_eq!(::core::mem::size_of::<gtask>() , 32usize , concat ! (
-               "Size of: " , stringify ! ( gtask ) ));
-    assert_eq! (::core::mem::align_of::<gtask>() , 8usize , concat ! (
-                "Alignment of " , stringify ! ( gtask ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const gtask ) ) . ta_link as * const _ as usize
-                } , 0usize , concat ! (
-                "Alignment of field: " , stringify ! ( gtask ) , "::" ,
-                stringify ! ( ta_link ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const gtask ) ) . ta_flags as * const _ as
-                usize } , 8usize , concat ! (
-                "Alignment of field: " , stringify ! ( gtask ) , "::" ,
-                stringify ! ( ta_flags ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const gtask ) ) . ta_priority as * const _ as
-                usize } , 10usize , concat ! (
-                "Alignment of field: " , stringify ! ( gtask ) , "::" ,
-                stringify ! ( ta_priority ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const gtask ) ) . ta_func as * const _ as usize
-                } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( gtask ) , "::" ,
-                stringify ! ( ta_func ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const gtask ) ) . ta_context as * const _ as
-                usize } , 24usize , concat ! (
-                "Alignment of field: " , stringify ! ( gtask ) , "::" ,
-                stringify ! ( ta_context ) ));
-}
-impl Clone for gtask {
-    fn clone(&self) -> Self { *self }
-}
-impl Default for gtask {
-    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
 }
 #[repr(C)]
 #[derive(Debug, Copy)]
@@ -21614,6 +14222,8 @@ pub struct ifnet {
     pub if_pcp: u8,
     pub if_netdump_methods: *mut netdump_methods,
     pub if_epoch_ctx: epoch_context,
+    pub if_addr_et: epoch_tracker,
+    pub if_maddr_et: epoch_tracker,
     pub if_ispare: [::kernel::sys::raw::c_int; 4usize],
 }
 #[repr(C)]
@@ -21704,7 +14314,7 @@ impl Default for ifnet__bindgen_ty_3 {
 }
 #[test]
 fn bindgen_test_layout_ifnet() {
-    assert_eq!(::core::mem::size_of::<ifnet>() , 1256usize , concat ! (
+    assert_eq!(::core::mem::size_of::<ifnet>() , 1320usize , concat ! (
                "Size of: " , stringify ! ( ifnet ) ));
     assert_eq! (::core::mem::align_of::<ifnet>() , 8usize , concat ! (
                 "Alignment of " , stringify ! ( ifnet ) ));
@@ -22104,8 +14714,18 @@ fn bindgen_test_layout_ifnet() {
                 "Alignment of field: " , stringify ! ( ifnet ) , "::" ,
                 stringify ! ( if_epoch_ctx ) ));
     assert_eq! (unsafe {
-                & ( * ( 0 as * const ifnet ) ) . if_ispare as * const _ as
+                & ( * ( 0 as * const ifnet ) ) . if_addr_et as * const _ as
                 usize } , 1240usize , concat ! (
+                "Alignment of field: " , stringify ! ( ifnet ) , "::" ,
+                stringify ! ( if_addr_et ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const ifnet ) ) . if_maddr_et as * const _ as
+                usize } , 1272usize , concat ! (
+                "Alignment of field: " , stringify ! ( ifnet ) , "::" ,
+                stringify ! ( if_maddr_et ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const ifnet ) ) . if_ispare as * const _ as
+                usize } , 1304usize , concat ! (
                 "Alignment of field: " , stringify ! ( ifnet ) , "::" ,
                 stringify ! ( if_ispare ) ));
 }
@@ -22118,7 +14738,7 @@ impl Default for ifnet {
 impl ::kernel::fmt::Debug for ifnet {
     fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
         write!(f ,
-               "ifnet {{ if_link: {:?}, if_clones: {:?}, if_groups: {:?}, if_alloctype: {:?}, if_softc: {:?}, if_llsoftc: {:?}, if_l2com: {:?}, if_dname: {:?}, if_dunit: {:?}, if_index: {:?}, if_index_reserved: {:?}, if_xname: {:?}, if_description: {:?}, if_flags: {:?}, if_drv_flags: {:?}, if_capabilities: {:?}, if_capenable: {:?}, if_linkmib: {:?}, if_linkmiblen: {:?}, if_refcount: {:?}, if_type: {:?}, if_addrlen: {:?}, if_hdrlen: {:?}, if_link_state: {:?}, if_mtu: {:?}, if_metric: {:?}, if_baudrate: {:?}, if_hwassist: {:?}, if_epoch: {:?}, if_lastchange: {:?}, if_snd: {:?}, if_linktask: {:?}, if_addr_lock: {:?}, if_addrhead: {:?}, if_multiaddrs: {:?}, if_amcount: {:?}, if_addr: {:?}, if_hw_addr: {:?}, if_broadcastaddr: {:?}, if_afdata_lock: {:?}, if_afdata: [{}], if_afdata_initialized: {:?}, if_fib: {:?}, if_vnet: {:?}, if_home_vnet: {:?}, if_vlantrunk: {:?}, if_bpf: {:?}, if_pcount: {:?}, if_bridge: {:?}, if_lagg: {:?}, if_pf_kif: {:?}, if_carp: {:?}, if_label: {:?}, if_netmap: {:?}, if_output: {:?}, if_input: {:?}, if_bridge_input: {:?}, if_bridge_output: {:?}, if_bridge_linkstate: {:?}, if_start: {:?}, if_ioctl: {:?}, if_init: {:?}, if_resolvemulti: {:?}, if_qflush: {:?}, if_transmit: {:?}, if_reassign: {:?}, if_get_counter: {:?}, if_requestencap: {:?}, if_counters: {:?}, if_hw_tsomax: {:?}, if_hw_tsomaxsegcount: {:?}, if_hw_tsomaxsegsize: {:?}, if_snd_tag_alloc: {:?}, if_snd_tag_modify: {:?}, if_snd_tag_query: {:?}, if_snd_tag_free: {:?}, if_pcp: {:?}, if_netdump_methods: {:?}, if_epoch_ctx: {:?}, if_ispare: {:?} }}"
+               "ifnet {{ if_link: {:?}, if_clones: {:?}, if_groups: {:?}, if_alloctype: {:?}, if_softc: {:?}, if_llsoftc: {:?}, if_l2com: {:?}, if_dname: {:?}, if_dunit: {:?}, if_index: {:?}, if_index_reserved: {:?}, if_xname: {:?}, if_description: {:?}, if_flags: {:?}, if_drv_flags: {:?}, if_capabilities: {:?}, if_capenable: {:?}, if_linkmib: {:?}, if_linkmiblen: {:?}, if_refcount: {:?}, if_type: {:?}, if_addrlen: {:?}, if_hdrlen: {:?}, if_link_state: {:?}, if_mtu: {:?}, if_metric: {:?}, if_baudrate: {:?}, if_hwassist: {:?}, if_epoch: {:?}, if_lastchange: {:?}, if_snd: {:?}, if_linktask: {:?}, if_addr_lock: {:?}, if_addrhead: {:?}, if_multiaddrs: {:?}, if_amcount: {:?}, if_addr: {:?}, if_hw_addr: {:?}, if_broadcastaddr: {:?}, if_afdata_lock: {:?}, if_afdata: [{}], if_afdata_initialized: {:?}, if_fib: {:?}, if_vnet: {:?}, if_home_vnet: {:?}, if_vlantrunk: {:?}, if_bpf: {:?}, if_pcount: {:?}, if_bridge: {:?}, if_lagg: {:?}, if_pf_kif: {:?}, if_carp: {:?}, if_label: {:?}, if_netmap: {:?}, if_output: {:?}, if_input: {:?}, if_bridge_input: {:?}, if_bridge_output: {:?}, if_bridge_linkstate: {:?}, if_start: {:?}, if_ioctl: {:?}, if_init: {:?}, if_resolvemulti: {:?}, if_qflush: {:?}, if_transmit: {:?}, if_reassign: {:?}, if_get_counter: {:?}, if_requestencap: {:?}, if_counters: {:?}, if_hw_tsomax: {:?}, if_hw_tsomaxsegcount: {:?}, if_hw_tsomaxsegsize: {:?}, if_snd_tag_alloc: {:?}, if_snd_tag_modify: {:?}, if_snd_tag_query: {:?}, if_snd_tag_free: {:?}, if_pcp: {:?}, if_netdump_methods: {:?}, if_epoch_ctx: {:?}, if_addr_et: {:?}, if_maddr_et: {:?}, if_ispare: {:?} }}"
                , self . if_link , self . if_clones , self . if_groups , self .
                if_alloctype , self . if_softc , self . if_llsoftc , self .
                if_l2com , self . if_dname , self . if_dunit , self . if_index
@@ -22150,7 +14770,7 @@ impl ::kernel::fmt::Debug for ifnet {
                . if_snd_tag_alloc , self . if_snd_tag_modify , self .
                if_snd_tag_query , self . if_snd_tag_free , self . if_pcp ,
                self . if_netdump_methods , self . if_epoch_ctx , self .
-               if_ispare)
+               if_addr_et , self . if_maddr_et , self . if_ispare)
     }
 }
 extern "C" {
@@ -22730,6 +15350,11 @@ extern "C" {
 extern "C" {
     pub fn if_setlladdr(arg1: *mut ifnet, arg2: *const u_char,
                         arg3: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn if_tunnel_check_nesting(arg1: *mut ifnet, arg2: *mut mbuf,
+                                   arg3: u32, arg4: ::kernel::sys::raw::c_int)
      -> ::kernel::sys::raw::c_int;
 }
 extern "C" {
@@ -23797,32 +16422,23 @@ pub enum device_state {
     DS_BUSY = 40,
 }
 pub use self::device_state as device_state_t;
-/// @brief Device information exported to userspace.
 #[repr(C)]
 #[derive(Copy)]
 pub struct u_device {
     pub dv_handle: usize,
     pub dv_parent: usize,
-    /// < @brief Name of device in tree.
-    pub dv_name: [::kernel::sys::raw::c_char; 32usize],
-    /// < @brief Driver description
-    pub dv_desc: [::kernel::sys::raw::c_char; 32usize],
-    /// < @brief Driver name
-    pub dv_drivername: [::kernel::sys::raw::c_char; 32usize],
-    /// < @brief Plug and play info
-    pub dv_pnpinfo: [::kernel::sys::raw::c_char; 128usize],
-    /// < @brief Where is the device?
-    pub dv_location: [::kernel::sys::raw::c_char; 128usize],
     /// < @brief API Flags for device
     pub dv_devflags: u32,
     /// < @brief flags for dev state
     pub dv_flags: u16,
     /// < @brief State of attachment
     pub dv_state: device_state_t,
+    /// < @brief NUL terminated fields
+    pub dv_fields: [::kernel::sys::raw::c_char; 3072usize],
 }
 #[test]
 fn bindgen_test_layout_u_device() {
-    assert_eq!(::core::mem::size_of::<u_device>() , 384usize , concat ! (
+    assert_eq!(::core::mem::size_of::<u_device>() , 3104usize , concat ! (
                "Size of: " , stringify ! ( u_device ) ));
     assert_eq! (::core::mem::align_of::<u_device>() , 8usize , concat ! (
                 "Alignment of " , stringify ! ( u_device ) ));
@@ -23837,45 +16453,25 @@ fn bindgen_test_layout_u_device() {
                 "Alignment of field: " , stringify ! ( u_device ) , "::" ,
                 stringify ! ( dv_parent ) ));
     assert_eq! (unsafe {
-                & ( * ( 0 as * const u_device ) ) . dv_name as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( u_device ) , "::" ,
-                stringify ! ( dv_name ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const u_device ) ) . dv_desc as * const _ as
-                usize } , 48usize , concat ! (
-                "Alignment of field: " , stringify ! ( u_device ) , "::" ,
-                stringify ! ( dv_desc ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const u_device ) ) . dv_drivername as * const _
-                as usize } , 80usize , concat ! (
-                "Alignment of field: " , stringify ! ( u_device ) , "::" ,
-                stringify ! ( dv_drivername ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const u_device ) ) . dv_pnpinfo as * const _ as
-                usize } , 112usize , concat ! (
-                "Alignment of field: " , stringify ! ( u_device ) , "::" ,
-                stringify ! ( dv_pnpinfo ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const u_device ) ) . dv_location as * const _
-                as usize } , 240usize , concat ! (
-                "Alignment of field: " , stringify ! ( u_device ) , "::" ,
-                stringify ! ( dv_location ) ));
-    assert_eq! (unsafe {
                 & ( * ( 0 as * const u_device ) ) . dv_devflags as * const _
-                as usize } , 368usize , concat ! (
+                as usize } , 16usize , concat ! (
                 "Alignment of field: " , stringify ! ( u_device ) , "::" ,
                 stringify ! ( dv_devflags ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const u_device ) ) . dv_flags as * const _ as
-                usize } , 372usize , concat ! (
+                usize } , 20usize , concat ! (
                 "Alignment of field: " , stringify ! ( u_device ) , "::" ,
                 stringify ! ( dv_flags ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const u_device ) ) . dv_state as * const _ as
-                usize } , 376usize , concat ! (
+                usize } , 24usize , concat ! (
                 "Alignment of field: " , stringify ! ( u_device ) , "::" ,
                 stringify ! ( dv_state ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const u_device ) ) . dv_fields as * const _ as
+                usize } , 28usize , concat ! (
+                "Alignment of field: " , stringify ! ( u_device ) , "::" ,
+                stringify ! ( dv_fields ) ));
 }
 impl Clone for u_device {
     fn clone(&self) -> Self { *self }
@@ -23886,29 +16482,13 @@ impl Default for u_device {
 impl ::kernel::fmt::Debug for u_device {
     fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
         write!(f ,
-               "u_device {{ dv_handle: {:?}, dv_parent: {:?}, dv_name: [{}], dv_desc: [{}], dv_drivername: [{}], dv_pnpinfo: [{}], dv_location: [{}], dv_devflags: {:?}, dv_flags: {:?}, dv_state: {:?} }}"
-               , self . dv_handle , self . dv_parent , self . dv_name . iter (
-                ) . enumerate (  ) . map (
+               "u_device {{ dv_handle: {:?}, dv_parent: {:?}, dv_devflags: {:?}, dv_flags: {:?}, dv_state: {:?}, dv_fields: [{}] }}"
+               , self . dv_handle , self . dv_parent , self . dv_devflags ,
+               self . dv_flags , self . dv_state , self . dv_fields . iter (
+               ) . enumerate (  ) . map (
                | ( i , v ) | format ! (
                "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: <
-               String > (  ) , self . dv_desc . iter (  ) . enumerate (  ) .
-               map (
-               | ( i , v ) | format ! (
-               "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: <
-               String > (  ) , self . dv_drivername . iter (  ) . enumerate (
-               ) . map (
-               | ( i , v ) | format ! (
-               "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: <
-               String > (  ) , self . dv_pnpinfo . iter (  ) . enumerate (  )
-               . map (
-               | ( i , v ) | format ! (
-               "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: <
-               String > (  ) , self . dv_location . iter (  ) . enumerate (  )
-               . map (
-               | ( i , v ) | format ! (
-               "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: <
-               String > (  ) , self . dv_devflags , self . dv_flags , self .
-               dv_state)
+               String > (  ))
     }
 }
 /// @brief Device request structure used for ioctl's.
@@ -24369,11 +16949,6 @@ impl Clone for eventhandler_entry_shutdown_pre_sync {
 }
 impl Default for eventhandler_entry_shutdown_pre_sync {
     fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct __hack {
-    _unused: [u8; 0],
 }
 #[repr(C)]
 #[derive(Debug, Copy)]
@@ -25874,10 +18449,14 @@ extern "C" {
 extern "C" {
     pub fn devctl_queue_data(__data: *mut ::kernel::sys::raw::c_char);
 }
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct sbuf {
+    _unused: [u8; 0],
+}
 extern "C" {
-    pub fn devctl_safe_quote(__dst: *mut ::kernel::sys::raw::c_char,
-                             __src: *const ::kernel::sys::raw::c_char,
-                             len: usize);
+    pub fn devctl_safe_quote_sb(__sb: *mut sbuf,
+                                __src: *const ::kernel::sys::raw::c_char);
 }
 /// Device name parsers.  Hook to allow device enumerators to map
 /// scheme-specific names to a device.
@@ -27725,6 +20304,139 @@ impl Clone for setlist {
 impl Default for setlist {
     fn default() -> Self { unsafe { ::core::mem::zeroed() } }
 }
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct cpuset {
+    pub cs_mask: cpuset_t,
+    pub cs_domain: *mut domainset,
+    pub cs_ref: u_int,
+    pub cs_flags: ::kernel::sys::raw::c_int,
+    pub cs_id: cpusetid_t,
+    pub cs_parent: *mut cpuset,
+    pub cs_link: cpuset__bindgen_ty_1,
+    pub cs_siblings: cpuset__bindgen_ty_2,
+    pub cs_children: setlist,
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct cpuset__bindgen_ty_1 {
+    pub le_next: *mut cpuset,
+    pub le_prev: *mut *mut cpuset,
+}
+#[test]
+fn bindgen_test_layout_cpuset__bindgen_ty_1() {
+    assert_eq!(::core::mem::size_of::<cpuset__bindgen_ty_1>() , 16usize ,
+               concat ! ( "Size of: " , stringify ! ( cpuset__bindgen_ty_1 )
+               ));
+    assert_eq! (::core::mem::align_of::<cpuset__bindgen_ty_1>() , 8usize ,
+                concat ! (
+                "Alignment of " , stringify ! ( cpuset__bindgen_ty_1 ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const cpuset__bindgen_ty_1 ) ) . le_next as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( cpuset__bindgen_ty_1 )
+                , "::" , stringify ! ( le_next ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const cpuset__bindgen_ty_1 ) ) . le_prev as *
+                const _ as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( cpuset__bindgen_ty_1 )
+                , "::" , stringify ! ( le_prev ) ));
+}
+impl Clone for cpuset__bindgen_ty_1 {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for cpuset__bindgen_ty_1 {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct cpuset__bindgen_ty_2 {
+    pub le_next: *mut cpuset,
+    pub le_prev: *mut *mut cpuset,
+}
+#[test]
+fn bindgen_test_layout_cpuset__bindgen_ty_2() {
+    assert_eq!(::core::mem::size_of::<cpuset__bindgen_ty_2>() , 16usize ,
+               concat ! ( "Size of: " , stringify ! ( cpuset__bindgen_ty_2 )
+               ));
+    assert_eq! (::core::mem::align_of::<cpuset__bindgen_ty_2>() , 8usize ,
+                concat ! (
+                "Alignment of " , stringify ! ( cpuset__bindgen_ty_2 ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const cpuset__bindgen_ty_2 ) ) . le_next as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( cpuset__bindgen_ty_2 )
+                , "::" , stringify ! ( le_next ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const cpuset__bindgen_ty_2 ) ) . le_prev as *
+                const _ as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( cpuset__bindgen_ty_2 )
+                , "::" , stringify ! ( le_prev ) ));
+}
+impl Clone for cpuset__bindgen_ty_2 {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for cpuset__bindgen_ty_2 {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+#[test]
+fn bindgen_test_layout_cpuset() {
+    assert_eq!(::core::mem::size_of::<cpuset>() , 104usize , concat ! (
+               "Size of: " , stringify ! ( cpuset ) ));
+    assert_eq! (::core::mem::align_of::<cpuset>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( cpuset ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const cpuset ) ) . cs_mask as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( cpuset ) , "::" ,
+                stringify ! ( cs_mask ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const cpuset ) ) . cs_domain as * const _ as
+                usize } , 32usize , concat ! (
+                "Alignment of field: " , stringify ! ( cpuset ) , "::" ,
+                stringify ! ( cs_domain ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const cpuset ) ) . cs_ref as * const _ as usize
+                } , 40usize , concat ! (
+                "Alignment of field: " , stringify ! ( cpuset ) , "::" ,
+                stringify ! ( cs_ref ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const cpuset ) ) . cs_flags as * const _ as
+                usize } , 44usize , concat ! (
+                "Alignment of field: " , stringify ! ( cpuset ) , "::" ,
+                stringify ! ( cs_flags ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const cpuset ) ) . cs_id as * const _ as usize
+                } , 48usize , concat ! (
+                "Alignment of field: " , stringify ! ( cpuset ) , "::" ,
+                stringify ! ( cs_id ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const cpuset ) ) . cs_parent as * const _ as
+                usize } , 56usize , concat ! (
+                "Alignment of field: " , stringify ! ( cpuset ) , "::" ,
+                stringify ! ( cs_parent ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const cpuset ) ) . cs_link as * const _ as
+                usize } , 64usize , concat ! (
+                "Alignment of field: " , stringify ! ( cpuset ) , "::" ,
+                stringify ! ( cs_link ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const cpuset ) ) . cs_siblings as * const _ as
+                usize } , 80usize , concat ! (
+                "Alignment of field: " , stringify ! ( cpuset ) , "::" ,
+                stringify ! ( cs_siblings ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const cpuset ) ) . cs_children as * const _ as
+                usize } , 96usize , concat ! (
+                "Alignment of field: " , stringify ! ( cpuset ) , "::" ,
+                stringify ! ( cs_children ) ));
+}
+impl Clone for cpuset {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for cpuset {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
 extern "C" {
     #[link_name = "cpuset_root"]
     pub static mut cpuset_root: *mut cpuset_t;
@@ -28539,6 +21251,27 @@ extern "C" {
                                    nitems: usize);
 }
 extern "C" {
+    pub fn nvlist_append_bool_array(nvl: *mut nvlist_t,
+                                    name: *const ::kernel::sys::raw::c_char,
+                                    value: bool_);
+}
+extern "C" {
+    pub fn nvlist_append_number_array(nvl: *mut nvlist_t,
+                                      name: *const ::kernel::sys::raw::c_char,
+                                      value: u64);
+}
+extern "C" {
+    pub fn nvlist_append_string_array(nvl: *mut nvlist_t,
+                                      name: *const ::kernel::sys::raw::c_char,
+                                      value:
+                                          *const ::kernel::sys::raw::c_char);
+}
+extern "C" {
+    pub fn nvlist_append_nvlist_array(nvl: *mut nvlist_t,
+                                      name: *const ::kernel::sys::raw::c_char,
+                                      value: *const nvlist_t);
+}
+extern "C" {
     pub fn nvlist_move_string(nvl: *mut nvlist_t,
                               name: *const ::kernel::sys::raw::c_char,
                               value: *mut ::kernel::sys::raw::c_char);
@@ -28953,14 +21686,14 @@ extern "C" {
                                  uniq: *mut ::kernel::sys::raw::c_void,
                                  cpu: ::kernel::sys::raw::c_int,
                                  irq: ::kernel::sys::raw::c_int,
-                                 name: *mut ::kernel::sys::raw::c_char)
+                                 name: *const ::kernel::sys::raw::c_char)
      -> ::kernel::sys::raw::c_int;
 }
 extern "C" {
     pub fn taskqgroup_detach(qgroup: *mut taskqgroup, gtask: *mut grouptask);
 }
 extern "C" {
-    pub fn taskqgroup_create(name: *mut ::kernel::sys::raw::c_char)
+    pub fn taskqgroup_create(name: *const ::kernel::sys::raw::c_char)
      -> *mut taskqgroup;
 }
 extern "C" {
@@ -29010,6 +21743,8 @@ pub struct if_shared_ctx {
     pub isc_q_align: bus_size_t,
     pub isc_tx_maxsize: bus_size_t,
     pub isc_tx_maxsegsize: bus_size_t,
+    pub isc_tso_maxsize: bus_size_t,
+    pub isc_tso_maxsegsize: bus_size_t,
     pub isc_rx_maxsize: bus_size_t,
     pub isc_rx_maxsegsize: bus_size_t,
     pub isc_rx_nsegments: ::kernel::sys::raw::c_int,
@@ -29030,7 +21765,7 @@ pub struct if_shared_ctx {
     pub isc_ntxd_min: [::kernel::sys::raw::c_int; 8usize],
     pub isc_ntxd_default: [::kernel::sys::raw::c_int; 8usize],
     pub isc_ntxd_max: [::kernel::sys::raw::c_int; 8usize],
-    pub __bindgen_padding_0: [u32; 10usize],
+    pub __bindgen_padding_0: [u32; 6usize],
     pub isc_nfl: ::kernel::sys::raw::c_int,
     pub isc_ntxqs: ::kernel::sys::raw::c_int,
     pub isc_nrxqs: ::kernel::sys::raw::c_int,
@@ -29070,68 +21805,78 @@ fn bindgen_test_layout_if_shared_ctx() {
                 "Alignment of field: " , stringify ! ( if_shared_ctx ) , "::"
                 , stringify ! ( isc_tx_maxsegsize ) ));
     assert_eq! (unsafe {
-                & ( * ( 0 as * const if_shared_ctx ) ) . isc_rx_maxsize as *
+                & ( * ( 0 as * const if_shared_ctx ) ) . isc_tso_maxsize as *
                 const _ as usize } , 40usize , concat ! (
+                "Alignment of field: " , stringify ! ( if_shared_ctx ) , "::"
+                , stringify ! ( isc_tso_maxsize ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const if_shared_ctx ) ) . isc_tso_maxsegsize as
+                * const _ as usize } , 48usize , concat ! (
+                "Alignment of field: " , stringify ! ( if_shared_ctx ) , "::"
+                , stringify ! ( isc_tso_maxsegsize ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const if_shared_ctx ) ) . isc_rx_maxsize as *
+                const _ as usize } , 56usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_shared_ctx ) , "::"
                 , stringify ! ( isc_rx_maxsize ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const if_shared_ctx ) ) . isc_rx_maxsegsize as
-                * const _ as usize } , 48usize , concat ! (
+                * const _ as usize } , 64usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_shared_ctx ) , "::"
                 , stringify ! ( isc_rx_maxsegsize ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const if_shared_ctx ) ) . isc_rx_nsegments as *
-                const _ as usize } , 56usize , concat ! (
+                const _ as usize } , 72usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_shared_ctx ) , "::"
                 , stringify ! ( isc_rx_nsegments ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const if_shared_ctx ) ) . isc_admin_intrcnt as
-                * const _ as usize } , 60usize , concat ! (
+                * const _ as usize } , 76usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_shared_ctx ) , "::"
                 , stringify ! ( isc_admin_intrcnt ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const if_shared_ctx ) ) . isc_vendor_info as *
-                const _ as usize } , 64usize , concat ! (
+                const _ as usize } , 80usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_shared_ctx ) , "::"
                 , stringify ! ( isc_vendor_info ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const if_shared_ctx ) ) . isc_driver_version as
-                * const _ as usize } , 72usize , concat ! (
+                * const _ as usize } , 88usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_shared_ctx ) , "::"
                 , stringify ! ( isc_driver_version ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const if_shared_ctx ) ) . isc_parse_devinfo as
-                * const _ as usize } , 80usize , concat ! (
+                * const _ as usize } , 96usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_shared_ctx ) , "::"
                 , stringify ! ( isc_parse_devinfo ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const if_shared_ctx ) ) . isc_nrxd_min as *
-                const _ as usize } , 88usize , concat ! (
+                const _ as usize } , 104usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_shared_ctx ) , "::"
                 , stringify ! ( isc_nrxd_min ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const if_shared_ctx ) ) . isc_nrxd_default as *
-                const _ as usize } , 120usize , concat ! (
+                const _ as usize } , 136usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_shared_ctx ) , "::"
                 , stringify ! ( isc_nrxd_default ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const if_shared_ctx ) ) . isc_nrxd_max as *
-                const _ as usize } , 152usize , concat ! (
+                const _ as usize } , 168usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_shared_ctx ) , "::"
                 , stringify ! ( isc_nrxd_max ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const if_shared_ctx ) ) . isc_ntxd_min as *
-                const _ as usize } , 184usize , concat ! (
+                const _ as usize } , 200usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_shared_ctx ) , "::"
                 , stringify ! ( isc_ntxd_min ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const if_shared_ctx ) ) . isc_ntxd_default as *
-                const _ as usize } , 216usize , concat ! (
+                const _ as usize } , 232usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_shared_ctx ) , "::"
                 , stringify ! ( isc_ntxd_default ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const if_shared_ctx ) ) . isc_ntxd_max as *
-                const _ as usize } , 248usize , concat ! (
+                const _ as usize } , 264usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_shared_ctx ) , "::"
                 , stringify ! ( isc_ntxd_max ) ));
     assert_eq! (unsafe {
@@ -29179,9 +21924,10 @@ impl Default for if_shared_ctx {
 impl ::kernel::fmt::Debug for if_shared_ctx {
     fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
         write!(f ,
-               "if_shared_ctx {{ isc_magic: {:?}, isc_driver: {:?}, isc_q_align: {:?}, isc_tx_maxsize: {:?}, isc_tx_maxsegsize: {:?}, isc_rx_maxsize: {:?}, isc_rx_maxsegsize: {:?}, isc_rx_nsegments: {:?}, isc_admin_intrcnt: {:?}, isc_vendor_info: {:?}, isc_driver_version: {:?}, isc_parse_devinfo: {:?}, isc_nrxd_min: {:?}, isc_nrxd_default: {:?}, isc_nrxd_max: {:?}, isc_ntxd_min: {:?}, isc_ntxd_default: {:?}, isc_ntxd_max: {:?}, isc_nfl: {:?}, isc_ntxqs: {:?}, isc_nrxqs: {:?}, isc_rx_process_limit: {:?}, isc_tx_reclaim_thresh: {:?}, isc_flags: {:?}, isc_name: {:?} }}"
+               "if_shared_ctx {{ isc_magic: {:?}, isc_driver: {:?}, isc_q_align: {:?}, isc_tx_maxsize: {:?}, isc_tx_maxsegsize: {:?}, isc_tso_maxsize: {:?}, isc_tso_maxsegsize: {:?}, isc_rx_maxsize: {:?}, isc_rx_maxsegsize: {:?}, isc_rx_nsegments: {:?}, isc_admin_intrcnt: {:?}, isc_vendor_info: {:?}, isc_driver_version: {:?}, isc_parse_devinfo: {:?}, isc_nrxd_min: {:?}, isc_nrxd_default: {:?}, isc_nrxd_max: {:?}, isc_ntxd_min: {:?}, isc_ntxd_default: {:?}, isc_ntxd_max: {:?}, isc_nfl: {:?}, isc_ntxqs: {:?}, isc_nrxqs: {:?}, isc_rx_process_limit: {:?}, isc_tx_reclaim_thresh: {:?}, isc_flags: {:?}, isc_name: {:?} }}"
                , self . isc_magic , self . isc_driver , self . isc_q_align ,
                self . isc_tx_maxsize , self . isc_tx_maxsegsize , self .
+               isc_tso_maxsize , self . isc_tso_maxsegsize , self .
                isc_rx_maxsize , self . isc_rx_maxsegsize , self .
                isc_rx_nsegments , self . isc_admin_intrcnt , self .
                isc_vendor_info , self . isc_driver_version , self .
@@ -29812,6 +22558,7 @@ pub struct if_softc_ctx {
     pub isc_tx_tso_size_max: ::kernel::sys::raw::c_int,
     pub isc_tx_tso_segsize_max: ::kernel::sys::raw::c_int,
     pub isc_tx_csum_flags: ::kernel::sys::raw::c_int,
+    pub isc_capabilities: ::kernel::sys::raw::c_int,
     pub isc_capenable: ::kernel::sys::raw::c_int,
     pub isc_rss_table_size: ::kernel::sys::raw::c_int,
     pub isc_rss_table_mask: ::kernel::sys::raw::c_int,
@@ -29828,7 +22575,7 @@ pub struct if_softc_ctx {
 }
 #[test]
 fn bindgen_test_layout_if_softc_ctx() {
-    assert_eq!(::core::mem::size_of::<if_softc_ctx>() , 272usize , concat ! (
+    assert_eq!(::core::mem::size_of::<if_softc_ctx>() , 280usize , concat ! (
                "Size of: " , stringify ! ( if_softc_ctx ) ));
     assert_eq! (::core::mem::align_of::<if_softc_ctx>() , 8usize , concat ! (
                 "Alignment of " , stringify ! ( if_softc_ctx ) ));
@@ -29925,68 +22672,73 @@ fn bindgen_test_layout_if_softc_ctx() {
                 "Alignment of field: " , stringify ! ( if_softc_ctx ) , "::" ,
                 stringify ! ( isc_tx_csum_flags ) ));
     assert_eq! (unsafe {
-                & ( * ( 0 as * const if_softc_ctx ) ) . isc_capenable as *
+                & ( * ( 0 as * const if_softc_ctx ) ) . isc_capabilities as *
                 const _ as usize } , 188usize , concat ! (
+                "Alignment of field: " , stringify ! ( if_softc_ctx ) , "::" ,
+                stringify ! ( isc_capabilities ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const if_softc_ctx ) ) . isc_capenable as *
+                const _ as usize } , 192usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_softc_ctx ) , "::" ,
                 stringify ! ( isc_capenable ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const if_softc_ctx ) ) . isc_rss_table_size as
-                * const _ as usize } , 192usize , concat ! (
+                * const _ as usize } , 196usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_softc_ctx ) , "::" ,
                 stringify ! ( isc_rss_table_size ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const if_softc_ctx ) ) . isc_rss_table_mask as
-                * const _ as usize } , 196usize , concat ! (
+                * const _ as usize } , 200usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_softc_ctx ) , "::" ,
                 stringify ! ( isc_rss_table_mask ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const if_softc_ctx ) ) . isc_nrxqsets_max as *
-                const _ as usize } , 200usize , concat ! (
+                const _ as usize } , 204usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_softc_ctx ) , "::" ,
                 stringify ! ( isc_nrxqsets_max ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const if_softc_ctx ) ) . isc_ntxqsets_max as *
-                const _ as usize } , 204usize , concat ! (
+                const _ as usize } , 208usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_softc_ctx ) , "::" ,
                 stringify ! ( isc_ntxqsets_max ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const if_softc_ctx ) ) . isc_tx_qdepth as *
-                const _ as usize } , 208usize , concat ! (
+                const _ as usize } , 212usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_softc_ctx ) , "::" ,
                 stringify ! ( isc_tx_qdepth ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const if_softc_ctx ) ) . isc_intr as * const _
-                as usize } , 212usize , concat ! (
+                as usize } , 216usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_softc_ctx ) , "::" ,
                 stringify ! ( isc_intr ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const if_softc_ctx ) ) . isc_max_frame_size as
-                * const _ as usize } , 216usize , concat ! (
+                * const _ as usize } , 220usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_softc_ctx ) , "::" ,
                 stringify ! ( isc_max_frame_size ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const if_softc_ctx ) ) . isc_min_frame_size as
-                * const _ as usize } , 218usize , concat ! (
+                * const _ as usize } , 222usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_softc_ctx ) , "::" ,
                 stringify ! ( isc_min_frame_size ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const if_softc_ctx ) ) . isc_pause_frames as *
-                const _ as usize } , 220usize , concat ! (
+                const _ as usize } , 224usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_softc_ctx ) , "::" ,
                 stringify ! ( isc_pause_frames ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const if_softc_ctx ) ) . isc_vendor_info as *
-                const _ as usize } , 224usize , concat ! (
+                const _ as usize } , 232usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_softc_ctx ) , "::" ,
                 stringify ! ( isc_vendor_info ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const if_softc_ctx ) ) . isc_disable_msix as *
-                const _ as usize } , 256usize , concat ! (
+                const _ as usize } , 264usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_softc_ctx ) , "::" ,
                 stringify ! ( isc_disable_msix ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const if_softc_ctx ) ) . isc_txrx as * const _
-                as usize } , 264usize , concat ! (
+                as usize } , 272usize , concat ! (
                 "Alignment of field: " , stringify ! ( if_softc_ctx ) , "::" ,
                 stringify ! ( isc_txrx ) ));
 }
@@ -30123,7 +22875,7 @@ extern "C" {
                            filter_arg: *mut ::kernel::sys::raw::c_void,
                            arg5: driver_intr_t,
                            arg: *mut ::kernel::sys::raw::c_void,
-                           name: *mut ::kernel::sys::raw::c_char)
+                           name: *const ::kernel::sys::raw::c_char)
      -> ::kernel::sys::raw::c_int;
 }
 extern "C" {
@@ -30134,7 +22886,7 @@ extern "C" {
                                    filter_arg:
                                        *mut ::kernel::sys::raw::c_void,
                                    qid: ::kernel::sys::raw::c_int,
-                                   name: *mut ::kernel::sys::raw::c_char)
+                                   name: *const ::kernel::sys::raw::c_char)
      -> ::kernel::sys::raw::c_int;
 }
 extern "C" {
@@ -30142,7 +22894,8 @@ extern "C" {
                                        type_: iflib_intr_type_t,
                                        arg: *mut ::kernel::sys::raw::c_void,
                                        qid: ::kernel::sys::raw::c_int,
-                                       name: *mut ::kernel::sys::raw::c_char);
+                                       name:
+                                           *const ::kernel::sys::raw::c_char);
 }
 extern "C" {
     pub fn iflib_irq_free(ctx: if_ctx_t, irq: if_irq_t);
@@ -30276,90 +23029,10 @@ impl Clone for witness {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy)]
-pub struct filedesc {
+pub struct amd64tss {
     pub _address: u8,
 }
-impl Clone for filedesc {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct filedesc_to_leader {
-    pub _address: u8,
-}
-impl Clone for filedesc_to_leader {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct pstats {
-    pub _address: u8,
-}
-impl Clone for pstats {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct plimit {
-    pub _address: u8,
-}
-impl Clone for plimit {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct itimers {
-    pub _address: u8,
-}
-impl Clone for itimers {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct sysentvec {
-    pub _address: u8,
-}
-impl Clone for sysentvec {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct label {
-    pub _address: u8,
-}
-impl Clone for label {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct ktr_request {
-    pub _address: u8,
-}
-impl Clone for ktr_request {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct seltd {
-    pub _address: u8,
-}
-impl Clone for seltd {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct rl_q_entry {
-    pub _address: u8,
-}
-impl Clone for rl_q_entry {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct umtx_q {
-    pub _address: u8,
-}
-impl Clone for umtx_q {
+impl Clone for amd64tss {
     fn clone(&self) -> Self { *self }
 }
 #[repr(C)]
@@ -30368,30 +23041,6 @@ pub struct file {
     pub _address: u8,
 }
 impl Clone for file {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct vm_object {
-    pub _address: u8,
-}
-impl Clone for vm_object {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct uidinfo {
-    pub _address: u8,
-}
-impl Clone for uidinfo {
-    fn clone(&self) -> Self { *self }
-}
-#[repr(C)]
-#[derive(Debug, Default, Copy)]
-pub struct amd64tss {
-    pub _address: u8,
-}
-impl Clone for amd64tss {
     fn clone(&self) -> Self { *self }
 }
 #[repr(C)]
@@ -30412,18 +23061,18 @@ impl Clone for aioliojob {
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy)]
-pub struct sysent {
+pub struct label {
     pub _address: u8,
 }
-impl Clone for sysent {
+impl Clone for label {
     fn clone(&self) -> Self { *self }
 }
 #[repr(C)]
 #[derive(Debug, Default, Copy)]
-pub struct cdev_priv {
+pub struct domainset {
     pub _address: u8,
 }
-impl Clone for cdev_priv {
+impl Clone for domainset {
     fn clone(&self) -> Self { *self }
 }
 #[repr(C)]

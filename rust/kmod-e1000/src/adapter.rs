@@ -92,11 +92,11 @@ pub struct Adapter {
     pub rx_process_limit: u32,
 
     /* Multicast array memory */
-    pub mta: Box<[u8]>,
+    pub mta: Option<Box<[u8]>>,
 
     /* RX, TX */
-    pub tx_queues: Box<[TxQueue]>,
-    pub rx_queues: Box<[RxQueue]>,
+    pub tx_queues: Option<Box<[TxQueue]>>,
+    pub rx_queues: Option<Box<[RxQueue]>>,
 
     /* Management and WOL features */
     pub wol: u32,
@@ -440,7 +440,7 @@ impl Adapter {
             .phy
             .ops
             .check_reset_block
-            .ok_or("No function".to_string())
+            .ok_or("(NOT FATAL) No function: check_reset_block".to_string())
             .and_then(|f| f(self))
     }
     pub fn validate_nvm_checksum(&mut self) -> AdResult {
@@ -469,8 +469,12 @@ impl Adapter {
     pub fn initialize_transmit_unit(&mut self) {
         e1000_println!();
         for i in 0..self.iflib_shared.isc_nrxqsets as usize {
-            self.tx_queues[i].txr.clear_checksum();
-            let bus_addr = self.tx_queues[i].txr.tx_paddr;
+            self.tx_queues.as_mut().expect("adapter.tx_queues is None")[i]
+                .txr
+                .clear_checksum();
+            let bus_addr = self.tx_queues.as_ref().expect("adapter.tx_queues is None")[i]
+                .txr
+                .tx_paddr;
 
             do_write_register(
                 self,
@@ -651,7 +655,12 @@ impl Adapter {
         if self.is_mac(MacType::Mac_82573) {
             incomplete_return!();
         }
-        for (i, rxqueue) in &mut self.rx_queues.iter().enumerate() {
+        for (i, rxqueue) in self.rx_queues
+            .as_ref()
+            .expect("adapter.rx_queues is None")
+            .iter()
+            .enumerate()
+        {
             let rxq: &RxQueue = rxqueue;
             let bus_addr = rxq.rxr.rx_paddr;
 
@@ -681,14 +690,11 @@ impl Adapter {
         ]) && self.ifnet.mtu() > ETHERMTU as i32
         {
             incomplete_return!();
-        }
-        else if self.is_mac(MacType::Mac_82574) {
+        } else if self.is_mac(MacType::Mac_82574) {
             incomplete_return!();
-        }
-        else if self.hw.mac.mac_type >= MacType::IGB_MAC_MIN {
+        } else if self.hw.mac.mac_type >= MacType::IGB_MAC_MIN {
             incomplete_return!();
-        }
-        else if self.hw.mac.mac_type >= MacType::Mac_pch2lan {
+        } else if self.hw.mac.mac_type >= MacType::Mac_pch2lan {
             if self.ifnet.mtu() > ETHERMTU as i32 {
                 try!(e1000_ich8lan::lv_jumbo_workaround(self, true))
             } else {
@@ -723,7 +729,7 @@ impl Adapter {
         e1000_println!();
         let mut reg_rctl: u32;
 
-        for item in &mut self.mta.iter_mut() {
+        for item in &mut self.mta.as_mut().expect("adapter.mta is None").iter_mut() {
             *item = 0;
         }
 
@@ -733,7 +739,7 @@ impl Adapter {
 
         let mut mcnt: u32 = 0;
         self.ifnet.multiaddr_array(
-            self.mta.as_mut_ptr(),
+            self.mta.as_mut().expect("adapter.mta is None").as_mut_ptr(),
             &mut mcnt,
             MAX_NUM_MULTICAST_ADDRESSES,
         );
@@ -974,56 +980,10 @@ impl Adapter {
     pub fn setup_interface(&mut self) -> AdResult {
         e1000_println!();
 
-        /* TSO parameters */
-        self.ifnet.set_hwtsomax(IP_MAXPACKET);
-
-        /* Take m_pullup(9)'s in em_xmit() w/ TSO into acount. */
-        self.ifnet.set_hwtsomax_segcount(EM_MAX_SCATTER - 5);
-        self.ifnet.set_hwtsomax_segsize(EM_TSO_SEG_SIZE);
-
         /* Single Queue */
         if self.iflib_shared.isc_ntxqsets == 1 {
             self.ifnet.set_sendqlen(self.iflib_shared.isc_ntxd[0] - 1);
             self.ifnet.set_sendqready();
-        }
-        let mut cap: u64;
-
-        cap = (IFCAP_HWCSUM | IFCAP_VLAN_HWCSUM | IFCAP_TSO4) as u64;
-        cap |= (IFCAP_VLAN_HWTAGGING | IFCAP_VLAN_HWTSO | IFCAP_VLAN_MTU) as u64;
-
-        /*
-         * Tell the upper layer(s) we
-         * support full VLAN capability
-         */
-        self.ifnet
-            .set_ifheaderlen(kernel::mem::size_of::<ether_vlan_header>() as i32);
-        self.ifnet.set_capabilitiesbit(cap as i32, 0);
-
-        /*
-         * Don't turn this on by default, if vlans are
-         * created on another pseudo device (eg. lagg)
-         * then vlan events are not passed thru, breaking
-         * operation, but with HW FILTER off it works. If
-         * using vlans directly on the em driver you can
-         * enable this and get full hardware tag filtering.
-         */
-        self.ifnet
-            .set_capabilitiesbit(IFCAP_VLAN_HWFILTER as i32, 0);
-
-        /* Enable only WOL MAGIC by default */
-        e1000_println!("self.wol {}", self.wol);
-        if self.wol > 0 {
-            e1000_println!("setting WOL");
-            self.ifnet.set_capenablebit(
-                IFCAP_WOL_MAGIC as i32,
-                (IFCAP_WOL_MCAST | IFCAP_WOL_UCAST) as i32,
-            );
-        } else {
-            e1000_println!("clearing WOL");
-            self.ifnet.set_capenablebit(
-                0,
-                (IFCAP_WOL_MAGIC | IFCAP_WOL_MCAST | IFCAP_WOL_UCAST) as i32,
-            );
         }
 
         /*
@@ -1225,8 +1185,7 @@ impl Adapter {
                     }
                 }
             }
-        }
-        else if self.smartspeed == EM_SMARTSPEED_DOWNSHIFT {
+        } else if self.smartspeed == EM_SMARTSPEED_DOWNSHIFT {
             try!(self.phy_read_reg(PHY_1000T_CTRL, &mut phy_tmp));
             phy_tmp |= CR_1000T_MS_ENABLE;
             try!(self.phy_write_reg(PHY_1000T_CTRL, phy_tmp));
@@ -1428,7 +1387,6 @@ impl Adapter {
             self.iflib
                 .link_state_change(LINK_STATE_UP as i32, self.ifnet.if_baudrate);
             e1000_println!("Link state changed to up");
-
         } else if !link_check && self.link_active {
             self.ifnet.set_baudrate(0);
             self.link_speed = 0;
@@ -1514,6 +1472,31 @@ impl Adapter {
         }
         Ok(())
     }
+    /// em_release_hw_control resets {CTRL_EXT|FWSM}:DRV_LOAD bit.
+    /// For ASF and Pass Through versions of f/w this means that
+    /// the driver is no longer loaded. For AMT versions of the
+    /// f/w this means that the network i/f is closed.
+    fn release_hw_control(&mut self) {
+        e1000_println!();
+        if !self.has_manage {
+            return;
+        }
+        if self.hw.mac.mac_type == MacType::Mac_82573 {
+            unsupported!();
+            return;
+        }
+        self.clear_register_bit(E1000_CTRL_EXT, E1000_CTRL_EXT_DRV_LOAD);
+    }
+    fn release_manageability(&mut self) {
+        e1000_println!();
+        if self.has_manage {
+            let mut manc: u32 = self.read_register(E1000_MANC);
+            /* re-enable hardware interception of ARP */
+            manc |= E1000_MANC_ARP_EN;
+            manc &= !E1000_MANC_EN_MNG2HOST;
+            self.write_register(E1000_MANC, manc);
+        }
+    }
 }
 
 impl Ifdi for Adapter {
@@ -1555,7 +1538,9 @@ impl Ifdi for Adapter {
         try!(self.reset());
         try!(self.update_admin_status());
 
-        for txq in &mut self.tx_queues.iter_mut() {
+        let tx_queues: &mut Box<[TxQueue]> =
+            self.tx_queues.as_mut().expect("adapter.tx_queues is None");
+        for txq in &mut tx_queues.iter_mut() {
             let mut txr: &mut TxRing = &mut txq.txr;
             txr.tx_rs_cidx = 0;
             txr.tx_rs_pidx = 0;
@@ -1645,10 +1630,10 @@ impl Ifdi for Adapter {
         try!(self.allocate_pci_resources());
 
         /*
-        	** For ICH8 and family we need to
-        	** map the flash memory, and this
-        	** must happen after the MAC is
-        	** identified
+         * For ICH8 and family we need to
+         * map the flash memory, and this
+         * must happen after the MAC is
+         * identified
          */
         let ich8_macs = [
             MacType::Mac_ich8lan,
@@ -1733,11 +1718,11 @@ impl Ifdi for Adapter {
         self.hw.mac.report_tx_early = true;
 
         /* Allocate multicast array memory. */
-        self.mta = Box::new(
+        self.mta = Some(Box::new(
             [0u8;
                 (kernel::sys::iflib_sys::ETHER_HDR_LEN * ::sys::e1000::MAX_NUM_MULTICAST_ADDRESSES)
                     as usize],
-        );
+        ));
 
         /* Check SOL/IDER usage */
         match self.check_reset_block() {
@@ -1783,6 +1768,12 @@ impl Ifdi for Adapter {
          * Get Wake-on-Lan and Management info for later use
          */
         try!(self.get_wakeup());
+
+        /* Enable only WOL MAGIC by default */
+        self.iflib_shared.isc_capenable &= !IFCAP_WOL as i32;
+        if self.wol != 0 {
+            self.iflib_shared.isc_capenable |= IFCAP_WOL_MAGIC as i32;
+        }
 
         self.iflib.set_mac(&self.hw.mac.addr);
 
@@ -1835,7 +1826,7 @@ impl Ifdi for Adapter {
 
             queues.push(queue);
         }
-        self.tx_queues = queues.into_boxed_slice();
+        self.tx_queues = Some(queues.into_boxed_slice());
 
         e1000_println!("allocated for {} tx_queues", self.iflib_shared.isc_ntxqsets);
         Ok(())
@@ -1882,7 +1873,7 @@ impl Ifdi for Adapter {
 
             queues.push(queue);
         }
-        self.rx_queues = queues.into_boxed_slice();
+        self.rx_queues = Some(queues.into_boxed_slice());
 
         e1000_println!("allocated for {} rx_queues", self.iflib_shared.isc_nrxqsets);
         Ok(())
@@ -2002,12 +1993,23 @@ impl Ifdi for Adapter {
     }
     fn detach(&mut self) -> AdResult {
         e1000_println!();
+        self.phy_reset();
+        self.release_manageability();
         Ok(())
+    }
+    fn queues_free(&mut self) {
+        e1000_println!();
+
+        self.tx_queues.take();
+        self.rx_queues.take();
+        self.release_hw_control();
+        self.mta.take();
     }
     fn release(&mut self) {
         e1000_println!();
-        self.ioport.take();
         self.memory.take();
+        self.flash.take();
+        self.ioport.take();
     }
 }
 

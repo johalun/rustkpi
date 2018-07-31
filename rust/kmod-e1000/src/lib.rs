@@ -260,7 +260,7 @@ pub extern "C" fn rust_em_if_rx_queues_alloc(
 pub extern "C" fn rust_em_if_queues_free(iflib_ptr: *mut iflib_ctx) {
     e1000_println!();
     let adapter: &mut Adapter = unsafe { &mut *(iflib_get_softc(iflib_ptr) as *mut Adapter) };
-    incomplete!();
+    adapter.queues_free();
 }
 #[no_mangle]
 pub extern "C" fn rust_em_if_get_counter(iflib_ptr: *mut iflib_ctx, ift: IftCounter) -> u64 {
@@ -386,13 +386,13 @@ pub extern "C" fn rust_em_if_led_func(iflib_ptr: *mut iflib_ctx, onoff: isize) {
 #[no_mangle]
 pub extern "C" fn rust_em_if_detach(iflib_ptr: *mut iflib_ctx) -> i32 {
     e1000_println!();
-    incomplete!();
 
     let adapter: &mut Adapter = unsafe { &mut *(iflib_get_softc(iflib_ptr) as *mut Adapter) };
     let ret = match adapter.detach() {
         Ok(()) => {
             e1000_println!("Adapter detach done");
             adapter.release();
+            e1000_println!("Adapter release done");
             0
         }
         Err(e) => {
@@ -400,13 +400,6 @@ pub extern "C" fn rust_em_if_detach(iflib_ptr: *mut iflib_ctx) -> i32 {
             1
         }
     };
-
-    // unsafe {
-    // e1000_phy_hw_reset(&mut (*adapter).hw);
-    // em_release_manageability(adapter);
-    // em_release_hw_control(adapter);
-    // em_free_pci_resources(ctx);
-    // }
 
     return ret;
 }

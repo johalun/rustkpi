@@ -1,4 +1,4 @@
-# RustKPI 
+# Safe Kernel Programming with Rust
 
 **Master Thesis Project**  
 Johannes Lundberg  
@@ -7,7 +7,7 @@ KTH, Stockholm, Sweden
 
 ## Introduction
 
-TODO: Clean up files and write introduction.
+TODO: Fix compile warnings and write introduction.
 
 
 ## How To 
@@ -31,7 +31,7 @@ TODO: Clean up files and write introduction.
    1. `cd $ROOT/rust/`
    1. `sudo kldload kmod-rustkpi/rustkpi.ko`
    1. `sudo kldload kmod-helloworld/rustkpi-hello.ko`
-   1. dmesg
+   1. `dmesg`
 
 For the e1000 driver in kmod-e1000 the following devices are supported
 * bhyve with e1000 nic emulation

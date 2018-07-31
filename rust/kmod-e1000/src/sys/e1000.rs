@@ -1,4 +1,3 @@
-
 /*
  * Do not use e1000_sys.rs directly. Copy over used bits to this
  * file instead.
@@ -24,9 +23,6 @@ use super::iflib::IfIrq;
 pub use super::e1000_consts::*;
 
 use e1000_osdep::Resource;
-
-
-
 
 /* ICH GbE Flash Hardware Sequencing Flash Status Register bit breakdown */
 /* Offset 04h HSFSTS */
@@ -402,34 +398,30 @@ impl Ich8HsfStatus {
         flockdn: u16,
     ) -> u16 {
         ({
-             ({
-                  ({
-                       ({
+            ({
+                ({
+                    ({
+                        ({
                             ({
-                                 ({
-                                      ({
-                                           ({
-                                                ({
-                                                     0
-                                                 } |
-                                                     ((flcdone as u16 as u16) << 0usize) &
-                                                         (1u64 as u16))
-                                            } |
-                                                ((flcerr as u16 as u16) << 1usize) & (2u64 as u16))
-                                       } |
-                                           ((dael as u16 as u16) << 2usize) & (4u64 as u16))
-                                  } |
-                                      ((berasesz as u16 as u16) << 3usize) & (24u64 as u16))
-                             } |
-                                 ((flcinprog as u16 as u16) << 5usize) & (32u64 as u16))
-                        } |
-                            ((reserved1 as u16 as u16) << 6usize) & (192u64 as u16))
-                   } | ((reserved2 as u16 as u16) << 8usize) & (16128u64 as u16))
-              } | ((fldesvalid as u16 as u16) << 14usize) & (16384u64 as u16))
-         } | ((flockdn as u16 as u16) << 15usize) & (32768u64 as u16))
+                                ({
+                                    ({
+                                        ({ 0 }
+                                            | ((flcdone as u16 as u16) << 0usize) & (1u64 as u16))
+                                    }
+                                        | ((flcerr as u16 as u16) << 1usize) & (2u64 as u16))
+                                }
+                                    | ((dael as u16 as u16) << 2usize) & (4u64 as u16))
+                            }
+                                | ((berasesz as u16 as u16) << 3usize) & (24u64 as u16))
+                        }
+                            | ((flcinprog as u16 as u16) << 5usize) & (32u64 as u16))
+                    }
+                        | ((reserved1 as u16 as u16) << 6usize) & (192u64 as u16))
+                } | ((reserved2 as u16 as u16) << 8usize) & (16128u64 as u16))
+            } | ((fldesvalid as u16 as u16) << 14usize) & (16384u64 as u16))
+        } | ((flockdn as u16 as u16) << 15usize) & (32768u64 as u16))
     }
 }
-
 
 #[repr(C)]
 #[derive(Copy)]
@@ -655,24 +647,15 @@ impl Ich8HsflCtrl {
         flockdn: u16,
     ) -> u16 {
         ({
-             ({
-                  ({
-                       ({
-                            ({
-                                 0
-                             } |
-                                 ((flcgo as u16 as u16) << 0usize) & (1u64 as u16))
-                        } |
-                            ((flcycle as u16 as u16) << 1usize) & (6u64 as u16))
-                   } | ((reserved as u16 as u16) << 3usize) & (248u64 as u16))
-              } | ((fldbcount as u16 as u16) << 8usize) & (768u64 as u16))
-         } | ((flockdn as u16 as u16) << 10usize) & (64512u64 as u16))
+            ({
+                ({
+                    ({ ({ 0 } | ((flcgo as u16 as u16) << 0usize) & (1u64 as u16)) }
+                        | ((flcycle as u16 as u16) << 1usize) & (6u64 as u16))
+                } | ((reserved as u16 as u16) << 3usize) & (248u64 as u16))
+            } | ((fldbcount as u16 as u16) << 8usize) & (768u64 as u16))
+        } | ((flockdn as u16 as u16) << 10usize) & (64512u64 as u16))
     }
 }
-
-
-
-
 
 #[repr(C, packed)]
 #[derive(Debug, Default)]
@@ -763,15 +746,10 @@ impl ip {
     }
     #[inline]
     pub fn new_bitfield_1(ip_hl: u8, ip_v: u8) -> u8 {
-        ({
-             ({
-                  0
-              } | ((ip_hl as u8 as u8) << 0usize) & (15u64 as u8))
-         } | ((ip_v as u8 as u8) << 4usize) & (240u64 as u8))
+        ({ ({ 0 } | ((ip_hl as u8 as u8) << 0usize) & (15u64 as u8)) }
+            | ((ip_v as u8 as u8) << 4usize) & (240u64 as u8))
     }
 }
-
-
 
 #[repr(C)]
 #[derive(Debug, Default)]
@@ -870,28 +848,16 @@ impl tcphdr {
     }
     #[inline]
     pub fn new_bitfield_1(th_x2: u8, th_off: u8) -> u8 {
-        ({
-             ({
-                  0
-              } | ((th_x2 as u8 as u8) << 0usize) & (15u64 as u8))
-         } | ((th_off as u8 as u8) << 4usize) & (240u64 as u8))
+        ({ ({ 0 } | ((th_x2 as u8 as u8) << 0usize) & (15u64 as u8)) }
+            | ((th_off as u8 as u8) << 4usize) & (240u64 as u8))
     }
 }
-
-
-
 
 #[repr(C)]
 #[derive(Debug, Default)]
 pub struct in_addr {
     pub s_addr: u32,
 }
-
-
-
-
-
-
 
 #[derive(Copy)]
 pub struct e1000_tx_desc {
@@ -914,9 +880,7 @@ impl ::kernel::fmt::Debug for e1000_tx_desc {
         write!(
             f,
             "e1000_tx_desc {{ buffer_addr: {:?}, lower: {:?}, upper: {:?} }}",
-            self.buffer_addr,
-            self.lower,
-            self.upper
+            self.buffer_addr, self.lower, self.upper
         )
     }
 }
@@ -980,7 +944,6 @@ impl ::kernel::fmt::Debug for e1000_tx_desc_u2 {
     }
 }
 
-
 #[repr(C)]
 #[derive(Debug, Default, Copy)]
 pub struct e1000_tx_desc_u2_u1 {
@@ -993,13 +956,6 @@ impl Clone for e1000_tx_desc_u2_u1 {
         *self
     }
 }
-
-
-
-
-
-
-
 
 #[repr(C)]
 #[derive(Copy)]
@@ -1079,8 +1035,7 @@ impl ::kernel::fmt::Debug for e1000_rx_desc_extended_u2_u1 {
         write!(
             f,
             "e1000_rx_desc_extended_u2_u1 {{ mrq: {:?}, hi_dword: {:?} }}",
-            self.mrq,
-            self.hi_dword
+            self.mrq, self.hi_dword
         )
     }
 }
@@ -1111,8 +1066,7 @@ impl ::kernel::fmt::Debug for e1000_rx_desc_extended_u2 {
         write!(
             f,
             "e1000_rx_desc_extended_u2 {{ lower: {:?}, upper: {:?} }}",
-            self.lower,
-            self.upper
+            self.lower, self.upper
         )
     }
 }
@@ -1131,10 +1085,6 @@ impl ::kernel::fmt::Debug for e1000_rx_desc_extended {
         write!(f, "e1000_rx_desc_extended {{ union }}")
     }
 }
-
-
-
-
 
 #[repr(C)]
 #[derive(Copy)]
@@ -1269,9 +1219,6 @@ impl ::kernel::fmt::Debug for e1000_context_desc {
     }
 }
 
-
-
-
 // TODO: Move to kernel?
 #[repr(C)]
 #[derive(Debug, Default)]
@@ -1325,7 +1272,6 @@ impl Clone for e1000_rx_desc {
     }
 }
 
-
 #[derive(Debug)]
 pub struct TxQueue {
     // pub adapter: *mut adapter,
@@ -1352,14 +1298,13 @@ pub struct RxQueue {
     pub eims: u32,
     pub rxr: RxRing,
     pub irqs: u64,
-    pub que_irq: IfIrq,
+    // pub que_irq: IfIrq,
 }
 impl Default for RxQueue {
     fn default() -> Self {
         unsafe { ::core::mem::zeroed() }
     }
 }
-
 
 #[derive(Debug)]
 pub struct TxRing {
@@ -1373,7 +1318,7 @@ pub struct TxRing {
     pub tx_rs_pidx: u16,
     pub tx_cidx_processed: u16,
     pub tag: *mut ::kernel::sys::raw::c_void,
-    pub res: Resource,
+    pub res: Option<Resource>,
     pub tx_irq: u64,
     pub csum_flags: i32,
     pub csum_lhlen: i32,
@@ -1413,7 +1358,6 @@ impl Default for TxRing {
 //     }
 // }
 
-
 #[derive(Debug)]
 pub struct RxRing {
     // pub adapter: *mut adapter,
@@ -1423,7 +1367,7 @@ pub struct RxRing {
     pub rx_base: *mut e1000_rx_desc_extended,
     pub rx_paddr: u64,
     pub tag: *mut ::kernel::sys::raw::c_void,
-    pub res: Resource,
+    pub res: Option<Resource>,
     pub discard: bool,
     pub rx_irq: ::kernel::sys::raw::c_ulong,
     pub rx_discarded: ::kernel::sys::raw::c_ulong,
@@ -1450,60 +1394,46 @@ impl Default for RxRing {
 //     }
 // }
 
-
 #[repr(C)]
 #[derive(Debug, Copy)]
 pub struct if_txrx {
-    pub ift_txd_encap:
-        ::core::option::Option<
-            unsafe extern "C" fn(arg1: *mut ::kernel::sys::raw::c_void,
-                                 arg2: if_pkt_info_t)
-                                 -> ::kernel::sys::raw::c_int,
-        >,
-    pub ift_txd_flush:
-        ::core::option::Option<
-            unsafe extern "C" fn(arg1: *mut ::kernel::sys::raw::c_void,
-                                 arg2: u16,
-                                 pidx: qidx_t),
-        >,
-    pub ift_txd_credits_update:
-        ::core::option::Option<
-            unsafe extern "C" fn(arg1: *mut ::kernel::sys::raw::c_void,
-                                 qsidx: u16,
-                                 clear: bool_)
-                                 -> ::kernel::sys::raw::c_int,
-        >,
-    pub ift_rxd_available:
-        ::core::option::Option<
-            unsafe extern "C" fn(arg1: *mut ::kernel::sys::raw::c_void,
-                                 qsidx: u16,
-                                 pidx: qidx_t,
-                                 budget: qidx_t)
-                                 -> ::kernel::sys::raw::c_int,
-        >,
-    pub ift_rxd_pkt_get:
-        ::core::option::Option<
-            unsafe extern "C" fn(arg1: *mut ::kernel::sys::raw::c_void,
-                                 ri: if_rxd_info_t)
-                                 -> ::kernel::sys::raw::c_int,
-        >,
-    pub ift_rxd_refill:
-        ::core::option::Option<
-            unsafe extern "C" fn(arg1: *mut ::kernel::sys::raw::c_void,
-                                 iru: *mut if_rxd_update),
-        >,
-    pub ift_rxd_flush:
-        ::core::option::Option<
-            unsafe extern "C" fn(arg1: *mut ::kernel::sys::raw::c_void,
-                                 qsidx: u16,
-                                 flidx: u8,
-                                 pidx: qidx_t),
-        >,
-    pub ift_legacy_intr:
-        ::core::option::Option<
-            unsafe extern "C" fn(arg1: *mut ::kernel::sys::raw::c_void)
-                                 -> ::kernel::sys::raw::c_int,
-        >,
+    pub ift_txd_encap: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::kernel::sys::raw::c_void, arg2: if_pkt_info_t)
+            -> ::kernel::sys::raw::c_int,
+    >,
+    pub ift_txd_flush: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::kernel::sys::raw::c_void, arg2: u16, pidx: qidx_t),
+    >,
+    pub ift_txd_credits_update: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::kernel::sys::raw::c_void, qsidx: u16, clear: bool_)
+            -> ::kernel::sys::raw::c_int,
+    >,
+    pub ift_rxd_available: ::core::option::Option<
+        unsafe extern "C" fn(
+            arg1: *mut ::kernel::sys::raw::c_void,
+            qsidx: u16,
+            pidx: qidx_t,
+            budget: qidx_t,
+        ) -> ::kernel::sys::raw::c_int,
+    >,
+    pub ift_rxd_pkt_get: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::kernel::sys::raw::c_void, ri: if_rxd_info_t)
+            -> ::kernel::sys::raw::c_int,
+    >,
+    pub ift_rxd_refill: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::kernel::sys::raw::c_void, iru: *mut if_rxd_update),
+    >,
+    pub ift_rxd_flush: ::core::option::Option<
+        unsafe extern "C" fn(
+            arg1: *mut ::kernel::sys::raw::c_void,
+            qsidx: u16,
+            flidx: u8,
+            pidx: qidx_t,
+        ),
+    >,
+    pub ift_legacy_intr: ::core::option::Option<
+        unsafe extern "C" fn(arg1: *mut ::kernel::sys::raw::c_void) -> ::kernel::sys::raw::c_int,
+    >,
 }
 impl Clone for if_txrx {
     fn clone(&self) -> Self {
@@ -1516,8 +1446,6 @@ impl Default for if_txrx {
     }
 }
 pub type if_txrx_t = *mut if_txrx;
-
-
 
 #[derive(Debug, Default)]
 pub struct HwStats {
@@ -1610,9 +1538,6 @@ pub struct IntDelayInfo {
     pub value: u32,
 }
 
-
-
-
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum MediaType {
     Unknown,
@@ -1676,7 +1601,6 @@ pub enum BusType {
     Pci_express,
     Reserved,
 }
-
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]
 pub enum BusSpeed {
@@ -1749,7 +1673,6 @@ impl MsType {
     /* PHY master/slave setting */
     pub const EM_MASTER_SLAVE: MsType = MsType::HwDefault;
 }
-
 
 #[repr(u32)]
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash)]

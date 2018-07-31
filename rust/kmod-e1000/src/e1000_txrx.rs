@@ -83,7 +83,8 @@ impl Adapter {
     ) -> u16 {
         e1000_println!();
 
-        let txq: &mut TxQueue = &mut self.tx_queues[pi.ipi_qsidx as usize];
+        let txq: &mut TxQueue =
+            &mut self.tx_queues.as_mut().expect("adapter.tx_queues is None")[pi.ipi_qsidx as usize];
         let txr: &mut TxRing = &mut txq.txr;
 
         let hdr_len = pi.ipi_ehdrlen + pi.ipi_ip_hlen + pi.ipi_tcp_hlen;
@@ -162,7 +163,8 @@ impl Adapter {
         let mut cmd;
         let csum_flags = pi.ipi_csum_flags;
 
-        let txq: &mut TxQueue = &mut self.tx_queues[pi.ipi_qsidx as usize];
+        let txq: &mut TxQueue =
+            &mut self.tx_queues.as_mut().expect("adapter.tx_queues is None")[pi.ipi_qsidx as usize];
         let txr: &mut TxRing = &mut txq.txr;
 
         cur = pi.ipi_pidx;
@@ -237,14 +239,14 @@ impl Adapter {
     pub fn rx_queue_intr_enable(&mut self, rxqid: u16) {
         e1000_println!();
 
-        let eims = self.rx_queues[rxqid as usize].eims;
+        let eims = self.rx_queues.as_ref().expect("adapter.rx_queues is None")[rxqid as usize].eims;
         do_write_register(self, E1000_IMS, eims);
     }
 
     pub fn tx_queue_intr_enable(&mut self, txqid: u16) {
         e1000_println!();
 
-        let eims = self.tx_queues[txqid as usize].eims;
+        let eims = self.tx_queues.as_ref().expect("adapter.tx_queues is None")[txqid as usize].eims;
         do_write_register(self, E1000_IMS, eims);
     }
 }
@@ -272,7 +274,9 @@ impl IfTxRx for Adapter {
         let mut txd_lower: u32 = 0;
 
         {
-            let txq: &mut TxQueue = &mut self.tx_queues[pi.ipi_qsidx as usize];
+            let txq: &mut TxQueue = &mut self.tx_queues
+                .as_mut()
+                .expect("adapter.tx_queues is None")[pi.ipi_qsidx as usize];
             let txr: &mut TxRing = &mut txq.txr;
 
             /*
@@ -302,7 +306,8 @@ impl IfTxRx for Adapter {
             txd_lower |= E1000_TXD_CMD_VLE;
         }
 
-        let txq: &mut TxQueue = &mut self.tx_queues[pi.ipi_qsidx as usize];
+        let txq: &mut TxQueue =
+            &mut self.tx_queues.as_mut().expect("adapter.tx_queues is None")[pi.ipi_qsidx as usize];
         let txr: &mut TxRing = &mut txq.txr;
 
         let mut pidx_last = first;
@@ -381,14 +386,17 @@ impl IfTxRx for Adapter {
     fn em_txd_flush(&mut self, txqid: u16, pidx: u16) {
         // e1000_println!();
 
-        let me = self.tx_queues[txqid as usize].txr.me as usize;
+        let me = self.tx_queues.as_ref().expect("adapter.tx_queues is None")[txqid as usize]
+            .txr
+            .me as usize;
         do_write_register(self, E1000_TDT(me), pidx as u32);
     }
 
     fn em_txd_credits_update(&mut self, txqid: u16, clear: bool) -> i32 {
         // e1000_println!();
 
-        let txq: &mut TxQueue = &mut self.tx_queues[txqid as usize];
+        let txq: &mut TxQueue =
+            &mut self.tx_queues.as_mut().expect("adapter.tx_queues is None")[txqid as usize];
         let txr: &mut TxRing = &mut txq.txr;
 
         let mut processed: u16 = 0;
@@ -460,7 +468,9 @@ impl IfTxRx for Adapter {
         let mut cnt: usize;
         let mut i: usize;
 
-        let rxq: &mut RxQueue = &mut self.rx_queues[rxqid as usize];
+        let rx_queues: &mut Box<[RxQueue]> =
+            self.rx_queues.as_mut().expect("adapter.rx_queues is None");
+        let rxq: &mut RxQueue = &mut rx_queues[rxqid as usize];
         let rxr: &mut RxRing = &mut rxq.rxr;
         let nrxd = self.iflib_shared.isc_nrxd[0] as usize;
         let rxd_slice: &mut [e1000_rx_desc_extended] = rxr.rxd_rx_desc_extended_slice(nrxd);
@@ -496,7 +506,9 @@ impl IfTxRx for Adapter {
         let mut cnt: usize;
         let mut i: usize;
 
-        let rxq: &mut RxQueue = &mut self.rx_queues[rxqid as usize];
+        let rx_queues: &mut Box<[RxQueue]> =
+            self.rx_queues.as_mut().expect("adapter.rx_queues is None");
+        let rxq: &mut RxQueue = &mut rx_queues[rxqid as usize];
         let rxr: &mut RxRing = &mut rxq.rxr;
         let nrxd = self.iflib_shared.isc_nrxd[0] as usize;
         let rxd_slice: &mut [e1000_rx_desc] = rxr.rxd_rx_desc_slice(nrxd);
@@ -538,7 +550,9 @@ impl IfTxRx for Adapter {
         cidx = ri.iri_cidx as usize;
         let mut last_rxd: usize;
         {
-            let rxq: &mut RxQueue = &mut self.rx_queues[ri.iri_qsidx as usize];
+            let rx_queues: &mut Box<[RxQueue]> =
+                self.rx_queues.as_mut().expect("adapter.rx_queues is None");
+            let rxq: &mut RxQueue = &mut rx_queues[ri.iri_qsidx as usize];
             let rxr: &mut RxRing = &mut rxq.rxr;
             let nrxd = self.iflib_shared.isc_nrxd[0] as usize;
             let rxd_slice: &mut [e1000_rx_desc_extended] = rxr.rxd_rx_desc_extended_slice(nrxd);
@@ -628,7 +642,9 @@ impl IfTxRx for Adapter {
         cidx = ri.iri_cidx as usize;
         let mut last_rxd: usize;
         {
-            let rxq: &mut RxQueue = &mut self.rx_queues[ri.iri_qsidx as usize];
+            let rx_queues: &mut Box<[RxQueue]> =
+                self.rx_queues.as_mut().expect("adapter.rx_queues is None");
+            let rxq: &mut RxQueue = &mut rx_queues[ri.iri_qsidx as usize];
             let rxr: &mut RxRing = &mut rxq.rxr;
             let nrxd = self.iflib_shared.isc_nrxd[0] as usize;
             let rxd_slice: &mut [e1000_rx_desc] = rxr.rxd_rx_desc_slice(nrxd);
@@ -710,7 +726,9 @@ impl IfTxRx for Adapter {
         let paddrs: *mut u64 = iru.iru_paddrs;
         let paddrs_slice: &[u64] = unsafe { kernel::slice::from_raw_parts(paddrs, count) };
 
-        let rxq: &mut RxQueue = &mut self.rx_queues[qid];
+        let rx_queues: &mut Box<[RxQueue]> =
+            self.rx_queues.as_mut().expect("adapter.rx_queues is None");
+        let rxq: &mut RxQueue = &mut rx_queues[qid];
         let rxr: &mut RxRing = &mut rxq.rxr;
         let rxd_slice: &mut [e1000_rx_desc_extended] = rxr.rxd_rx_desc_extended_slice(nrxd);
 
@@ -742,7 +760,9 @@ impl IfTxRx for Adapter {
         let paddrs: *mut u64 = iru.iru_paddrs;
         let paddrs_slice: &[u64] = unsafe { kernel::slice::from_raw_parts(paddrs, count) };
 
-        let rxq: &mut RxQueue = &mut self.rx_queues[qid];
+        let rx_queues: &mut Box<[RxQueue]> =
+            self.rx_queues.as_mut().expect("adapter.rx_queues is None");
+        let rxq: &mut RxQueue = &mut rx_queues[qid];
         let rxr: &mut RxRing = &mut rxq.rxr;
         let rxd_slice: &mut [e1000_rx_desc] = rxr.rxd_rx_desc_slice(nrxd);
 
@@ -762,7 +782,8 @@ impl IfTxRx for Adapter {
     fn em_rxd_flush(&mut self, rxqid: u16, flid: u8, pidx: u16) {
         // e1000_println!();
 
-        let rxr: &RxRing = &self.rx_queues[rxqid as usize].rxr;
+        let rxr: &RxRing =
+            &self.rx_queues.as_ref().expect("adapter.rx_queues is None")[rxqid as usize].rxr;
         self.write_register(E1000_RDT(rxr.me as usize), pidx as u32);
     }
 

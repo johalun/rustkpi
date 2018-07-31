@@ -1,4 +1,3 @@
-
 use kernel;
 use kernel::ptr::NonNull;
 use kernel::sys::raw::*;
@@ -21,7 +20,6 @@ pub use kernel::sys::bus_sys::bus_space_handle_t;
 pub use kernel::sys::bus_sys::rman_get_bustag;
 pub use kernel::sys::bus_sys::rman_get_bushandle;
 pub use kernel::sys::bus_sys::rman_get_size;
-
 
 use sys::e1000::*;
 use iflib::*;
@@ -56,7 +54,6 @@ extern "C" {
         offset: bus_size_t,
     ) -> u32;
 
-
     pub fn rust_bus_space_write_2(
         tag: bus_space_tag_t,
         handle: bus_space_handle_t,
@@ -74,7 +71,6 @@ extern "C" {
     pub fn rust_usec_delay(usecs: usize);
 
 }
-
 
 pub fn register(hw: &Hardware, reg: u32) -> u32 {
     // e1000_println!();
@@ -125,9 +121,6 @@ pub fn do_write_register_array(adapter: &Adapter, reg: u32, index: u32, value: u
     }
 }
 
-
-
-
 pub fn do_write_register_io(adapter: &Adapter, reg: u32, value: u32) {
     // e1000_println!();
     unsafe {
@@ -146,7 +139,6 @@ pub fn do_write_register_io(adapter: &Adapter, reg: u32, value: u32) {
     }
 }
 
-
 pub fn do_usec_delay(usecs: usize) {
     // e1000_println!();
     unsafe {
@@ -160,9 +152,6 @@ pub fn do_msec_delay(msecs: usize) {
         rust_usec_delay(1000 * msecs);
     }
 }
-
-
-
 
 #[derive(Debug)]
 pub struct Resource {
@@ -226,7 +215,6 @@ impl Drop for OsDep {
         // Clean up?
     }
 }
-
 
 #[derive(Debug)]
 pub struct PciDevice {

@@ -1,4 +1,3 @@
-
 use kernel;
 use kernel::ptr::Unique;
 
@@ -34,20 +33,16 @@ pub fn get_bus_info_pci_generic(adapter: &mut Adapter) -> AdResult {
 
     /* Bus speed */
     adapter.hw.bus.speed = match adapter.hw.bus.bustype {
-        BusType::Pci => {
-            match status & E1000_STATUS_PCI66 {
-                E1000_STATUS_PCI66 => BusSpeed::Speed_66,
-                _ => BusSpeed::Speed_33,
-            }
-        }
-        _ => {
-            match status & E1000_STATUS_PCIX_SPEED {
-                E1000_STATUS_PCIX_SPEED_66 => BusSpeed::Speed_66,
-                E1000_STATUS_PCIX_SPEED_100 => BusSpeed::Speed_100,
-                E1000_STATUS_PCIX_SPEED_133 => BusSpeed::Speed_133,
-                _ => BusSpeed::Reserved,
-            }
-        }
+        BusType::Pci => match status & E1000_STATUS_PCI66 {
+            E1000_STATUS_PCI66 => BusSpeed::Speed_66,
+            _ => BusSpeed::Speed_33,
+        },
+        _ => match status & E1000_STATUS_PCIX_SPEED {
+            E1000_STATUS_PCIX_SPEED_66 => BusSpeed::Speed_66,
+            E1000_STATUS_PCIX_SPEED_100 => BusSpeed::Speed_100,
+            E1000_STATUS_PCIX_SPEED_133 => BusSpeed::Speed_133,
+            _ => BusSpeed::Reserved,
+        },
     };
 
     /* Bus width */
@@ -76,10 +71,9 @@ pub fn get_bus_info_pcie_generic(adapter: &mut Adapter) -> AdResult {
 
     adapter.hw.bus.bustype = BusType::Pci_express;
 
-    if let Err(e) = adapter.dev.read_pcie_cap_reg(
-        PCIE_LINK_STATUS,
-        &mut pcie_link_status,
-    )
+    if let Err(e) = adapter
+        .dev
+        .read_pcie_cap_reg(PCIE_LINK_STATUS, &mut pcie_link_status)
     {
         eprintln!("{:?}", e);
         adapter.hw.bus.width = BusWidth::Unknown;
@@ -107,7 +101,6 @@ pub fn get_bus_info_pcie_generic(adapter: &mut Adapter) -> AdResult {
     }
     Ok(())
 }
-
 
 pub fn led_off_generic(adapter: &mut Adapter) -> AdResult {
     e1000_mac_println!();
@@ -155,7 +148,57 @@ pub fn setup_led_generic(adapter: &mut Adapter) -> AdResult {
 
 pub fn id_led_init_generic(adapter: &mut Adapter) -> AdResult {
     e1000_mac_println!();
-    incomplete_return!();
+
+    let ledctl_mask: u32 = 0x000000FF;
+    let ledctl_on: u32 = E1000_LEDCTL_MODE_LED_ON;
+    let ledctl_off: u32 = E1000_LEDCTL_MODE_LED_OFF;
+    let mut data: [u16; 1] = [0];
+    let mut temp: u16;
+    let led_mask: u16 = 0x0F;
+
+    try!(
+        adapter
+            .hw
+            .nvm
+            .ops
+            .valid_led_default
+            .ok_or("No function: valid_led_default".to_string())
+            .and_then(|f| {
+                f(adapter, &mut data);
+                Ok(())
+            })
+    );
+
+    adapter.hw.mac.ledctl_default = adapter.read_register(E1000_LEDCTL);
+    adapter.hw.mac.ledctl_mode1 = adapter.hw.mac.ledctl_default;
+    adapter.hw.mac.ledctl_mode2 = adapter.hw.mac.ledctl_default;
+
+    for i in 0..4 {
+        temp = (data[0] >> (i << 2)) & led_mask;
+        match temp {
+            ID_LED_ON1_DEF2 | ID_LED_ON1_OFF2 | ID_LED_ON1_ON2 => {
+                adapter.hw.mac.ledctl_mode1 &= !(ledctl_mask << (i << 3));
+                adapter.hw.mac.ledctl_mode1 |= ledctl_on << (i << 3);
+            }
+            ID_LED_OFF1_DEF2 | ID_LED_OFF1_OFF2 | ID_LED_OFF1_ON2 => {
+                adapter.hw.mac.ledctl_mode1 &= !(ledctl_mask << (i << 3));
+                adapter.hw.mac.ledctl_mode1 |= ledctl_off << (i << 3);
+            }
+            _ => {}
+        }
+        match temp {
+            ID_LED_DEF1_ON2 | ID_LED_ON1_ON2 | ID_LED_OFF1_ON2 => {
+                adapter.hw.mac.ledctl_mode2 &= !(ledctl_mask << (i << 3));
+                adapter.hw.mac.ledctl_mode2 |= ledctl_on << (i << 3);
+            }
+            ID_LED_DEF1_OFF2 | ID_LED_ON1_OFF2 | ID_LED_OFF1_OFF2 => {
+                adapter.hw.mac.ledctl_mode2 &= !(ledctl_mask << (i << 3));
+                adapter.hw.mac.ledctl_mode2 |= ledctl_off << (i << 3);
+            }
+            _ => {}
+        }
+    }
+    Ok(())
 }
 
 pub fn clear_vfta_generic(adapter: &mut Adapter) {
@@ -229,8 +272,8 @@ pub fn hash_mc_addr_generic(adapter: &Adapter, mc_addr: &[u8]) -> u32 {
         }
     }
 
-    hash_value = hash_mask &
-        (((mc_addr[4] as u32) >> (8 - bit_shift)) | ((mc_addr[5] as u32) << bit_shift));
+    hash_value =
+        hash_mask & (((mc_addr[4] as u32) >> (8 - bit_shift)) | ((mc_addr[5] as u32) << bit_shift));
     hash_value
 }
 
@@ -241,15 +284,15 @@ pub fn update_mc_addr_list_generic(adapter: &mut Adapter, mc_addr_count: u32) ->
     for mta in &mut adapter.hw.mac.mta_shadow.iter_mut() {
         *mta = 0;
     }
+    let mta: &Box<[u8]> = try!(adapter.mta.as_ref().ok_or("Can't access mta".to_string()));
 
     /* update mta_shadow from mc_addr_list */
     for i in 0..mc_addr_count as usize {
-        let hash_value = self::hash_mc_addr_generic(adapter, &adapter.mta[i * 6..(i + 1) * 6]);
+        let hash_value = self::hash_mc_addr_generic(adapter, &mta[i * 6..(i + 1) * 6]);
         let hash_reg = (hash_value >> 5) & (adapter.hw.mac.mta_reg_count as u32 - 1);
         let hash_bit = hash_value & 0x1F;
         adapter.hw.mac.mta_shadow[hash_reg as usize] |= 1 << hash_bit;
     }
-
 
     /* replace the entire MTA table */
     let mut i = (adapter.hw.mac.mta_reg_count - 1) as isize;
@@ -464,8 +507,8 @@ pub fn rar_set_generic(adapter: &mut Adapter, addr: &[u8], index: usize) -> AdRe
      * from network order (big endian) to little endian
      */
     let (rar_low, mut rar_high): (u32, u32) = {
-        let low: u32 = (addr[0] as u32) | (addr[1] as u32) << 8 | (addr[2] as u32) << 16 |
-            (addr[3] as u32) << 24;
+        let low: u32 = (addr[0] as u32) | (addr[1] as u32) << 8 | (addr[2] as u32) << 16
+            | (addr[3] as u32) << 24;
         let high: u32 = (addr[4] as u32) | (addr[5] as u32) << 8;
         (low, high)
     };
@@ -498,9 +541,15 @@ pub fn config_collision_dist_generic(adapter: &mut Adapter) {
     do_write_flush(adapter);
 }
 
-pub fn valid_led_default_generic(adapter: &mut Adapter, arg2: &mut [u16]) -> AdResult {
+pub fn valid_led_default_generic(adapter: &mut Adapter, data: &mut [u16]) -> AdResult {
     e1000_mac_println!();
-    incomplete_return!();
+
+    try!(adapter.nvm_read(NVM_ID_LED_SETTINGS, 1, data));
+
+    if data[0] == ID_LED_RESERVED_0000 || data[0] == ID_LED_RESERVED_FFFF {
+        data[0] = ID_LED_DEFAULT;
+    }
+    Ok(())
 }
 
 pub fn init_rx_addrs_generic(adapter: &mut Adapter, rar_count: usize) -> AdResult {
@@ -579,7 +628,6 @@ pub fn config_fc_after_link_up_generic(adapter: &mut Adapter) -> AdResult {
      * flow control configured.
      */
     if adapter.hw.phy.media_type == MediaType::Copper && adapter.hw.mac.autoneg {
-
         /* Read the MII Status Register and check to see if AutoNeg
          * has completed.  We read this twice because this reg has
          * some "sticky" (latched) bits.
@@ -601,10 +649,7 @@ pub fn config_fc_after_link_up_generic(adapter: &mut Adapter) -> AdResult {
          * flow control was negotiated.
          */
         try!(adapter.phy_read_reg(PHY_AUTONEG_ADV, &mut mii_nway_adv_reg));
-        try!(adapter.phy_read_reg(
-            PHY_LP_ABILITY,
-            &mut mii_nway_lp_ability_reg,
-        ));
+        try!(adapter.phy_read_reg(PHY_LP_ABILITY, &mut mii_nway_lp_ability_reg,));
 
         /* Two bits in the Auto Negotiation Advertisement Register
          * (Address 4) and two bits in the Auto Negotiation Base
@@ -640,8 +685,8 @@ pub fn config_fc_after_link_up_generic(adapter: &mut Adapter) -> AdResult {
          *
          */
 
-        if btst!(mii_nway_adv_reg, NWAY_AR_PAUSE as u16) &&
-            btst!(mii_nway_lp_ability_reg, NWAY_LPAR_PAUSE as u16)
+        if btst!(mii_nway_adv_reg, NWAY_AR_PAUSE as u16)
+            && btst!(mii_nway_lp_ability_reg, NWAY_LPAR_PAUSE as u16)
         {
             /* Now we need to check if the user selected Rx ONLY
              * of pause frames.  In this case, we had to advertise
@@ -664,10 +709,10 @@ pub fn config_fc_after_link_up_generic(adapter: &mut Adapter) -> AdResult {
          *-------|---------|-------|---------|--------------------
          *   0   |    1    |   1   |    1    | e1000_fc_tx_pause
          */
-        else if mii_nway_adv_reg & NWAY_AR_PAUSE as u16 == 0 &&
-                   mii_nway_adv_reg & NWAY_AR_ASM_DIR as u16 > 0 &&
-                   mii_nway_lp_ability_reg & NWAY_LPAR_PAUSE as u16 > 0 &&
-                   mii_nway_lp_ability_reg & NWAY_LPAR_ASM_DIR as u16 > 0
+        else if mii_nway_adv_reg & NWAY_AR_PAUSE as u16 == 0
+            && mii_nway_adv_reg & NWAY_AR_ASM_DIR as u16 > 0
+            && mii_nway_lp_ability_reg & NWAY_LPAR_PAUSE as u16 > 0
+            && mii_nway_lp_ability_reg & NWAY_LPAR_ASM_DIR as u16 > 0
         {
             adapter.hw.fc.current_mode = FcMode::TxPause;
             e1000_mac_println!("Flow Control = Tx PAUSE frames only");
@@ -679,10 +724,10 @@ pub fn config_fc_after_link_up_generic(adapter: &mut Adapter) -> AdResult {
          *-------|---------|-------|---------|--------------------
          *   1   |    1    |   0   |    1    | e1000_fc_rx_pause
          */
-        else if mii_nway_adv_reg & NWAY_AR_PAUSE as u16 > 0 &&
-                   mii_nway_adv_reg & NWAY_AR_ASM_DIR as u16 > 0 &&
-                   mii_nway_lp_ability_reg & NWAY_LPAR_PAUSE as u16 == 0 &&
-                   mii_nway_lp_ability_reg & NWAY_LPAR_ASM_DIR as u16 > 0
+        else if mii_nway_adv_reg & NWAY_AR_PAUSE as u16 > 0
+            && mii_nway_adv_reg & NWAY_AR_ASM_DIR as u16 > 0
+            && mii_nway_lp_ability_reg & NWAY_LPAR_PAUSE as u16 == 0
+            && mii_nway_lp_ability_reg & NWAY_LPAR_ASM_DIR as u16 > 0
         {
             adapter.hw.fc.current_mode = FcMode::RxPause;
             e1000_mac_println!("Flow Control = Rx PAUSE frames only");
@@ -823,7 +868,6 @@ pub fn set_lan_id_single_port(adapter: &mut Adapter) {
     adapter.hw.bus.func = 0;
 }
 
-
 /// e1000_blink_led_generic - Blink LED
 /// @hw: pointer to the HW structure
 ///
@@ -856,7 +900,6 @@ pub fn get_auto_rd_done_generic(adapter: &mut Adapter) -> AdResult {
     }
 }
 
-
 /// e1000_disable_pcie_master_generic - Disables PCI-express master access
 /// @hw: pointer to the HW structure
 ///
@@ -883,8 +926,7 @@ pub fn disable_pcie_master_generic(adapter: &mut Adapter) -> AdResult {
         if !btst!(
             adapter.read_register(E1000_STATUS),
             E1000_STATUS_GIO_MASTER_ENABLE
-        )
-        {
+        ) {
             break;
         }
         do_usec_delay(100);

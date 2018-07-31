@@ -53,6 +53,7 @@ pub trait Ifdi {
     fn attach_post(&mut self) -> Result<(), String>;
     fn stop(&mut self) -> Result<(), String>;
     fn detach(&mut self) -> Result<(), String>;
+    fn queues_free(&mut self);
     fn release(&mut self);
 }
 

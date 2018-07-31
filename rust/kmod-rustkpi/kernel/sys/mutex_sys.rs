@@ -71,7 +71,7 @@ pub const FD_SETSIZE: ::kernel::sys::raw::c_uint = 1024;
 pub const BSD: ::kernel::sys::raw::c_uint = 199506;
 pub const BSD4_3: ::kernel::sys::raw::c_uint = 1;
 pub const BSD4_4: ::kernel::sys::raw::c_uint = 1;
-pub const __FreeBSD_version: ::kernel::sys::raw::c_uint = 1200064;
+pub const __FreeBSD_version: ::kernel::sys::raw::c_uint = 1200074;
 pub const P_OSREL_SIGWAIT: ::kernel::sys::raw::c_uint = 700000;
 pub const P_OSREL_SIGSEGV: ::kernel::sys::raw::c_uint = 700004;
 pub const P_OSREL_MAP_ANON: ::kernel::sys::raw::c_uint = 800104;
@@ -432,8 +432,11 @@ pub const OFFSETOF_CURPCB: ::kernel::sys::raw::c_uint = 32;
 pub const DPCPU_SETNAME: &'static [u8; 9usize] = b"set_pcpu\x00";
 pub const DPCPU_SYMPREFIX: &'static [u8; 12usize] = b"pcpu_entry_\x00";
 pub const DPCPU_MODMIN: ::kernel::sys::raw::c_uint = 2048;
+pub const UMA_PCPU_ALLOC_SIZE: ::kernel::sys::raw::c_uint = 4096;
 pub const LOCKSTAT_WRITER: ::kernel::sys::raw::c_uint = 0;
 pub const LOCKSTAT_READER: ::kernel::sys::raw::c_uint = 1;
+pub const MPLOCKED: &'static [u8; 8usize] = b"lock ; \x00";
+pub const OFFSETOF_MONITORBUF: ::kernel::sys::raw::c_uint = 256;
 pub const CR4_PGE: ::kernel::sys::raw::c_uint = 128;
 pub const INVPCID_ADDR: ::kernel::sys::raw::c_uint = 0;
 pub const INVPCID_CTX: ::kernel::sys::raw::c_uint = 1;
@@ -776,6 +779,8 @@ pub struct cap_rights {
     _unused: [u8; 0],
 }
 pub type cap_rights_t = cap_rights;
+pub type kvaddr_t = __uint64_t;
+pub type ksize_t = __uint64_t;
 pub type vm_offset_t = __vm_offset_t;
 pub type vm_ooffset_t = __int64_t;
 pub type vm_paddr_t = __vm_paddr_t;
@@ -2225,7 +2230,7 @@ pub struct pcpu {
     pub pc_pcid_gen: u32,
     pub pc_smp_tlb_done: u32,
     pub pc_ibpb_set: u32,
-    pub __pad: [::kernel::sys::raw::c_char; 216usize],
+    pub __pad: [::kernel::sys::raw::c_char; 3288usize],
 }
 #[repr(C)]
 #[derive(Debug, Copy)]
@@ -2253,7 +2258,7 @@ impl Default for pcpu__bindgen_ty_1 {
 }
 #[test]
 fn bindgen_test_layout_pcpu() {
-    assert_eq!(::core::mem::size_of::<pcpu>() , 1024usize , concat ! (
+    assert_eq!(::core::mem::size_of::<pcpu>() , 4096usize , concat ! (
                "Size of: " , stringify ! ( pcpu ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const pcpu ) ) . pc_curthread as * const _ as
@@ -2945,191 +2950,10 @@ extern "C" {
     #[link_name = "lockstat_enabled"]
     pub static mut lockstat_enabled: bool_;
 }
-extern "C" {
-    pub fn atomic_cmpset_char(dst: *mut u_char, expect: u_char, src: u_char)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_cmpset_short(dst: *mut u_short, expect: u_short,
-                               src: u_short) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_cmpset_int(dst: *mut u_int, expect: u_int, src: u_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_cmpset_long(dst: *mut u_long, expect: u_long, src: u_long)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_fcmpset_char(dst: *mut u_char, expect: *mut u_char,
-                               src: u_char) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_fcmpset_short(dst: *mut u_short, expect: *mut u_short,
-                                src: u_short) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_fcmpset_int(dst: *mut u_int, expect: *mut u_int, src: u_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_fcmpset_long(dst: *mut u_long, expect: *mut u_long,
-                               src: u_long) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_fetchadd_int(p: *mut u_int, v: u_int) -> u_int;
-}
-extern "C" {
-    pub fn atomic_fetchadd_long(p: *mut u_long, v: u_long) -> u_long;
-}
-extern "C" {
-    pub fn atomic_testandset_int(p: *mut u_int, v: u_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_testandset_long(p: *mut u_long, v: u_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_testandclear_int(p: *mut u_int, v: u_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_testandclear_long(p: *mut u_long, v: u_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_thread_fence_acq();
-}
-extern "C" {
-    pub fn atomic_thread_fence_acq_rel();
-}
-extern "C" {
-    pub fn atomic_thread_fence_rel();
-}
-extern "C" {
-    pub fn atomic_thread_fence_seq_cst();
-}
-extern "C" {
-    pub fn atomic_set_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_set_barr_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_clear_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_clear_barr_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_add_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_add_barr_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_subtract_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_subtract_barr_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_set_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_set_barr_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_clear_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_clear_barr_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_add_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_add_barr_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_subtract_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_subtract_barr_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_set_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_set_barr_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_clear_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_clear_barr_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_add_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_add_barr_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_subtract_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_subtract_barr_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_set_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_set_barr_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_clear_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_clear_barr_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_add_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_add_barr_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_subtract_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_subtract_barr_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_load_acq_char(p: *mut u_char) -> u_char;
-}
-extern "C" {
-    pub fn atomic_store_rel_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_load_acq_short(p: *mut u_short) -> u_short;
-}
-extern "C" {
-    pub fn atomic_store_rel_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_load_acq_int(p: *mut u_int) -> u_int;
-}
-extern "C" {
-    pub fn atomic_store_rel_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_load_acq_long(p: *mut u_long) -> u_long;
-}
-extern "C" {
-    pub fn atomic_store_rel_long(p: *mut u_long, v: u_long);
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct __hack {
+    _unused: [u8; 0],
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]

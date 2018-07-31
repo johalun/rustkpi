@@ -76,7 +76,8 @@ pub const IOC_OUT: ::kernel::sys::raw::c_uint = 1073741824;
 pub const IOC_IN: ::kernel::sys::raw::c_uint = 2147483648;
 pub const IOC_INOUT: ::kernel::sys::raw::c_uint = 3221225472;
 pub const IOC_DIRMASK: ::kernel::sys::raw::c_uint = 3758096384;
-pub const BUS_USER_VERSION: ::kernel::sys::raw::c_uint = 1;
+pub const BUS_USER_VERSION: ::kernel::sys::raw::c_uint = 2;
+pub const BUS_USER_BUFFER: ::kernel::sys::raw::c_uint = 3072;
 pub const DF_ENABLED: ::kernel::sys::raw::c_uint = 1;
 pub const DF_FIXEDCLASS: ::kernel::sys::raw::c_uint = 2;
 pub const DF_WILDCARD: ::kernel::sys::raw::c_uint = 4;
@@ -162,7 +163,7 @@ pub const KTR_PARMS: ::kernel::sys::raw::c_uint = 6;
 pub const BSD: ::kernel::sys::raw::c_uint = 199506;
 pub const BSD4_3: ::kernel::sys::raw::c_uint = 1;
 pub const BSD4_4: ::kernel::sys::raw::c_uint = 1;
-pub const __FreeBSD_version: ::kernel::sys::raw::c_uint = 1200064;
+pub const __FreeBSD_version: ::kernel::sys::raw::c_uint = 1200074;
 pub const P_OSREL_SIGWAIT: ::kernel::sys::raw::c_uint = 700000;
 pub const P_OSREL_SIGSEGV: ::kernel::sys::raw::c_uint = 700004;
 pub const P_OSREL_MAP_ANON: ::kernel::sys::raw::c_uint = 800104;
@@ -457,8 +458,11 @@ pub const OFFSETOF_CURPCB: ::kernel::sys::raw::c_uint = 32;
 pub const DPCPU_SETNAME: &'static [u8; 9usize] = b"set_pcpu\x00";
 pub const DPCPU_SYMPREFIX: &'static [u8; 12usize] = b"pcpu_entry_\x00";
 pub const DPCPU_MODMIN: ::kernel::sys::raw::c_uint = 2048;
+pub const UMA_PCPU_ALLOC_SIZE: ::kernel::sys::raw::c_uint = 4096;
 pub const LOCKSTAT_WRITER: ::kernel::sys::raw::c_uint = 0;
 pub const LOCKSTAT_READER: ::kernel::sys::raw::c_uint = 1;
+pub const MPLOCKED: &'static [u8; 8usize] = b"lock ; \x00";
+pub const OFFSETOF_MONITORBUF: ::kernel::sys::raw::c_uint = 256;
 pub const CR4_PGE: ::kernel::sys::raw::c_uint = 128;
 pub const INVPCID_ADDR: ::kernel::sys::raw::c_uint = 0;
 pub const INVPCID_CTX: ::kernel::sys::raw::c_uint = 1;
@@ -859,6 +863,8 @@ pub struct cap_rights {
     _unused: [u8; 0],
 }
 pub type cap_rights_t = cap_rights;
+pub type kvaddr_t = __uint64_t;
+pub type ksize_t = __uint64_t;
 pub type vm_offset_t = __vm_offset_t;
 pub type vm_ooffset_t = __int64_t;
 pub type vm_paddr_t = __vm_paddr_t;
@@ -1070,32 +1076,23 @@ pub enum device_state {
     DS_BUSY = 40,
 }
 pub use self::device_state as device_state_t;
-/// @brief Device information exported to userspace.
 #[repr(C)]
 #[derive(Copy)]
 pub struct u_device {
     pub dv_handle: usize,
     pub dv_parent: usize,
-    /// < @brief Name of device in tree.
-    pub dv_name: [::kernel::sys::raw::c_char; 32usize],
-    /// < @brief Driver description
-    pub dv_desc: [::kernel::sys::raw::c_char; 32usize],
-    /// < @brief Driver name
-    pub dv_drivername: [::kernel::sys::raw::c_char; 32usize],
-    /// < @brief Plug and play info
-    pub dv_pnpinfo: [::kernel::sys::raw::c_char; 128usize],
-    /// < @brief Where is the device?
-    pub dv_location: [::kernel::sys::raw::c_char; 128usize],
     /// < @brief API Flags for device
     pub dv_devflags: u32,
     /// < @brief flags for dev state
     pub dv_flags: u16,
     /// < @brief State of attachment
     pub dv_state: device_state_t,
+    /// < @brief NUL terminated fields
+    pub dv_fields: [::kernel::sys::raw::c_char; 3072usize],
 }
 #[test]
 fn bindgen_test_layout_u_device() {
-    assert_eq!(::core::mem::size_of::<u_device>() , 384usize , concat ! (
+    assert_eq!(::core::mem::size_of::<u_device>() , 3104usize , concat ! (
                "Size of: " , stringify ! ( u_device ) ));
     assert_eq! (::core::mem::align_of::<u_device>() , 8usize , concat ! (
                 "Alignment of " , stringify ! ( u_device ) ));
@@ -1110,45 +1107,25 @@ fn bindgen_test_layout_u_device() {
                 "Alignment of field: " , stringify ! ( u_device ) , "::" ,
                 stringify ! ( dv_parent ) ));
     assert_eq! (unsafe {
-                & ( * ( 0 as * const u_device ) ) . dv_name as * const _ as
-                usize } , 16usize , concat ! (
-                "Alignment of field: " , stringify ! ( u_device ) , "::" ,
-                stringify ! ( dv_name ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const u_device ) ) . dv_desc as * const _ as
-                usize } , 48usize , concat ! (
-                "Alignment of field: " , stringify ! ( u_device ) , "::" ,
-                stringify ! ( dv_desc ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const u_device ) ) . dv_drivername as * const _
-                as usize } , 80usize , concat ! (
-                "Alignment of field: " , stringify ! ( u_device ) , "::" ,
-                stringify ! ( dv_drivername ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const u_device ) ) . dv_pnpinfo as * const _ as
-                usize } , 112usize , concat ! (
-                "Alignment of field: " , stringify ! ( u_device ) , "::" ,
-                stringify ! ( dv_pnpinfo ) ));
-    assert_eq! (unsafe {
-                & ( * ( 0 as * const u_device ) ) . dv_location as * const _
-                as usize } , 240usize , concat ! (
-                "Alignment of field: " , stringify ! ( u_device ) , "::" ,
-                stringify ! ( dv_location ) ));
-    assert_eq! (unsafe {
                 & ( * ( 0 as * const u_device ) ) . dv_devflags as * const _
-                as usize } , 368usize , concat ! (
+                as usize } , 16usize , concat ! (
                 "Alignment of field: " , stringify ! ( u_device ) , "::" ,
                 stringify ! ( dv_devflags ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const u_device ) ) . dv_flags as * const _ as
-                usize } , 372usize , concat ! (
+                usize } , 20usize , concat ! (
                 "Alignment of field: " , stringify ! ( u_device ) , "::" ,
                 stringify ! ( dv_flags ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const u_device ) ) . dv_state as * const _ as
-                usize } , 376usize , concat ! (
+                usize } , 24usize , concat ! (
                 "Alignment of field: " , stringify ! ( u_device ) , "::" ,
                 stringify ! ( dv_state ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const u_device ) ) . dv_fields as * const _ as
+                usize } , 28usize , concat ! (
+                "Alignment of field: " , stringify ! ( u_device ) , "::" ,
+                stringify ! ( dv_fields ) ));
 }
 impl Clone for u_device {
     fn clone(&self) -> Self { *self }
@@ -1159,29 +1136,13 @@ impl Default for u_device {
 impl ::kernel::fmt::Debug for u_device {
     fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
         write!(f ,
-               "u_device {{ dv_handle: {:?}, dv_parent: {:?}, dv_name: [{}], dv_desc: [{}], dv_drivername: [{}], dv_pnpinfo: [{}], dv_location: [{}], dv_devflags: {:?}, dv_flags: {:?}, dv_state: {:?} }}"
-               , self . dv_handle , self . dv_parent , self . dv_name . iter (
-                ) . enumerate (  ) . map (
+               "u_device {{ dv_handle: {:?}, dv_parent: {:?}, dv_devflags: {:?}, dv_flags: {:?}, dv_state: {:?}, dv_fields: [{}] }}"
+               , self . dv_handle , self . dv_parent , self . dv_devflags ,
+               self . dv_flags , self . dv_state , self . dv_fields . iter (
+               ) . enumerate (  ) . map (
                | ( i , v ) | format ! (
                "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: <
-               String > (  ) , self . dv_desc . iter (  ) . enumerate (  ) .
-               map (
-               | ( i , v ) | format ! (
-               "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: <
-               String > (  ) , self . dv_drivername . iter (  ) . enumerate (
-               ) . map (
-               | ( i , v ) | format ! (
-               "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: <
-               String > (  ) , self . dv_pnpinfo . iter (  ) . enumerate (  )
-               . map (
-               | ( i , v ) | format ! (
-               "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: <
-               String > (  ) , self . dv_location . iter (  ) . enumerate (  )
-               . map (
-               | ( i , v ) | format ! (
-               "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: <
-               String > (  ) , self . dv_devflags , self . dv_flags , self .
-               dv_state)
+               String > (  ))
     }
 }
 /// @brief Device request structure used for ioctl's.
@@ -2683,7 +2644,7 @@ pub struct pcpu {
     pub pc_pcid_gen: u32,
     pub pc_smp_tlb_done: u32,
     pub pc_ibpb_set: u32,
-    pub __pad: [::kernel::sys::raw::c_char; 216usize],
+    pub __pad: [::kernel::sys::raw::c_char; 3288usize],
 }
 #[repr(C)]
 #[derive(Debug, Copy)]
@@ -2711,7 +2672,7 @@ impl Default for pcpu__bindgen_ty_1 {
 }
 #[test]
 fn bindgen_test_layout_pcpu() {
-    assert_eq!(::core::mem::size_of::<pcpu>() , 1024usize , concat ! (
+    assert_eq!(::core::mem::size_of::<pcpu>() , 4096usize , concat ! (
                "Size of: " , stringify ! ( pcpu ) ));
     assert_eq! (unsafe {
                 & ( * ( 0 as * const pcpu ) ) . pc_curthread as * const _ as
@@ -3403,191 +3364,10 @@ extern "C" {
     #[link_name = "lockstat_enabled"]
     pub static mut lockstat_enabled: bool_;
 }
-extern "C" {
-    pub fn atomic_cmpset_char(dst: *mut u_char, expect: u_char, src: u_char)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_cmpset_short(dst: *mut u_short, expect: u_short,
-                               src: u_short) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_cmpset_int(dst: *mut u_int, expect: u_int, src: u_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_cmpset_long(dst: *mut u_long, expect: u_long, src: u_long)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_fcmpset_char(dst: *mut u_char, expect: *mut u_char,
-                               src: u_char) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_fcmpset_short(dst: *mut u_short, expect: *mut u_short,
-                                src: u_short) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_fcmpset_int(dst: *mut u_int, expect: *mut u_int, src: u_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_fcmpset_long(dst: *mut u_long, expect: *mut u_long,
-                               src: u_long) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_fetchadd_int(p: *mut u_int, v: u_int) -> u_int;
-}
-extern "C" {
-    pub fn atomic_fetchadd_long(p: *mut u_long, v: u_long) -> u_long;
-}
-extern "C" {
-    pub fn atomic_testandset_int(p: *mut u_int, v: u_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_testandset_long(p: *mut u_long, v: u_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_testandclear_int(p: *mut u_int, v: u_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_testandclear_long(p: *mut u_long, v: u_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_thread_fence_acq();
-}
-extern "C" {
-    pub fn atomic_thread_fence_acq_rel();
-}
-extern "C" {
-    pub fn atomic_thread_fence_rel();
-}
-extern "C" {
-    pub fn atomic_thread_fence_seq_cst();
-}
-extern "C" {
-    pub fn atomic_set_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_set_barr_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_clear_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_clear_barr_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_add_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_add_barr_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_subtract_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_subtract_barr_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_set_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_set_barr_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_clear_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_clear_barr_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_add_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_add_barr_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_subtract_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_subtract_barr_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_set_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_set_barr_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_clear_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_clear_barr_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_add_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_add_barr_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_subtract_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_subtract_barr_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_set_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_set_barr_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_clear_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_clear_barr_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_add_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_add_barr_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_subtract_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_subtract_barr_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_load_acq_char(p: *mut u_char) -> u_char;
-}
-extern "C" {
-    pub fn atomic_store_rel_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_load_acq_short(p: *mut u_short) -> u_short;
-}
-extern "C" {
-    pub fn atomic_store_rel_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_load_acq_int(p: *mut u_int) -> u_int;
-}
-extern "C" {
-    pub fn atomic_store_rel_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_load_acq_long(p: *mut u_long) -> u_long;
-}
-extern "C" {
-    pub fn atomic_store_rel_long(p: *mut u_long, v: u_long);
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct __hack {
+    _unused: [u8; 0],
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -4160,11 +3940,6 @@ impl Clone for eventhandler_entry_shutdown_pre_sync {
 }
 impl Default for eventhandler_entry_shutdown_pre_sync {
     fn default() -> Self { unsafe { ::core::mem::zeroed() } }
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct __hack {
-    _unused: [u8; 0],
 }
 #[repr(C)]
 #[derive(Debug, Copy)]
@@ -5884,10 +5659,14 @@ extern "C" {
 extern "C" {
     pub fn devctl_queue_data(__data: *mut ::kernel::sys::raw::c_char);
 }
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct sbuf {
+    _unused: [u8; 0],
+}
 extern "C" {
-    pub fn devctl_safe_quote(__dst: *mut ::kernel::sys::raw::c_char,
-                             __src: *const ::kernel::sys::raw::c_char,
-                             len: usize);
+    pub fn devctl_safe_quote_sb(__sb: *mut sbuf,
+                                __src: *const ::kernel::sys::raw::c_char);
 }
 /// Device name parsers.  Hook to allow device enumerators to map
 /// scheme-specific names to a device.

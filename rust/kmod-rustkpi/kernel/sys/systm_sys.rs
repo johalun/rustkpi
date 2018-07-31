@@ -68,6 +68,8 @@ pub const true_: ::kernel::sys::raw::c_uint = 1;
 pub const _SIG_WORDS: ::kernel::sys::raw::c_uint = 4;
 pub const _SIG_MAXSIG: ::kernel::sys::raw::c_uint = 128;
 pub const FD_SETSIZE: ::kernel::sys::raw::c_uint = 1024;
+pub const MPLOCKED: &'static [u8; 8usize] = b"lock ; \x00";
+pub const OFFSETOF_MONITORBUF: ::kernel::sys::raw::c_uint = 256;
 pub const CR4_PGE: ::kernel::sys::raw::c_uint = 128;
 pub const INVPCID_ADDR: ::kernel::sys::raw::c_uint = 0;
 pub const INVPCID_CTX: ::kernel::sys::raw::c_uint = 1;
@@ -152,6 +154,305 @@ pub const __WORDSIZE: ::kernel::sys::raw::c_uint = 64;
 pub const WCHAR_MIN: ::kernel::sys::raw::c_int = -2147483648;
 pub const WCHAR_MAX: ::kernel::sys::raw::c_uint = 2147483647;
 pub const RSIZE_MAX: ::kernel::sys::raw::c_int = -1;
+pub const BSD: ::kernel::sys::raw::c_uint = 199506;
+pub const BSD4_3: ::kernel::sys::raw::c_uint = 1;
+pub const BSD4_4: ::kernel::sys::raw::c_uint = 1;
+pub const __FreeBSD_version: ::kernel::sys::raw::c_uint = 1200074;
+pub const P_OSREL_SIGWAIT: ::kernel::sys::raw::c_uint = 700000;
+pub const P_OSREL_SIGSEGV: ::kernel::sys::raw::c_uint = 700004;
+pub const P_OSREL_MAP_ANON: ::kernel::sys::raw::c_uint = 800104;
+pub const P_OSREL_MAP_FSTRICT: ::kernel::sys::raw::c_uint = 1100036;
+pub const P_OSREL_SHUTDOWN_ENOTCONN: ::kernel::sys::raw::c_uint = 1100077;
+pub const P_OSREL_MAP_GUARD: ::kernel::sys::raw::c_uint = 1200035;
+pub const P_OSREL_WRFSBASE: ::kernel::sys::raw::c_uint = 1200041;
+pub const P_OSREL_CK_CYLGRP: ::kernel::sys::raw::c_uint = 1200046;
+pub const P_OSREL_VMTOTAL64: ::kernel::sys::raw::c_uint = 1200054;
+pub const ARG_MAX: ::kernel::sys::raw::c_uint = 262144;
+pub const CHILD_MAX: ::kernel::sys::raw::c_uint = 40;
+pub const MAX_CANON: ::kernel::sys::raw::c_uint = 255;
+pub const MAX_INPUT: ::kernel::sys::raw::c_uint = 255;
+pub const NAME_MAX: ::kernel::sys::raw::c_uint = 255;
+pub const NGROUPS_MAX: ::kernel::sys::raw::c_uint = 1023;
+pub const OPEN_MAX: ::kernel::sys::raw::c_uint = 64;
+pub const PATH_MAX: ::kernel::sys::raw::c_uint = 1024;
+pub const PIPE_BUF: ::kernel::sys::raw::c_uint = 512;
+pub const IOV_MAX: ::kernel::sys::raw::c_uint = 1024;
+pub const MAXCOMLEN: ::kernel::sys::raw::c_uint = 19;
+pub const MAXINTERP: ::kernel::sys::raw::c_uint = 1024;
+pub const MAXLOGNAME: ::kernel::sys::raw::c_uint = 33;
+pub const MAXUPRC: ::kernel::sys::raw::c_uint = 40;
+pub const NCARGS: ::kernel::sys::raw::c_uint = 262144;
+pub const NGROUPS: ::kernel::sys::raw::c_uint = 1024;
+pub const NOFILE: ::kernel::sys::raw::c_uint = 64;
+pub const NOGROUP: ::kernel::sys::raw::c_uint = 65535;
+pub const MAXHOSTNAMELEN: ::kernel::sys::raw::c_uint = 256;
+pub const SPECNAMELEN: ::kernel::sys::raw::c_uint = 63;
+pub const EPERM: ::kernel::sys::raw::c_uint = 1;
+pub const ENOENT: ::kernel::sys::raw::c_uint = 2;
+pub const ESRCH: ::kernel::sys::raw::c_uint = 3;
+pub const EINTR: ::kernel::sys::raw::c_uint = 4;
+pub const EIO: ::kernel::sys::raw::c_uint = 5;
+pub const ENXIO: ::kernel::sys::raw::c_uint = 6;
+pub const E2BIG: ::kernel::sys::raw::c_uint = 7;
+pub const ENOEXEC: ::kernel::sys::raw::c_uint = 8;
+pub const EBADF: ::kernel::sys::raw::c_uint = 9;
+pub const ECHILD: ::kernel::sys::raw::c_uint = 10;
+pub const EDEADLK: ::kernel::sys::raw::c_uint = 11;
+pub const ENOMEM: ::kernel::sys::raw::c_uint = 12;
+pub const EACCES: ::kernel::sys::raw::c_uint = 13;
+pub const EFAULT: ::kernel::sys::raw::c_uint = 14;
+pub const ENOTBLK: ::kernel::sys::raw::c_uint = 15;
+pub const EBUSY: ::kernel::sys::raw::c_uint = 16;
+pub const EEXIST: ::kernel::sys::raw::c_uint = 17;
+pub const EXDEV: ::kernel::sys::raw::c_uint = 18;
+pub const ENODEV: ::kernel::sys::raw::c_uint = 19;
+pub const ENOTDIR: ::kernel::sys::raw::c_uint = 20;
+pub const EISDIR: ::kernel::sys::raw::c_uint = 21;
+pub const EINVAL: ::kernel::sys::raw::c_uint = 22;
+pub const ENFILE: ::kernel::sys::raw::c_uint = 23;
+pub const EMFILE: ::kernel::sys::raw::c_uint = 24;
+pub const ENOTTY: ::kernel::sys::raw::c_uint = 25;
+pub const ETXTBSY: ::kernel::sys::raw::c_uint = 26;
+pub const EFBIG: ::kernel::sys::raw::c_uint = 27;
+pub const ENOSPC: ::kernel::sys::raw::c_uint = 28;
+pub const ESPIPE: ::kernel::sys::raw::c_uint = 29;
+pub const EROFS: ::kernel::sys::raw::c_uint = 30;
+pub const EMLINK: ::kernel::sys::raw::c_uint = 31;
+pub const EPIPE: ::kernel::sys::raw::c_uint = 32;
+pub const EDOM: ::kernel::sys::raw::c_uint = 33;
+pub const ERANGE: ::kernel::sys::raw::c_uint = 34;
+pub const EAGAIN: ::kernel::sys::raw::c_uint = 35;
+pub const EWOULDBLOCK: ::kernel::sys::raw::c_uint = 35;
+pub const EINPROGRESS: ::kernel::sys::raw::c_uint = 36;
+pub const EALREADY: ::kernel::sys::raw::c_uint = 37;
+pub const ENOTSOCK: ::kernel::sys::raw::c_uint = 38;
+pub const EDESTADDRREQ: ::kernel::sys::raw::c_uint = 39;
+pub const EMSGSIZE: ::kernel::sys::raw::c_uint = 40;
+pub const EPROTOTYPE: ::kernel::sys::raw::c_uint = 41;
+pub const ENOPROTOOPT: ::kernel::sys::raw::c_uint = 42;
+pub const EPROTONOSUPPORT: ::kernel::sys::raw::c_uint = 43;
+pub const ESOCKTNOSUPPORT: ::kernel::sys::raw::c_uint = 44;
+pub const EOPNOTSUPP: ::kernel::sys::raw::c_uint = 45;
+pub const ENOTSUP: ::kernel::sys::raw::c_uint = 45;
+pub const EPFNOSUPPORT: ::kernel::sys::raw::c_uint = 46;
+pub const EAFNOSUPPORT: ::kernel::sys::raw::c_uint = 47;
+pub const EADDRINUSE: ::kernel::sys::raw::c_uint = 48;
+pub const EADDRNOTAVAIL: ::kernel::sys::raw::c_uint = 49;
+pub const ENETDOWN: ::kernel::sys::raw::c_uint = 50;
+pub const ENETUNREACH: ::kernel::sys::raw::c_uint = 51;
+pub const ENETRESET: ::kernel::sys::raw::c_uint = 52;
+pub const ECONNABORTED: ::kernel::sys::raw::c_uint = 53;
+pub const ECONNRESET: ::kernel::sys::raw::c_uint = 54;
+pub const ENOBUFS: ::kernel::sys::raw::c_uint = 55;
+pub const EISCONN: ::kernel::sys::raw::c_uint = 56;
+pub const ENOTCONN: ::kernel::sys::raw::c_uint = 57;
+pub const ESHUTDOWN: ::kernel::sys::raw::c_uint = 58;
+pub const ETOOMANYREFS: ::kernel::sys::raw::c_uint = 59;
+pub const ETIMEDOUT: ::kernel::sys::raw::c_uint = 60;
+pub const ECONNREFUSED: ::kernel::sys::raw::c_uint = 61;
+pub const ELOOP: ::kernel::sys::raw::c_uint = 62;
+pub const ENAMETOOLONG: ::kernel::sys::raw::c_uint = 63;
+pub const EHOSTDOWN: ::kernel::sys::raw::c_uint = 64;
+pub const EHOSTUNREACH: ::kernel::sys::raw::c_uint = 65;
+pub const ENOTEMPTY: ::kernel::sys::raw::c_uint = 66;
+pub const EPROCLIM: ::kernel::sys::raw::c_uint = 67;
+pub const EUSERS: ::kernel::sys::raw::c_uint = 68;
+pub const EDQUOT: ::kernel::sys::raw::c_uint = 69;
+pub const ESTALE: ::kernel::sys::raw::c_uint = 70;
+pub const EREMOTE: ::kernel::sys::raw::c_uint = 71;
+pub const EBADRPC: ::kernel::sys::raw::c_uint = 72;
+pub const ERPCMISMATCH: ::kernel::sys::raw::c_uint = 73;
+pub const EPROGUNAVAIL: ::kernel::sys::raw::c_uint = 74;
+pub const EPROGMISMATCH: ::kernel::sys::raw::c_uint = 75;
+pub const EPROCUNAVAIL: ::kernel::sys::raw::c_uint = 76;
+pub const ENOLCK: ::kernel::sys::raw::c_uint = 77;
+pub const ENOSYS: ::kernel::sys::raw::c_uint = 78;
+pub const EFTYPE: ::kernel::sys::raw::c_uint = 79;
+pub const EAUTH: ::kernel::sys::raw::c_uint = 80;
+pub const ENEEDAUTH: ::kernel::sys::raw::c_uint = 81;
+pub const EIDRM: ::kernel::sys::raw::c_uint = 82;
+pub const ENOMSG: ::kernel::sys::raw::c_uint = 83;
+pub const EOVERFLOW: ::kernel::sys::raw::c_uint = 84;
+pub const ECANCELED: ::kernel::sys::raw::c_uint = 85;
+pub const EILSEQ: ::kernel::sys::raw::c_uint = 86;
+pub const ENOATTR: ::kernel::sys::raw::c_uint = 87;
+pub const EDOOFUS: ::kernel::sys::raw::c_uint = 88;
+pub const EBADMSG: ::kernel::sys::raw::c_uint = 89;
+pub const EMULTIHOP: ::kernel::sys::raw::c_uint = 90;
+pub const ENOLINK: ::kernel::sys::raw::c_uint = 91;
+pub const EPROTO: ::kernel::sys::raw::c_uint = 92;
+pub const ENOTCAPABLE: ::kernel::sys::raw::c_uint = 93;
+pub const ECAPMODE: ::kernel::sys::raw::c_uint = 94;
+pub const ENOTRECOVERABLE: ::kernel::sys::raw::c_uint = 95;
+pub const EOWNERDEAD: ::kernel::sys::raw::c_uint = 96;
+pub const ELAST: ::kernel::sys::raw::c_uint = 96;
+pub const ERESTART: ::kernel::sys::raw::c_int = -1;
+pub const EJUSTRETURN: ::kernel::sys::raw::c_int = -2;
+pub const ENOIOCTL: ::kernel::sys::raw::c_int = -3;
+pub const EDIRIOCTL: ::kernel::sys::raw::c_int = -4;
+pub const ERELOOKUP: ::kernel::sys::raw::c_int = -5;
+pub const DST_NONE: ::kernel::sys::raw::c_uint = 0;
+pub const DST_USA: ::kernel::sys::raw::c_uint = 1;
+pub const DST_AUST: ::kernel::sys::raw::c_uint = 2;
+pub const DST_WET: ::kernel::sys::raw::c_uint = 3;
+pub const DST_MET: ::kernel::sys::raw::c_uint = 4;
+pub const DST_EET: ::kernel::sys::raw::c_uint = 5;
+pub const DST_CAN: ::kernel::sys::raw::c_uint = 6;
+pub const SBT_MAX: ::kernel::sys::raw::c_ulonglong = 9223372036854775807;
+pub const ITIMER_REAL: ::kernel::sys::raw::c_uint = 0;
+pub const ITIMER_VIRTUAL: ::kernel::sys::raw::c_uint = 1;
+pub const ITIMER_PROF: ::kernel::sys::raw::c_uint = 2;
+pub const CLOCK_REALTIME: ::kernel::sys::raw::c_uint = 0;
+pub const CLOCK_VIRTUAL: ::kernel::sys::raw::c_uint = 1;
+pub const CLOCK_PROF: ::kernel::sys::raw::c_uint = 2;
+pub const CLOCK_MONOTONIC: ::kernel::sys::raw::c_uint = 4;
+pub const CLOCK_UPTIME: ::kernel::sys::raw::c_uint = 5;
+pub const CLOCK_UPTIME_PRECISE: ::kernel::sys::raw::c_uint = 7;
+pub const CLOCK_UPTIME_FAST: ::kernel::sys::raw::c_uint = 8;
+pub const CLOCK_REALTIME_PRECISE: ::kernel::sys::raw::c_uint = 9;
+pub const CLOCK_REALTIME_FAST: ::kernel::sys::raw::c_uint = 10;
+pub const CLOCK_MONOTONIC_PRECISE: ::kernel::sys::raw::c_uint = 11;
+pub const CLOCK_MONOTONIC_FAST: ::kernel::sys::raw::c_uint = 12;
+pub const CLOCK_SECOND: ::kernel::sys::raw::c_uint = 13;
+pub const CLOCK_THREAD_CPUTIME_ID: ::kernel::sys::raw::c_uint = 14;
+pub const CLOCK_PROCESS_CPUTIME_ID: ::kernel::sys::raw::c_uint = 15;
+pub const TIMER_RELTIME: ::kernel::sys::raw::c_uint = 0;
+pub const TIMER_ABSTIME: ::kernel::sys::raw::c_uint = 1;
+pub const CPUCLOCK_WHICH_PID: ::kernel::sys::raw::c_uint = 0;
+pub const CPUCLOCK_WHICH_TID: ::kernel::sys::raw::c_uint = 1;
+pub const TC_DEFAULTPERC: ::kernel::sys::raw::c_uint = 5;
+pub const PRI_ITHD: ::kernel::sys::raw::c_uint = 1;
+pub const PRI_REALTIME: ::kernel::sys::raw::c_uint = 2;
+pub const PRI_TIMESHARE: ::kernel::sys::raw::c_uint = 3;
+pub const PRI_IDLE: ::kernel::sys::raw::c_uint = 4;
+pub const PRI_FIFO_BIT: ::kernel::sys::raw::c_uint = 8;
+pub const PRI_FIFO: ::kernel::sys::raw::c_uint = 10;
+pub const PRI_MIN: ::kernel::sys::raw::c_uint = 0;
+pub const PRI_MAX: ::kernel::sys::raw::c_uint = 255;
+pub const PRI_MIN_ITHD: ::kernel::sys::raw::c_uint = 0;
+pub const PI_REALTIME: ::kernel::sys::raw::c_uint = 0;
+pub const PI_AV: ::kernel::sys::raw::c_uint = 4;
+pub const PI_NET: ::kernel::sys::raw::c_uint = 8;
+pub const PI_DISK: ::kernel::sys::raw::c_uint = 12;
+pub const PI_TTY: ::kernel::sys::raw::c_uint = 16;
+pub const PI_DULL: ::kernel::sys::raw::c_uint = 20;
+pub const PI_SOFT: ::kernel::sys::raw::c_uint = 24;
+pub const PRI_MIN_REALTIME: ::kernel::sys::raw::c_uint = 48;
+pub const PRI_MIN_KERN: ::kernel::sys::raw::c_uint = 80;
+pub const PSWP: ::kernel::sys::raw::c_uint = 80;
+pub const PVM: ::kernel::sys::raw::c_uint = 84;
+pub const PINOD: ::kernel::sys::raw::c_uint = 88;
+pub const PRIBIO: ::kernel::sys::raw::c_uint = 92;
+pub const PVFS: ::kernel::sys::raw::c_uint = 96;
+pub const PZERO: ::kernel::sys::raw::c_uint = 100;
+pub const PSOCK: ::kernel::sys::raw::c_uint = 104;
+pub const PWAIT: ::kernel::sys::raw::c_uint = 108;
+pub const PLOCK: ::kernel::sys::raw::c_uint = 112;
+pub const PPAUSE: ::kernel::sys::raw::c_uint = 116;
+pub const PRI_MIN_TIMESHARE: ::kernel::sys::raw::c_uint = 120;
+pub const PUSER: ::kernel::sys::raw::c_uint = 120;
+pub const PRI_MIN_IDLE: ::kernel::sys::raw::c_uint = 224;
+pub const PRI_MAX_IDLE: ::kernel::sys::raw::c_uint = 255;
+pub const PRI_USER: ::kernel::sys::raw::c_int = -2;
+pub const PRI_UNCHANGED: ::kernel::sys::raw::c_int = -1;
+pub const FALSE: ::kernel::sys::raw::c_uint = 0;
+pub const TRUE: ::kernel::sys::raw::c_uint = 1;
+pub const MACHINE: &'static [u8; 6usize] = b"amd64\x00";
+pub const MACHINE_ARCH: &'static [u8; 6usize] = b"amd64\x00";
+pub const MACHINE_ARCH32: &'static [u8; 5usize] = b"i386\x00";
+pub const MAXCPU: ::kernel::sys::raw::c_uint = 256;
+pub const MAXMEMDOM: ::kernel::sys::raw::c_uint = 8;
+pub const CACHE_LINE_SHIFT: ::kernel::sys::raw::c_uint = 6;
+pub const CACHE_LINE_SIZE: ::kernel::sys::raw::c_uint = 64;
+pub const NPTEPGSHIFT: ::kernel::sys::raw::c_uint = 9;
+pub const PAGE_SHIFT: ::kernel::sys::raw::c_uint = 12;
+pub const PAGE_SIZE: ::kernel::sys::raw::c_uint = 4096;
+pub const PAGE_MASK: ::kernel::sys::raw::c_uint = 4095;
+pub const NPDEPGSHIFT: ::kernel::sys::raw::c_uint = 9;
+pub const PDRSHIFT: ::kernel::sys::raw::c_uint = 21;
+pub const NBPDR: ::kernel::sys::raw::c_uint = 2097152;
+pub const PDRMASK: ::kernel::sys::raw::c_uint = 2097151;
+pub const NPDPEPGSHIFT: ::kernel::sys::raw::c_uint = 9;
+pub const PDPSHIFT: ::kernel::sys::raw::c_uint = 30;
+pub const NBPDP: ::kernel::sys::raw::c_uint = 1073741824;
+pub const PDPMASK: ::kernel::sys::raw::c_uint = 1073741823;
+pub const NPML4EPGSHIFT: ::kernel::sys::raw::c_uint = 9;
+pub const PML4SHIFT: ::kernel::sys::raw::c_uint = 39;
+pub const NBPML4: ::kernel::sys::raw::c_ulonglong = 549755813888;
+pub const PML4MASK: ::kernel::sys::raw::c_ulonglong = 549755813887;
+pub const MAXPAGESIZES: ::kernel::sys::raw::c_uint = 3;
+pub const IOPAGES: ::kernel::sys::raw::c_uint = 2;
+pub const IOPERM_BITMAP_SIZE: ::kernel::sys::raw::c_uint = 8193;
+pub const KSTACK_PAGES: ::kernel::sys::raw::c_uint = 4;
+pub const KSTACK_GUARD_PAGES: ::kernel::sys::raw::c_uint = 1;
+pub const DEV_BSHIFT: ::kernel::sys::raw::c_uint = 9;
+pub const DEV_BSIZE: ::kernel::sys::raw::c_uint = 512;
+pub const BLKDEV_IOSIZE: ::kernel::sys::raw::c_uint = 4096;
+pub const DFLTPHYS: ::kernel::sys::raw::c_uint = 65536;
+pub const MAXPHYS: ::kernel::sys::raw::c_uint = 131072;
+pub const MAXDUMPPGS: ::kernel::sys::raw::c_uint = 16;
+pub const MSIZE: ::kernel::sys::raw::c_uint = 256;
+pub const MCLSHIFT: ::kernel::sys::raw::c_uint = 11;
+pub const MCLBYTES: ::kernel::sys::raw::c_uint = 2048;
+pub const MJUMPAGESIZE: ::kernel::sys::raw::c_uint = 4096;
+pub const MJUM9BYTES: ::kernel::sys::raw::c_uint = 9216;
+pub const MJUM16BYTES: ::kernel::sys::raw::c_uint = 16384;
+pub const PRIMASK: ::kernel::sys::raw::c_uint = 255;
+pub const PCATCH: ::kernel::sys::raw::c_uint = 256;
+pub const PDROP: ::kernel::sys::raw::c_uint = 512;
+pub const NZERO: ::kernel::sys::raw::c_uint = 0;
+pub const NBBY: ::kernel::sys::raw::c_uint = 8;
+pub const CMASK: ::kernel::sys::raw::c_uint = 18;
+pub const MAXBSIZE: ::kernel::sys::raw::c_uint = 65536;
+pub const MAXBCACHEBUF: ::kernel::sys::raw::c_uint = 65536;
+pub const BKVASIZE: ::kernel::sys::raw::c_uint = 16384;
+pub const BKVAMASK: ::kernel::sys::raw::c_uint = 16383;
+pub const MAXPATHLEN: ::kernel::sys::raw::c_uint = 1024;
+pub const MAXSYMLINKS: ::kernel::sys::raw::c_uint = 32;
+pub const FSHIFT: ::kernel::sys::raw::c_uint = 11;
+pub const FSCALE: ::kernel::sys::raw::c_uint = 2048;
+pub const CPU_SETSIZE: ::kernel::sys::raw::c_uint = 256;
+pub const CPU_MAXSIZE: ::kernel::sys::raw::c_uint = 256;
+pub const PRIO_MIN: ::kernel::sys::raw::c_int = -20;
+pub const PRIO_MAX: ::kernel::sys::raw::c_uint = 20;
+pub const PRIO_PROCESS: ::kernel::sys::raw::c_uint = 0;
+pub const PRIO_PGRP: ::kernel::sys::raw::c_uint = 1;
+pub const PRIO_USER: ::kernel::sys::raw::c_uint = 2;
+pub const RUSAGE_SELF: ::kernel::sys::raw::c_uint = 0;
+pub const RUSAGE_CHILDREN: ::kernel::sys::raw::c_int = -1;
+pub const RUSAGE_THREAD: ::kernel::sys::raw::c_uint = 1;
+pub const RLIMIT_CPU: ::kernel::sys::raw::c_uint = 0;
+pub const RLIMIT_FSIZE: ::kernel::sys::raw::c_uint = 1;
+pub const RLIMIT_DATA: ::kernel::sys::raw::c_uint = 2;
+pub const RLIMIT_STACK: ::kernel::sys::raw::c_uint = 3;
+pub const RLIMIT_CORE: ::kernel::sys::raw::c_uint = 4;
+pub const RLIMIT_RSS: ::kernel::sys::raw::c_uint = 5;
+pub const RLIMIT_MEMLOCK: ::kernel::sys::raw::c_uint = 6;
+pub const RLIMIT_NPROC: ::kernel::sys::raw::c_uint = 7;
+pub const RLIMIT_NOFILE: ::kernel::sys::raw::c_uint = 8;
+pub const RLIMIT_SBSIZE: ::kernel::sys::raw::c_uint = 9;
+pub const RLIMIT_VMEM: ::kernel::sys::raw::c_uint = 10;
+pub const RLIMIT_AS: ::kernel::sys::raw::c_uint = 10;
+pub const RLIMIT_NPTS: ::kernel::sys::raw::c_uint = 11;
+pub const RLIMIT_SWAP: ::kernel::sys::raw::c_uint = 12;
+pub const RLIMIT_KQUEUES: ::kernel::sys::raw::c_uint = 13;
+pub const RLIMIT_UMTXP: ::kernel::sys::raw::c_uint = 14;
+pub const RLIM_NLIMITS: ::kernel::sys::raw::c_uint = 15;
+pub const CP_USER: ::kernel::sys::raw::c_uint = 0;
+pub const CP_NICE: ::kernel::sys::raw::c_uint = 1;
+pub const CP_SYS: ::kernel::sys::raw::c_uint = 2;
+pub const CP_INTR: ::kernel::sys::raw::c_uint = 3;
+pub const CP_IDLE: ::kernel::sys::raw::c_uint = 4;
+pub const CPUSTATES: ::kernel::sys::raw::c_uint = 5;
+pub const PC_PTI_STACK_SZ: ::kernel::sys::raw::c_uint = 16;
+pub const PC_DBREG_CMD_NONE: ::kernel::sys::raw::c_uint = 0;
+pub const PC_DBREG_CMD_LOAD: ::kernel::sys::raw::c_uint = 1;
+pub const OFFSETOF_CURTHREAD: ::kernel::sys::raw::c_uint = 0;
+pub const OFFSETOF_CURPCB: ::kernel::sys::raw::c_uint = 32;
+pub const DPCPU_SETNAME: &'static [u8; 9usize] = b"set_pcpu\x00";
+pub const DPCPU_SYMPREFIX: &'static [u8; 12usize] = b"pcpu_entry_\x00";
+pub const DPCPU_MODMIN: ::kernel::sys::raw::c_uint = 2048;
+pub const UMA_PCPU_ALLOC_SIZE: ::kernel::sys::raw::c_uint = 4096;
 pub const HASH_NOWAIT: ::kernel::sys::raw::c_uint = 1;
 pub const HASH_WAITOK: ::kernel::sys::raw::c_uint = 2;
 pub const HD_COLUMN_MASK: ::kernel::sys::raw::c_uint = 255;
@@ -159,6 +460,8 @@ pub const HD_DELIM_MASK: ::kernel::sys::raw::c_uint = 65280;
 pub const HD_OMIT_COUNT: ::kernel::sys::raw::c_uint = 65536;
 pub const HD_OMIT_HEX: ::kernel::sys::raw::c_uint = 131072;
 pub const HD_OMIT_CHARS: ::kernel::sys::raw::c_uint = 262144;
+pub const GETENV_UNSIGNED: ::kernel::sys::raw::c_uint = 0;
+pub const GETENV_SIGNED: ::kernel::sys::raw::c_uint = 1;
 pub const LIBKERN_LEN_BCD2BIN: ::kernel::sys::raw::c_uint = 154;
 pub const LIBKERN_LEN_BIN2BCD: ::kernel::sys::raw::c_uint = 100;
 pub const LIBKERN_LEN_HEX2ASCII: ::kernel::sys::raw::c_uint = 36;
@@ -494,6 +797,8 @@ pub struct cap_rights {
     _unused: [u8; 0],
 }
 pub type cap_rights_t = cap_rights;
+pub type kvaddr_t = __uint64_t;
+pub type ksize_t = __uint64_t;
 pub type vm_offset_t = __vm_offset_t;
 pub type vm_ooffset_t = __int64_t;
 pub type vm_paddr_t = __vm_paddr_t;
@@ -641,191 +946,10 @@ fn bindgen_test_layout_fd_set() {
 impl Clone for fd_set {
     fn clone(&self) -> Self { *self }
 }
-extern "C" {
-    pub fn atomic_cmpset_char(dst: *mut u_char, expect: u_char, src: u_char)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_cmpset_short(dst: *mut u_short, expect: u_short,
-                               src: u_short) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_cmpset_int(dst: *mut u_int, expect: u_int, src: u_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_cmpset_long(dst: *mut u_long, expect: u_long, src: u_long)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_fcmpset_char(dst: *mut u_char, expect: *mut u_char,
-                               src: u_char) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_fcmpset_short(dst: *mut u_short, expect: *mut u_short,
-                                src: u_short) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_fcmpset_int(dst: *mut u_int, expect: *mut u_int, src: u_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_fcmpset_long(dst: *mut u_long, expect: *mut u_long,
-                               src: u_long) -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_fetchadd_int(p: *mut u_int, v: u_int) -> u_int;
-}
-extern "C" {
-    pub fn atomic_fetchadd_long(p: *mut u_long, v: u_long) -> u_long;
-}
-extern "C" {
-    pub fn atomic_testandset_int(p: *mut u_int, v: u_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_testandset_long(p: *mut u_long, v: u_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_testandclear_int(p: *mut u_int, v: u_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_testandclear_long(p: *mut u_long, v: u_int)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    pub fn atomic_thread_fence_acq();
-}
-extern "C" {
-    pub fn atomic_thread_fence_acq_rel();
-}
-extern "C" {
-    pub fn atomic_thread_fence_rel();
-}
-extern "C" {
-    pub fn atomic_thread_fence_seq_cst();
-}
-extern "C" {
-    pub fn atomic_set_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_set_barr_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_clear_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_clear_barr_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_add_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_add_barr_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_subtract_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_subtract_barr_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_set_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_set_barr_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_clear_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_clear_barr_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_add_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_add_barr_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_subtract_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_subtract_barr_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_set_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_set_barr_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_clear_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_clear_barr_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_add_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_add_barr_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_subtract_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_subtract_barr_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_set_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_set_barr_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_clear_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_clear_barr_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_add_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_add_barr_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_subtract_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_subtract_barr_long(p: *mut u_long, v: u_long);
-}
-extern "C" {
-    pub fn atomic_load_acq_char(p: *mut u_char) -> u_char;
-}
-extern "C" {
-    pub fn atomic_store_rel_char(p: *mut u_char, v: u_char);
-}
-extern "C" {
-    pub fn atomic_load_acq_short(p: *mut u_short) -> u_short;
-}
-extern "C" {
-    pub fn atomic_store_rel_short(p: *mut u_short, v: u_short);
-}
-extern "C" {
-    pub fn atomic_load_acq_int(p: *mut u_int) -> u_int;
-}
-extern "C" {
-    pub fn atomic_store_rel_int(p: *mut u_int, v: u_int);
-}
-extern "C" {
-    pub fn atomic_load_acq_long(p: *mut u_long) -> u_long;
-}
-extern "C" {
-    pub fn atomic_store_rel_long(p: *mut u_long, v: u_long);
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct __hack {
+    _unused: [u8; 0],
 }
 #[repr(C)]
 #[derive(Debug, Copy, Clone)]
@@ -989,9 +1113,45 @@ extern "C" {
     pub fn wrmsr_safe(msr: u_int, newval: u64) -> ::kernel::sys::raw::c_int;
 }
 #[repr(C)]
-#[derive(Debug, Copy, Clone)]
+#[derive(Debug, Copy)]
 pub struct lock_object {
-    _unused: [u8; 0],
+    pub lo_name: *const ::kernel::sys::raw::c_char,
+    pub lo_flags: u_int,
+    pub lo_data: u_int,
+    pub lo_witness: *mut witness,
+}
+#[test]
+fn bindgen_test_layout_lock_object() {
+    assert_eq!(::core::mem::size_of::<lock_object>() , 24usize , concat ! (
+               "Size of: " , stringify ! ( lock_object ) ));
+    assert_eq! (::core::mem::align_of::<lock_object>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( lock_object ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const lock_object ) ) . lo_name as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( lock_object ) , "::" ,
+                stringify ! ( lo_name ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const lock_object ) ) . lo_flags as * const _
+                as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( lock_object ) , "::" ,
+                stringify ! ( lo_flags ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const lock_object ) ) . lo_data as * const _ as
+                usize } , 12usize , concat ! (
+                "Alignment of field: " , stringify ! ( lock_object ) , "::" ,
+                stringify ! ( lo_data ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const lock_object ) ) . lo_witness as * const _
+                as usize } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( lock_object ) , "::" ,
+                stringify ! ( lo_witness ) ));
+}
+impl Clone for lock_object {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for lock_object {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
 }
 #[repr(C)]
 #[derive(Debug, Copy)]
@@ -1454,26 +1614,1354 @@ pub enum VM_GUEST {
     VM_GUEST_BHYVE = 6,
     VM_LAST = 7,
 }
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct timezone {
+    pub tz_minuteswest: ::kernel::sys::raw::c_int,
+    pub tz_dsttime: ::kernel::sys::raw::c_int,
+}
+#[test]
+fn bindgen_test_layout_timezone() {
+    assert_eq!(::core::mem::size_of::<timezone>() , 8usize , concat ! (
+               "Size of: " , stringify ! ( timezone ) ));
+    assert_eq! (::core::mem::align_of::<timezone>() , 4usize , concat ! (
+                "Alignment of " , stringify ! ( timezone ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const timezone ) ) . tz_minuteswest as * const
+                _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( timezone ) , "::" ,
+                stringify ! ( tz_minuteswest ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const timezone ) ) . tz_dsttime as * const _ as
+                usize } , 4usize , concat ! (
+                "Alignment of field: " , stringify ! ( timezone ) , "::" ,
+                stringify ! ( tz_dsttime ) ));
+}
+impl Clone for timezone {
+    fn clone(&self) -> Self { *self }
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct bintime {
+    pub sec: time_t,
+    pub frac: u64,
+}
+#[test]
+fn bindgen_test_layout_bintime() {
+    assert_eq!(::core::mem::size_of::<bintime>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( bintime ) ));
+    assert_eq! (::core::mem::align_of::<bintime>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( bintime ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const bintime ) ) . sec as * const _ as usize }
+                , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( bintime ) , "::" ,
+                stringify ! ( sec ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const bintime ) ) . frac as * const _ as usize
+                } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( bintime ) , "::" ,
+                stringify ! ( frac ) ));
+}
+impl Clone for bintime {
+    fn clone(&self) -> Self { *self }
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct itimerval {
+    pub it_interval: timeval,
+    pub it_value: timeval,
+}
+#[test]
+fn bindgen_test_layout_itimerval() {
+    assert_eq!(::core::mem::size_of::<itimerval>() , 32usize , concat ! (
+               "Size of: " , stringify ! ( itimerval ) ));
+    assert_eq! (::core::mem::align_of::<itimerval>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( itimerval ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const itimerval ) ) . it_interval as * const _
+                as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( itimerval ) , "::" ,
+                stringify ! ( it_interval ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const itimerval ) ) . it_value as * const _ as
+                usize } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( itimerval ) , "::" ,
+                stringify ! ( it_value ) ));
+}
+impl Clone for itimerval {
+    fn clone(&self) -> Self { *self }
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct clockinfo {
+    pub hz: ::kernel::sys::raw::c_int,
+    pub tick: ::kernel::sys::raw::c_int,
+    pub spare: ::kernel::sys::raw::c_int,
+    pub stathz: ::kernel::sys::raw::c_int,
+    pub profhz: ::kernel::sys::raw::c_int,
+}
+#[test]
+fn bindgen_test_layout_clockinfo() {
+    assert_eq!(::core::mem::size_of::<clockinfo>() , 20usize , concat ! (
+               "Size of: " , stringify ! ( clockinfo ) ));
+    assert_eq! (::core::mem::align_of::<clockinfo>() , 4usize , concat ! (
+                "Alignment of " , stringify ! ( clockinfo ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const clockinfo ) ) . hz as * const _ as usize
+                } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( clockinfo ) , "::" ,
+                stringify ! ( hz ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const clockinfo ) ) . tick as * const _ as
+                usize } , 4usize , concat ! (
+                "Alignment of field: " , stringify ! ( clockinfo ) , "::" ,
+                stringify ! ( tick ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const clockinfo ) ) . spare as * const _ as
+                usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( clockinfo ) , "::" ,
+                stringify ! ( spare ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const clockinfo ) ) . stathz as * const _ as
+                usize } , 12usize , concat ! (
+                "Alignment of field: " , stringify ! ( clockinfo ) , "::" ,
+                stringify ! ( stathz ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const clockinfo ) ) . profhz as * const _ as
+                usize } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( clockinfo ) , "::" ,
+                stringify ! ( profhz ) ));
+}
+impl Clone for clockinfo {
+    fn clone(&self) -> Self { *self }
+}
+extern "C" {
+    pub fn inittodr(base: time_t);
+}
+extern "C" {
+    pub fn resettodr();
+}
+extern "C" {
+    #[link_name = "time_second"]
+    pub static mut time_second: time_t;
+}
+extern "C" {
+    #[link_name = "time_uptime"]
+    pub static mut time_uptime: time_t;
+}
+extern "C" {
+    #[link_name = "tc_tick_bt"]
+    pub static mut tc_tick_bt: bintime;
+}
+extern "C" {
+    #[link_name = "tc_tick_sbt"]
+    pub static mut tc_tick_sbt: sbintime_t;
+}
+extern "C" {
+    #[link_name = "tick_bt"]
+    pub static mut tick_bt: bintime;
+}
+extern "C" {
+    #[link_name = "tick_sbt"]
+    pub static mut tick_sbt: sbintime_t;
+}
+extern "C" {
+    #[link_name = "tc_precexp"]
+    pub static mut tc_precexp: ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    #[link_name = "tc_timepercentage"]
+    pub static mut tc_timepercentage: ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    #[link_name = "bt_timethreshold"]
+    pub static mut bt_timethreshold: bintime;
+}
+extern "C" {
+    #[link_name = "bt_tickthreshold"]
+    pub static mut bt_tickthreshold: bintime;
+}
+extern "C" {
+    #[link_name = "sbt_timethreshold"]
+    pub static mut sbt_timethreshold: sbintime_t;
+}
+extern "C" {
+    #[link_name = "sbt_tickthreshold"]
+    pub static mut sbt_tickthreshold: sbintime_t;
+}
+extern "C" {
+    #[link_name = "rtc_generation"]
+    pub static mut rtc_generation: ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn binuptime(bt: *mut bintime);
+}
+extern "C" {
+    pub fn nanouptime(tsp: *mut timespec);
+}
+extern "C" {
+    pub fn microuptime(tvp: *mut timeval);
+}
+extern "C" {
+    pub fn bintime(bt: *mut bintime);
+}
+extern "C" {
+    pub fn nanotime(tsp: *mut timespec);
+}
+extern "C" {
+    pub fn microtime(tvp: *mut timeval);
+}
+extern "C" {
+    pub fn getbinuptime(bt: *mut bintime);
+}
+extern "C" {
+    pub fn getnanouptime(tsp: *mut timespec);
+}
+extern "C" {
+    pub fn getmicrouptime(tvp: *mut timeval);
+}
+extern "C" {
+    pub fn getbintime(bt: *mut bintime);
+}
+extern "C" {
+    pub fn getnanotime(tsp: *mut timespec);
+}
+extern "C" {
+    pub fn getmicrotime(tvp: *mut timeval);
+}
+extern "C" {
+    pub fn getboottime(boottime: *mut timeval);
+}
+extern "C" {
+    pub fn getboottimebin(boottimebin: *mut bintime);
+}
+extern "C" {
+    pub fn itimerdecr(itp: *mut itimerval, usec: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn itimerfix(tv: *mut timeval) -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn ppsratecheck(arg1: *mut timeval,
+                        arg2: *mut ::kernel::sys::raw::c_int,
+                        arg3: ::kernel::sys::raw::c_int)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn ratecheck(arg1: *mut timeval, arg2: *const timeval)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn timevaladd(t1: *mut timeval, t2: *const timeval);
+}
+extern "C" {
+    pub fn timevalsub(t1: *mut timeval, t2: *const timeval);
+}
+extern "C" {
+    pub fn tvtohz(tv: *mut timeval) -> ::kernel::sys::raw::c_int;
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct priority {
+    pub pri_class: u_char,
+    pub pri_level: u_char,
+    pub pri_native: u_char,
+    pub pri_user: u_char,
+}
+#[test]
+fn bindgen_test_layout_priority() {
+    assert_eq!(::core::mem::size_of::<priority>() , 4usize , concat ! (
+               "Size of: " , stringify ! ( priority ) ));
+    assert_eq! (::core::mem::align_of::<priority>() , 1usize , concat ! (
+                "Alignment of " , stringify ! ( priority ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const priority ) ) . pri_class as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( priority ) , "::" ,
+                stringify ! ( pri_class ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const priority ) ) . pri_level as * const _ as
+                usize } , 1usize , concat ! (
+                "Alignment of field: " , stringify ! ( priority ) , "::" ,
+                stringify ! ( pri_level ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const priority ) ) . pri_native as * const _ as
+                usize } , 2usize , concat ! (
+                "Alignment of field: " , stringify ! ( priority ) , "::" ,
+                stringify ! ( pri_native ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const priority ) ) . pri_user as * const _ as
+                usize } , 3usize , concat ! (
+                "Alignment of field: " , stringify ! ( priority ) , "::" ,
+                stringify ! ( pri_user ) ));
+}
+impl Clone for priority {
+    fn clone(&self) -> Self { *self }
+}
+extern "C" {
+    pub fn htonl(arg1: __uint32_t) -> __uint32_t;
+}
+extern "C" {
+    pub fn htons(arg1: __uint16_t) -> __uint16_t;
+}
+extern "C" {
+    pub fn ntohl(arg1: __uint32_t) -> __uint32_t;
+}
+extern "C" {
+    pub fn ntohs(arg1: __uint16_t) -> __uint16_t;
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct bitset {
+    pub __bits: [::kernel::sys::raw::c_long; 1usize],
+}
+#[test]
+fn bindgen_test_layout_bitset() {
+    assert_eq!(::core::mem::size_of::<bitset>() , 8usize , concat ! (
+               "Size of: " , stringify ! ( bitset ) ));
+    assert_eq! (::core::mem::align_of::<bitset>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( bitset ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const bitset ) ) . __bits as * const _ as usize
+                } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( bitset ) , "::" ,
+                stringify ! ( __bits ) ));
+}
+impl Clone for bitset {
+    fn clone(&self) -> Self { *self }
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct _cpuset {
+    pub __bits: [::kernel::sys::raw::c_long; 4usize],
+}
+#[test]
+fn bindgen_test_layout__cpuset() {
+    assert_eq!(::core::mem::size_of::<_cpuset>() , 32usize , concat ! (
+               "Size of: " , stringify ! ( _cpuset ) ));
+    assert_eq! (::core::mem::align_of::<_cpuset>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( _cpuset ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const _cpuset ) ) . __bits as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( _cpuset ) , "::" ,
+                stringify ! ( __bits ) ));
+}
+impl Clone for _cpuset {
+    fn clone(&self) -> Self { *self }
+}
+pub type cpuset_t = _cpuset;
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct mtx {
+    pub lock_object: lock_object,
+    pub mtx_lock: usize,
+}
+#[test]
+fn bindgen_test_layout_mtx() {
+    assert_eq!(::core::mem::size_of::<mtx>() , 32usize , concat ! (
+               "Size of: " , stringify ! ( mtx ) ));
+    assert_eq! (::core::mem::align_of::<mtx>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( mtx ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const mtx ) ) . lock_object as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( mtx ) , "::" ,
+                stringify ! ( lock_object ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const mtx ) ) . mtx_lock as * const _ as usize
+                } , 24usize , concat ! (
+                "Alignment of field: " , stringify ! ( mtx ) , "::" ,
+                stringify ! ( mtx_lock ) ));
+}
+impl Clone for mtx {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for mtx {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+#[repr(C)]
+#[derive(Copy)]
+pub struct mtx_padalign {
+    pub lock_object: lock_object,
+    pub mtx_lock: usize,
+    pub __bindgen_padding_0: [u64; 4usize],
+}
+#[test]
+fn bindgen_test_layout_mtx_padalign() {
+    assert_eq!(::core::mem::size_of::<mtx_padalign>() , 64usize , concat ! (
+               "Size of: " , stringify ! ( mtx_padalign ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const mtx_padalign ) ) . lock_object as * const
+                _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( mtx_padalign ) , "::" ,
+                stringify ! ( lock_object ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const mtx_padalign ) ) . mtx_lock as * const _
+                as usize } , 24usize , concat ! (
+                "Alignment of field: " , stringify ! ( mtx_padalign ) , "::" ,
+                stringify ! ( mtx_lock ) ));
+}
+impl Clone for mtx_padalign {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for mtx_padalign {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+impl ::kernel::fmt::Debug for mtx_padalign {
+    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
+        write!(f , "mtx_padalign {{ lock_object: {:?}, mtx_lock: {:?} }}" ,
+               self . lock_object , self . mtx_lock)
+    }
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct sx {
+    pub lock_object: lock_object,
+    pub sx_lock: usize,
+}
+#[test]
+fn bindgen_test_layout_sx() {
+    assert_eq!(::core::mem::size_of::<sx>() , 32usize , concat ! (
+               "Size of: " , stringify ! ( sx ) ));
+    assert_eq! (::core::mem::align_of::<sx>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( sx ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const sx ) ) . lock_object as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( sx ) , "::" , stringify
+                ! ( lock_object ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const sx ) ) . sx_lock as * const _ as usize }
+                , 24usize , concat ! (
+                "Alignment of field: " , stringify ! ( sx ) , "::" , stringify
+                ! ( sx_lock ) ));
+}
+impl Clone for sx {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for sx {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct rmpriolist {
+    pub lh_first: *mut rm_priotracker,
+}
+#[test]
+fn bindgen_test_layout_rmpriolist() {
+    assert_eq!(::core::mem::size_of::<rmpriolist>() , 8usize , concat ! (
+               "Size of: " , stringify ! ( rmpriolist ) ));
+    assert_eq! (::core::mem::align_of::<rmpriolist>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( rmpriolist ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rmpriolist ) ) . lh_first as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( rmpriolist ) , "::" ,
+                stringify ! ( lh_first ) ));
+}
+impl Clone for rmpriolist {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for rmpriolist {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct rm_queue {
+    pub rmq_next: *mut rm_queue,
+    pub rmq_prev: *mut rm_queue,
+}
+#[test]
+fn bindgen_test_layout_rm_queue() {
+    assert_eq!(::core::mem::size_of::<rm_queue>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( rm_queue ) ));
+    assert_eq! (::core::mem::align_of::<rm_queue>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( rm_queue ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rm_queue ) ) . rmq_next as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( rm_queue ) , "::" ,
+                stringify ! ( rmq_next ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rm_queue ) ) . rmq_prev as * const _ as
+                usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( rm_queue ) , "::" ,
+                stringify ! ( rmq_prev ) ));
+}
+impl Clone for rm_queue {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for rm_queue {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+#[repr(C)]
+#[derive(Copy)]
+pub struct rmlock {
+    pub lock_object: lock_object,
+    pub rm_writecpus: cpuset_t,
+    pub rm_activeReaders: rmlock__bindgen_ty_1,
+    pub _rm_lock: rmlock__bindgen_ty_2,
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct rmlock__bindgen_ty_1 {
+    pub lh_first: *mut rm_priotracker,
+}
+#[test]
+fn bindgen_test_layout_rmlock__bindgen_ty_1() {
+    assert_eq!(::core::mem::size_of::<rmlock__bindgen_ty_1>() , 8usize ,
+               concat ! ( "Size of: " , stringify ! ( rmlock__bindgen_ty_1 )
+               ));
+    assert_eq! (::core::mem::align_of::<rmlock__bindgen_ty_1>() , 8usize ,
+                concat ! (
+                "Alignment of " , stringify ! ( rmlock__bindgen_ty_1 ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rmlock__bindgen_ty_1 ) ) . lh_first as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( rmlock__bindgen_ty_1 )
+                , "::" , stringify ! ( lh_first ) ));
+}
+impl Clone for rmlock__bindgen_ty_1 {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for rmlock__bindgen_ty_1 {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+#[repr(C)]
+#[derive(Copy)]
+pub union rmlock__bindgen_ty_2 {
+    pub _rm_wlock_object: lock_object,
+    pub _rm_lock_mtx: mtx,
+    pub _rm_lock_sx: sx,
+    _bindgen_union_align: [u64; 4usize],
+}
+#[test]
+fn bindgen_test_layout_rmlock__bindgen_ty_2() {
+    assert_eq!(::core::mem::size_of::<rmlock__bindgen_ty_2>() , 32usize ,
+               concat ! ( "Size of: " , stringify ! ( rmlock__bindgen_ty_2 )
+               ));
+    assert_eq! (::core::mem::align_of::<rmlock__bindgen_ty_2>() , 8usize ,
+                concat ! (
+                "Alignment of " , stringify ! ( rmlock__bindgen_ty_2 ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rmlock__bindgen_ty_2 ) ) .
+                _rm_wlock_object as * const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( rmlock__bindgen_ty_2 )
+                , "::" , stringify ! ( _rm_wlock_object ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rmlock__bindgen_ty_2 ) ) . _rm_lock_mtx
+                as * const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( rmlock__bindgen_ty_2 )
+                , "::" , stringify ! ( _rm_lock_mtx ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rmlock__bindgen_ty_2 ) ) . _rm_lock_sx as
+                * const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( rmlock__bindgen_ty_2 )
+                , "::" , stringify ! ( _rm_lock_sx ) ));
+}
+impl Clone for rmlock__bindgen_ty_2 {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for rmlock__bindgen_ty_2 {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+impl ::kernel::fmt::Debug for rmlock__bindgen_ty_2 {
+    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
+        write!(f , "rmlock__bindgen_ty_2 {{ union }}")
+    }
+}
+#[test]
+fn bindgen_test_layout_rmlock() {
+    assert_eq!(::core::mem::size_of::<rmlock>() , 96usize , concat ! (
+               "Size of: " , stringify ! ( rmlock ) ));
+    assert_eq! (::core::mem::align_of::<rmlock>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( rmlock ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rmlock ) ) . lock_object as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( rmlock ) , "::" ,
+                stringify ! ( lock_object ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rmlock ) ) . rm_writecpus as * const _ as
+                usize } , 24usize , concat ! (
+                "Alignment of field: " , stringify ! ( rmlock ) , "::" ,
+                stringify ! ( rm_writecpus ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rmlock ) ) . rm_activeReaders as * const
+                _ as usize } , 56usize , concat ! (
+                "Alignment of field: " , stringify ! ( rmlock ) , "::" ,
+                stringify ! ( rm_activeReaders ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rmlock ) ) . _rm_lock as * const _ as
+                usize } , 64usize , concat ! (
+                "Alignment of field: " , stringify ! ( rmlock ) , "::" ,
+                stringify ! ( _rm_lock ) ));
+}
+impl Clone for rmlock {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for rmlock {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+impl ::kernel::fmt::Debug for rmlock {
+    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
+        write!(f ,
+               "rmlock {{ lock_object: {:?}, rm_writecpus: {:?}, rm_activeReaders: {:?}, _rm_lock: {:?} }}"
+               , self . lock_object , self . rm_writecpus , self .
+               rm_activeReaders , self . _rm_lock)
+    }
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct rm_priotracker {
+    pub rmp_cpuQueue: rm_queue,
+    pub rmp_rmlock: *mut rmlock,
+    pub rmp_thread: *mut thread,
+    pub rmp_flags: ::kernel::sys::raw::c_int,
+    pub rmp_qentry: rm_priotracker__bindgen_ty_1,
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct rm_priotracker__bindgen_ty_1 {
+    pub le_next: *mut rm_priotracker,
+    pub le_prev: *mut *mut rm_priotracker,
+}
+#[test]
+fn bindgen_test_layout_rm_priotracker__bindgen_ty_1() {
+    assert_eq!(::core::mem::size_of::<rm_priotracker__bindgen_ty_1>() ,
+               16usize , concat ! (
+               "Size of: " , stringify ! ( rm_priotracker__bindgen_ty_1 ) ));
+    assert_eq! (::core::mem::align_of::<rm_priotracker__bindgen_ty_1>() ,
+                8usize , concat ! (
+                "Alignment of " , stringify ! ( rm_priotracker__bindgen_ty_1 )
+                ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rm_priotracker__bindgen_ty_1 ) ) .
+                le_next as * const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! (
+                rm_priotracker__bindgen_ty_1 ) , "::" , stringify ! ( le_next
+                ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rm_priotracker__bindgen_ty_1 ) ) .
+                le_prev as * const _ as usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! (
+                rm_priotracker__bindgen_ty_1 ) , "::" , stringify ! ( le_prev
+                ) ));
+}
+impl Clone for rm_priotracker__bindgen_ty_1 {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for rm_priotracker__bindgen_ty_1 {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+#[test]
+fn bindgen_test_layout_rm_priotracker() {
+    assert_eq!(::core::mem::size_of::<rm_priotracker>() , 56usize , concat ! (
+               "Size of: " , stringify ! ( rm_priotracker ) ));
+    assert_eq! (::core::mem::align_of::<rm_priotracker>() , 8usize , concat !
+                ( "Alignment of " , stringify ! ( rm_priotracker ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rm_priotracker ) ) . rmp_cpuQueue as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( rm_priotracker ) , "::"
+                , stringify ! ( rmp_cpuQueue ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rm_priotracker ) ) . rmp_rmlock as *
+                const _ as usize } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( rm_priotracker ) , "::"
+                , stringify ! ( rmp_rmlock ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rm_priotracker ) ) . rmp_thread as *
+                const _ as usize } , 24usize , concat ! (
+                "Alignment of field: " , stringify ! ( rm_priotracker ) , "::"
+                , stringify ! ( rmp_thread ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rm_priotracker ) ) . rmp_flags as * const
+                _ as usize } , 32usize , concat ! (
+                "Alignment of field: " , stringify ! ( rm_priotracker ) , "::"
+                , stringify ! ( rmp_flags ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rm_priotracker ) ) . rmp_qentry as *
+                const _ as usize } , 40usize , concat ! (
+                "Alignment of field: " , stringify ! ( rm_priotracker ) , "::"
+                , stringify ! ( rmp_qentry ) ));
+}
+impl Clone for rm_priotracker {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for rm_priotracker {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct rusage {
+    pub ru_utime: timeval,
+    pub ru_stime: timeval,
+    pub ru_maxrss: ::kernel::sys::raw::c_long,
+    pub ru_ixrss: ::kernel::sys::raw::c_long,
+    pub ru_idrss: ::kernel::sys::raw::c_long,
+    pub ru_isrss: ::kernel::sys::raw::c_long,
+    pub ru_minflt: ::kernel::sys::raw::c_long,
+    pub ru_majflt: ::kernel::sys::raw::c_long,
+    pub ru_nswap: ::kernel::sys::raw::c_long,
+    pub ru_inblock: ::kernel::sys::raw::c_long,
+    pub ru_oublock: ::kernel::sys::raw::c_long,
+    pub ru_msgsnd: ::kernel::sys::raw::c_long,
+    pub ru_msgrcv: ::kernel::sys::raw::c_long,
+    pub ru_nsignals: ::kernel::sys::raw::c_long,
+    pub ru_nvcsw: ::kernel::sys::raw::c_long,
+    pub ru_nivcsw: ::kernel::sys::raw::c_long,
+}
+#[test]
+fn bindgen_test_layout_rusage() {
+    assert_eq!(::core::mem::size_of::<rusage>() , 144usize , concat ! (
+               "Size of: " , stringify ! ( rusage ) ));
+    assert_eq! (::core::mem::align_of::<rusage>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( rusage ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_utime as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_utime ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_stime as * const _ as
+                usize } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_stime ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_maxrss as * const _ as
+                usize } , 32usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_maxrss ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_ixrss as * const _ as
+                usize } , 40usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_ixrss ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_idrss as * const _ as
+                usize } , 48usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_idrss ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_isrss as * const _ as
+                usize } , 56usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_isrss ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_minflt as * const _ as
+                usize } , 64usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_minflt ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_majflt as * const _ as
+                usize } , 72usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_majflt ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_nswap as * const _ as
+                usize } , 80usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_nswap ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_inblock as * const _ as
+                usize } , 88usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_inblock ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_oublock as * const _ as
+                usize } , 96usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_oublock ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_msgsnd as * const _ as
+                usize } , 104usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_msgsnd ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_msgrcv as * const _ as
+                usize } , 112usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_msgrcv ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_nsignals as * const _ as
+                usize } , 120usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_nsignals ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_nvcsw as * const _ as
+                usize } , 128usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_nvcsw ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rusage ) ) . ru_nivcsw as * const _ as
+                usize } , 136usize , concat ! (
+                "Alignment of field: " , stringify ! ( rusage ) , "::" ,
+                stringify ! ( ru_nivcsw ) ));
+}
+impl Clone for rusage {
+    fn clone(&self) -> Self { *self }
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct __wrusage {
+    pub wru_self: rusage,
+    pub wru_children: rusage,
+}
+#[test]
+fn bindgen_test_layout___wrusage() {
+    assert_eq!(::core::mem::size_of::<__wrusage>() , 288usize , concat ! (
+               "Size of: " , stringify ! ( __wrusage ) ));
+    assert_eq! (::core::mem::align_of::<__wrusage>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( __wrusage ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const __wrusage ) ) . wru_self as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( __wrusage ) , "::" ,
+                stringify ! ( wru_self ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const __wrusage ) ) . wru_children as * const _
+                as usize } , 144usize , concat ! (
+                "Alignment of field: " , stringify ! ( __wrusage ) , "::" ,
+                stringify ! ( wru_children ) ));
+}
+impl Clone for __wrusage {
+    fn clone(&self) -> Self { *self }
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct rlimit {
+    pub rlim_cur: rlim_t,
+    pub rlim_max: rlim_t,
+}
+#[test]
+fn bindgen_test_layout_rlimit() {
+    assert_eq!(::core::mem::size_of::<rlimit>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( rlimit ) ));
+    assert_eq! (::core::mem::align_of::<rlimit>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( rlimit ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rlimit ) ) . rlim_cur as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( rlimit ) , "::" ,
+                stringify ! ( rlim_cur ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const rlimit ) ) . rlim_max as * const _ as
+                usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( rlimit ) , "::" ,
+                stringify ! ( rlim_max ) ));
+}
+impl Clone for rlimit {
+    fn clone(&self) -> Self { *self }
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct orlimit {
+    pub rlim_cur: __int32_t,
+    pub rlim_max: __int32_t,
+}
+#[test]
+fn bindgen_test_layout_orlimit() {
+    assert_eq!(::core::mem::size_of::<orlimit>() , 8usize , concat ! (
+               "Size of: " , stringify ! ( orlimit ) ));
+    assert_eq! (::core::mem::align_of::<orlimit>() , 4usize , concat ! (
+                "Alignment of " , stringify ! ( orlimit ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const orlimit ) ) . rlim_cur as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( orlimit ) , "::" ,
+                stringify ! ( rlim_cur ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const orlimit ) ) . rlim_max as * const _ as
+                usize } , 4usize , concat ! (
+                "Alignment of field: " , stringify ! ( orlimit ) , "::" ,
+                stringify ! ( rlim_max ) ));
+}
+impl Clone for orlimit {
+    fn clone(&self) -> Self { *self }
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct loadavg {
+    pub ldavg: [__fixpt_t; 3usize],
+    pub fscale: ::kernel::sys::raw::c_long,
+}
+#[test]
+fn bindgen_test_layout_loadavg() {
+    assert_eq!(::core::mem::size_of::<loadavg>() , 24usize , concat ! (
+               "Size of: " , stringify ! ( loadavg ) ));
+    assert_eq! (::core::mem::align_of::<loadavg>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( loadavg ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const loadavg ) ) . ldavg as * const _ as usize
+                } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( loadavg ) , "::" ,
+                stringify ! ( ldavg ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const loadavg ) ) . fscale as * const _ as
+                usize } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( loadavg ) , "::" ,
+                stringify ! ( fscale ) ));
+}
+impl Clone for loadavg {
+    fn clone(&self) -> Self { *self }
+}
+extern "C" {
+    #[link_name = "averunnable"]
+    pub static mut averunnable: loadavg;
+}
+extern "C" {
+    pub fn read_cpu_time(cp_time: *mut ::kernel::sys::raw::c_long);
+}
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct pcb {
+    _unused: [u8; 0],
+}
+extern "C" {
+    #[link_name = "__start_set_pcpu"]
+    pub static mut __start_set_pcpu: *mut usize;
+}
+extern "C" {
+    #[link_name = "__stop_set_pcpu"]
+    pub static mut __stop_set_pcpu: *mut usize;
+}
+extern "C" {
+    #[link_name = "dpcpu_off"]
+    pub static mut dpcpu_off: [usize; 0usize];
+}
+#[repr(C)]
+#[derive(Copy)]
+pub struct pcpu {
+    pub pc_curthread: *mut thread,
+    pub pc_idlethread: *mut thread,
+    pub pc_fpcurthread: *mut thread,
+    pub pc_deadthread: *mut thread,
+    pub pc_curpcb: *mut pcb,
+    pub pc_switchtime: u64,
+    pub pc_switchticks: ::kernel::sys::raw::c_int,
+    pub pc_cpuid: u_int,
+    pub pc_allcpu: pcpu__bindgen_ty_1,
+    pub pc_spinlocks: *mut lock_list_entry,
+    pub pc_cp_time: [::kernel::sys::raw::c_long; 5usize],
+    pub pc_device: *mut device,
+    pub pc_netisr: *mut ::kernel::sys::raw::c_void,
+    pub pc_unused1: ::kernel::sys::raw::c_int,
+    pub pc_domain: ::kernel::sys::raw::c_int,
+    pub pc_rm_queue: rm_queue,
+    pub pc_dynamic: usize,
+    pub pc_early_dummy_counter: u64,
+    pub __bindgen_padding_0: [u8; 88usize],
+    pub pc_monitorbuf: [::kernel::sys::raw::c_char; 128usize],
+    pub pc_prvspace: *mut pcpu,
+    pub pc_curpmap: *mut pmap,
+    pub pc_tssp: *mut amd64tss,
+    pub pc_commontssp: *mut amd64tss,
+    pub pc_kcr3: u64,
+    pub pc_ucr3: u64,
+    pub pc_saved_ucr3: u64,
+    pub pc_rsp0: register_t,
+    pub pc_scratch_rsp: register_t,
+    pub pc_scratch_rax: register_t,
+    pub pc_apic_id: u_int,
+    pub pc_acpi_id: u_int,
+    pub pc_fs32p: *mut user_segment_descriptor,
+    pub pc_gs32p: *mut user_segment_descriptor,
+    pub pc_ldt: *mut system_segment_descriptor,
+    pub pc_tss: *mut system_segment_descriptor,
+    pub pc_pm_save_cnt: u64,
+    pub pc_cmci_mask: u_int,
+    pub pc_dbreg: [u64; 16usize],
+    pub pc_pti_stack: [u64; 16usize],
+    pub pc_pti_rsp0: register_t,
+    pub pc_dbreg_cmd: ::kernel::sys::raw::c_int,
+    pub pc_vcpu_id: u_int,
+    pub pc_pcid_next: u32,
+    pub pc_pcid_gen: u32,
+    pub pc_smp_tlb_done: u32,
+    pub pc_ibpb_set: u32,
+    pub __pad: [::kernel::sys::raw::c_char; 3288usize],
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct pcpu__bindgen_ty_1 {
+    pub stqe_next: *mut pcpu,
+}
+#[test]
+fn bindgen_test_layout_pcpu__bindgen_ty_1() {
+    assert_eq!(::core::mem::size_of::<pcpu__bindgen_ty_1>() , 8usize , concat
+               ! ( "Size of: " , stringify ! ( pcpu__bindgen_ty_1 ) ));
+    assert_eq! (::core::mem::align_of::<pcpu__bindgen_ty_1>() , 8usize ,
+                concat ! (
+                "Alignment of " , stringify ! ( pcpu__bindgen_ty_1 ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu__bindgen_ty_1 ) ) . stqe_next as *
+                const _ as usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu__bindgen_ty_1 ) ,
+                "::" , stringify ! ( stqe_next ) ));
+}
+impl Clone for pcpu__bindgen_ty_1 {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for pcpu__bindgen_ty_1 {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+#[test]
+fn bindgen_test_layout_pcpu() {
+    assert_eq!(::core::mem::size_of::<pcpu>() , 4096usize , concat ! (
+               "Size of: " , stringify ! ( pcpu ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_curthread as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_curthread ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_idlethread as * const _ as
+                usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_idlethread ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_fpcurthread as * const _ as
+                usize } , 16usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_fpcurthread ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_deadthread as * const _ as
+                usize } , 24usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_deadthread ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_curpcb as * const _ as
+                usize } , 32usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_curpcb ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_switchtime as * const _ as
+                usize } , 40usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_switchtime ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_switchticks as * const _ as
+                usize } , 48usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_switchticks ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_cpuid as * const _ as usize
+                } , 52usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_cpuid ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_allcpu as * const _ as
+                usize } , 56usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_allcpu ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_spinlocks as * const _ as
+                usize } , 64usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_spinlocks ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_cp_time as * const _ as
+                usize } , 72usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_cp_time ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_device as * const _ as
+                usize } , 112usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_device ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_netisr as * const _ as
+                usize } , 120usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_netisr ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_unused1 as * const _ as
+                usize } , 128usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_unused1 ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_domain as * const _ as
+                usize } , 132usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_domain ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_rm_queue as * const _ as
+                usize } , 136usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_rm_queue ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_dynamic as * const _ as
+                usize } , 152usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_dynamic ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_early_dummy_counter as *
+                const _ as usize } , 160usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_early_dummy_counter ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_monitorbuf as * const _ as
+                usize } , 256usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_monitorbuf ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_prvspace as * const _ as
+                usize } , 384usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_prvspace ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_curpmap as * const _ as
+                usize } , 392usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_curpmap ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_tssp as * const _ as usize
+                } , 400usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_tssp ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_commontssp as * const _ as
+                usize } , 408usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_commontssp ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_kcr3 as * const _ as usize
+                } , 416usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_kcr3 ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_ucr3 as * const _ as usize
+                } , 424usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_ucr3 ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_saved_ucr3 as * const _ as
+                usize } , 432usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_saved_ucr3 ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_rsp0 as * const _ as usize
+                } , 440usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_rsp0 ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_scratch_rsp as * const _ as
+                usize } , 448usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_scratch_rsp ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_scratch_rax as * const _ as
+                usize } , 456usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_scratch_rax ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_apic_id as * const _ as
+                usize } , 464usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_apic_id ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_acpi_id as * const _ as
+                usize } , 468usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_acpi_id ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_fs32p as * const _ as usize
+                } , 472usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_fs32p ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_gs32p as * const _ as usize
+                } , 480usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_gs32p ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_ldt as * const _ as usize }
+                , 488usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_ldt ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_tss as * const _ as usize }
+                , 496usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_tss ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_pm_save_cnt as * const _ as
+                usize } , 504usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_pm_save_cnt ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_cmci_mask as * const _ as
+                usize } , 512usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_cmci_mask ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_dbreg as * const _ as usize
+                } , 520usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_dbreg ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_pti_stack as * const _ as
+                usize } , 648usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_pti_stack ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_pti_rsp0 as * const _ as
+                usize } , 776usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_pti_rsp0 ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_dbreg_cmd as * const _ as
+                usize } , 784usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_dbreg_cmd ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_vcpu_id as * const _ as
+                usize } , 788usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_vcpu_id ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_pcid_next as * const _ as
+                usize } , 792usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_pcid_next ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_pcid_gen as * const _ as
+                usize } , 796usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_pcid_gen ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_smp_tlb_done as * const _
+                as usize } , 800usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_smp_tlb_done ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . pc_ibpb_set as * const _ as
+                usize } , 804usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( pc_ibpb_set ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const pcpu ) ) . __pad as * const _ as usize }
+                , 808usize , concat ! (
+                "Alignment of field: " , stringify ! ( pcpu ) , "::" ,
+                stringify ! ( __pad ) ));
+}
+impl Clone for pcpu {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for pcpu {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+impl ::kernel::fmt::Debug for pcpu {
+    fn fmt(&self, f: &mut ::kernel::fmt::Formatter) -> ::kernel::fmt::Result {
+        write!(f ,
+               "pcpu {{ pc_curthread: {:?}, pc_idlethread: {:?}, pc_fpcurthread: {:?}, pc_deadthread: {:?}, pc_curpcb: {:?}, pc_switchtime: {:?}, pc_switchticks: {:?}, pc_cpuid: {:?}, pc_allcpu: {:?}, pc_spinlocks: {:?}, pc_cp_time: {:?}, pc_device: {:?}, pc_netisr: {:?}, pc_unused1: {:?}, pc_domain: {:?}, pc_rm_queue: {:?}, pc_dynamic: {:?}, pc_early_dummy_counter: {:?}, pc_monitorbuf: [{}], pc_prvspace: {:?}, pc_curpmap: {:?}, pc_tssp: {:?}, pc_commontssp: {:?}, pc_kcr3: {:?}, pc_ucr3: {:?}, pc_saved_ucr3: {:?}, pc_rsp0: {:?}, pc_scratch_rsp: {:?}, pc_scratch_rax: {:?}, pc_apic_id: {:?}, pc_acpi_id: {:?}, pc_fs32p: {:?}, pc_gs32p: {:?}, pc_ldt: {:?}, pc_tss: {:?}, pc_pm_save_cnt: {:?}, pc_cmci_mask: {:?}, pc_dbreg: {:?}, pc_pti_stack: {:?}, pc_pti_rsp0: {:?}, pc_dbreg_cmd: {:?}, pc_vcpu_id: {:?}, pc_pcid_next: {:?}, pc_pcid_gen: {:?}, pc_smp_tlb_done: {:?}, pc_ibpb_set: {:?}, __pad: [{}] }}"
+               , self . pc_curthread , self . pc_idlethread , self .
+               pc_fpcurthread , self . pc_deadthread , self . pc_curpcb , self
+               . pc_switchtime , self . pc_switchticks , self . pc_cpuid ,
+               self . pc_allcpu , self . pc_spinlocks , self . pc_cp_time ,
+               self . pc_device , self . pc_netisr , self . pc_unused1 , self
+               . pc_domain , self . pc_rm_queue , self . pc_dynamic , self .
+               pc_early_dummy_counter , self . pc_monitorbuf . iter (  ) .
+               enumerate (  ) . map (
+               | ( i , v ) | format ! (
+               "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: <
+               String > (  ) , self . pc_prvspace , self . pc_curpmap , self .
+               pc_tssp , self . pc_commontssp , self . pc_kcr3 , self .
+               pc_ucr3 , self . pc_saved_ucr3 , self . pc_rsp0 , self .
+               pc_scratch_rsp , self . pc_scratch_rax , self . pc_apic_id ,
+               self . pc_acpi_id , self . pc_fs32p , self . pc_gs32p , self .
+               pc_ldt , self . pc_tss , self . pc_pm_save_cnt , self .
+               pc_cmci_mask , self . pc_dbreg , self . pc_pti_stack , self .
+               pc_pti_rsp0 , self . pc_dbreg_cmd , self . pc_vcpu_id , self .
+               pc_pcid_next , self . pc_pcid_gen , self . pc_smp_tlb_done ,
+               self . pc_ibpb_set , self . __pad . iter (  ) . enumerate (  )
+               . map (
+               | ( i , v ) | format ! (
+               "{}{:?}" , if i > 0 { ", " } else { "" } , v ) ) . collect :: <
+               String > (  ))
+    }
+}
+#[repr(C)]
+#[derive(Debug, Copy)]
+pub struct cpuhead {
+    pub stqh_first: *mut pcpu,
+    pub stqh_last: *mut *mut pcpu,
+}
+#[test]
+fn bindgen_test_layout_cpuhead() {
+    assert_eq!(::core::mem::size_of::<cpuhead>() , 16usize , concat ! (
+               "Size of: " , stringify ! ( cpuhead ) ));
+    assert_eq! (::core::mem::align_of::<cpuhead>() , 8usize , concat ! (
+                "Alignment of " , stringify ! ( cpuhead ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const cpuhead ) ) . stqh_first as * const _ as
+                usize } , 0usize , concat ! (
+                "Alignment of field: " , stringify ! ( cpuhead ) , "::" ,
+                stringify ! ( stqh_first ) ));
+    assert_eq! (unsafe {
+                & ( * ( 0 as * const cpuhead ) ) . stqh_last as * const _ as
+                usize } , 8usize , concat ! (
+                "Alignment of field: " , stringify ! ( cpuhead ) , "::" ,
+                stringify ! ( stqh_last ) ));
+}
+impl Clone for cpuhead {
+    fn clone(&self) -> Self { *self }
+}
+impl Default for cpuhead {
+    fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+extern "C" {
+    #[link_name = "cpuhead"]
+    pub static mut cpuhead: cpuhead;
+}
+extern "C" {
+    #[link_name = "cpuid_to_pcpu"]
+    pub static mut cpuid_to_pcpu: [*mut pcpu; 0usize];
+}
+extern "C" {
+    pub fn cpu_pcpu_init(pcpu: *mut pcpu, cpuid: ::kernel::sys::raw::c_int,
+                         size: usize);
+}
+extern "C" {
+    pub fn db_show_mdpcpu(pcpu: *mut pcpu);
+}
+extern "C" {
+    pub fn dpcpu_alloc(size: ::kernel::sys::raw::c_int)
+     -> *mut ::kernel::sys::raw::c_void;
+}
+extern "C" {
+    pub fn dpcpu_copy(s: *mut ::kernel::sys::raw::c_void,
+                      size: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn dpcpu_free(s: *mut ::kernel::sys::raw::c_void,
+                      size: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn dpcpu_init(dpcpu: *mut ::kernel::sys::raw::c_void,
+                      cpuid: ::kernel::sys::raw::c_int);
+}
+extern "C" {
+    pub fn pcpu_destroy(pcpu: *mut pcpu);
+}
+extern "C" {
+    pub fn pcpu_find(cpuid: u_int) -> *mut pcpu;
+}
+extern "C" {
+    pub fn pcpu_init(pcpu: *mut pcpu, cpuid: ::kernel::sys::raw::c_int,
+                     size: usize);
+}
 extern "C" {
     #[link_name = "osreldate"]
     pub static mut osreldate: ::kernel::sys::raw::c_int;
 }
 extern "C" {
-    #[link_name = "envmode"]
-    pub static mut envmode: ::kernel::sys::raw::c_int;
-}
-extern "C" {
-    #[link_name = "hintmode"]
-    pub static mut hintmode: ::kernel::sys::raw::c_int;
-}
-extern "C" {
     #[link_name = "dynamic_kenv"]
-    pub static mut dynamic_kenv: ::kernel::sys::raw::c_int;
-}
-#[repr(C)]
-#[derive(Debug, Copy, Clone)]
-pub struct mtx {
-    _unused: [u8; 0],
+    pub static mut dynamic_kenv: bool_;
 }
 extern "C" {
     #[link_name = "kenv_lock"]
@@ -1482,6 +2970,10 @@ extern "C" {
 extern "C" {
     #[link_name = "kern_envp"]
     pub static mut kern_envp: *mut ::kernel::sys::raw::c_char;
+}
+extern "C" {
+    #[link_name = "md_envp"]
+    pub static mut md_envp: *mut ::kernel::sys::raw::c_char;
 }
 extern "C" {
     #[link_name = "static_env"]
@@ -1624,10 +3116,13 @@ extern "C" {
     pub fn cpu_rootconf();
 }
 extern "C" {
-    pub fn critical_enter();
+    pub fn critical_enter_KBI();
 }
 extern "C" {
-    pub fn critical_exit();
+    pub fn critical_exit_KBI();
+}
+extern "C" {
+    pub fn critical_exit_preempt();
 }
 extern "C" {
     pub fn init_param1();
@@ -1777,6 +3272,16 @@ extern "C" {
     pub fn explicit_bzero(arg1: *mut ::kernel::sys::raw::c_void, arg2: usize);
 }
 extern "C" {
+    pub fn bcmp(b1: *const ::kernel::sys::raw::c_void,
+                b2: *const ::kernel::sys::raw::c_void, len: usize)
+     -> ::kernel::sys::raw::c_int;
+}
+extern "C" {
+    pub fn memset(buf: *mut ::kernel::sys::raw::c_void,
+                  c: ::kernel::sys::raw::c_int, len: usize)
+     -> *mut ::kernel::sys::raw::c_void;
+}
+extern "C" {
     pub fn memcpy(to: *mut ::kernel::sys::raw::c_void,
                   from: *const ::kernel::sys::raw::c_void, len: usize)
      -> *mut ::kernel::sys::raw::c_void;
@@ -1785,6 +3290,11 @@ extern "C" {
     pub fn memmove(dest: *mut ::kernel::sys::raw::c_void,
                    src: *const ::kernel::sys::raw::c_void, n: usize)
      -> *mut ::kernel::sys::raw::c_void;
+}
+extern "C" {
+    pub fn memcmp(b1: *const ::kernel::sys::raw::c_void,
+                  b2: *const ::kernel::sys::raw::c_void, len: usize)
+     -> ::kernel::sys::raw::c_int;
 }
 extern "C" {
     pub fn copystr(kfaddr: *const ::kernel::sys::raw::c_void,
@@ -2022,6 +3532,14 @@ extern "C" {
     pub fn testenv(name: *const ::kernel::sys::raw::c_char)
      -> ::kernel::sys::raw::c_int;
 }
+extern "C" {
+    pub fn getenv_array(name: *const ::kernel::sys::raw::c_char,
+                        data: *mut ::kernel::sys::raw::c_void,
+                        size: ::kernel::sys::raw::c_int,
+                        psize: *mut ::kernel::sys::raw::c_int,
+                        type_size: ::kernel::sys::raw::c_int,
+                        allow_signed: bool_) -> ::kernel::sys::raw::c_int;
+}
 pub type cpu_tick_f = ::core::option::Option<unsafe extern "C" fn() -> u64>;
 extern "C" {
     pub fn set_cputicker(func: cpu_tick_f, freq: u64,
@@ -2064,11 +3582,6 @@ extern "C" {
                     arg3: ::kernel::sys::raw::c_int);
 }
 extern "C" {
-    pub fn bcmp(arg1: *const ::kernel::sys::raw::c_void,
-                arg2: *const ::kernel::sys::raw::c_void, arg3: usize)
-     -> ::kernel::sys::raw::c_int;
-}
-extern "C" {
     pub fn timingsafe_bcmp(arg1: *const ::kernel::sys::raw::c_void,
                            arg2: *const ::kernel::sys::raw::c_void,
                            arg3: usize) -> ::kernel::sys::raw::c_int;
@@ -2106,11 +3619,6 @@ extern "C" {
     pub fn memcchr(s: *const ::kernel::sys::raw::c_void,
                    c: ::kernel::sys::raw::c_int, n: usize)
      -> *mut ::kernel::sys::raw::c_void;
-}
-extern "C" {
-    pub fn memcmp(b1: *const ::kernel::sys::raw::c_void,
-                  b2: *const ::kernel::sys::raw::c_void, len: usize)
-     -> ::kernel::sys::raw::c_int;
 }
 extern "C" {
     pub fn memmem(l: *const ::kernel::sys::raw::c_void, l_len: usize,
@@ -2458,4 +3966,52 @@ impl Clone for __va_list_tag {
 }
 impl Default for __va_list_tag {
     fn default() -> Self { unsafe { ::core::mem::zeroed() } }
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct witness {
+    pub _address: u8,
+}
+impl Clone for witness {
+    fn clone(&self) -> Self { *self }
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct lock_list_entry {
+    pub _address: u8,
+}
+impl Clone for lock_list_entry {
+    fn clone(&self) -> Self { *self }
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct pmap {
+    pub _address: u8,
+}
+impl Clone for pmap {
+    fn clone(&self) -> Self { *self }
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct amd64tss {
+    pub _address: u8,
+}
+impl Clone for amd64tss {
+    fn clone(&self) -> Self { *self }
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct user_segment_descriptor {
+    pub _address: u8,
+}
+impl Clone for user_segment_descriptor {
+    fn clone(&self) -> Self { *self }
+}
+#[repr(C)]
+#[derive(Debug, Default, Copy)]
+pub struct system_segment_descriptor {
+    pub _address: u8,
+}
+impl Clone for system_segment_descriptor {
+    fn clone(&self) -> Self { *self }
 }

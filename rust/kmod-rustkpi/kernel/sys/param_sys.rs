@@ -3,7 +3,7 @@
 pub const BSD: ::kernel::sys::raw::c_uint = 199506;
 pub const BSD4_3: ::kernel::sys::raw::c_uint = 1;
 pub const BSD4_4: ::kernel::sys::raw::c_uint = 1;
-pub const __FreeBSD_version: ::kernel::sys::raw::c_uint = 1200064;
+pub const __FreeBSD_version: ::kernel::sys::raw::c_uint = 1200074;
 pub const P_OSREL_SIGWAIT: ::kernel::sys::raw::c_uint = 700000;
 pub const P_OSREL_SIGSEGV: ::kernel::sys::raw::c_uint = 700004;
 pub const P_OSREL_MAP_ANON: ::kernel::sys::raw::c_uint = 800104;
@@ -646,6 +646,8 @@ pub struct cap_rights {
     _unused: [u8; 0],
 }
 pub type cap_rights_t = cap_rights;
+pub type kvaddr_t = __uint64_t;
+pub type ksize_t = __uint64_t;
 pub type vm_offset_t = __vm_offset_t;
 pub type vm_ooffset_t = __int64_t;
 pub type vm_paddr_t = __vm_paddr_t;

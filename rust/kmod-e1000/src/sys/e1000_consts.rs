@@ -1,6 +1,3 @@
-
-
-
 /* This defines the bits that are set in the Interrupt Mask
  * Set/Read Register.  Each bit is documented below:
  *   o RXT0   = Receiver Timer Interrupt (ring 0)
@@ -9,10 +6,8 @@
  *   o RXSEQ  = Receive Sequence Error
  *   o LSC    = Link Status Change
  */
-pub const IMS_ENABLE_MASK: u32 = E1000_IMS_RXT0 | E1000_IMS_TXDW | E1000_IMS_RXDMT0 |
-    E1000_IMS_RXSEQ | E1000_IMS_LSC;
-
-
+pub const IMS_ENABLE_MASK: u32 =
+    E1000_IMS_RXT0 | E1000_IMS_TXDW | E1000_IMS_RXDMT0 | E1000_IMS_RXSEQ | E1000_IMS_LSC;
 
 pub const E1000_CTRL: ::kernel::sys::raw::c_uint = 0;
 pub const E1000_CTRL_DUP: ::kernel::sys::raw::c_uint = 4;
@@ -1311,6 +1306,7 @@ pub const NVM_A8_OPCODE_SPI: ::kernel::sys::raw::c_uint = 8;
 pub const NVM_WREN_OPCODE_SPI: ::kernel::sys::raw::c_uint = 6;
 pub const NVM_RDSR_OPCODE_SPI: ::kernel::sys::raw::c_uint = 5;
 pub const NVM_STATUS_RDY_SPI: ::kernel::sys::raw::c_uint = 1;
+
 pub const ID_LED_RESERVED_0000: u16 = 0;
 pub const ID_LED_RESERVED_FFFF: u16 = 65535;
 pub const ID_LED_DEF1_DEF2: u16 = 1;
@@ -1322,6 +1318,9 @@ pub const ID_LED_ON1_OFF2: u16 = 6;
 pub const ID_LED_OFF1_DEF2: u16 = 7;
 pub const ID_LED_OFF1_ON2: u16 = 8;
 pub const ID_LED_OFF1_OFF2: u16 = 9;
+pub const ID_LED_DEFAULT: u16 = (ID_LED_OFF1_ON2 << 12) | (ID_LED_OFF1_OFF2 << 8)
+    | (ID_LED_DEF1_DEF2 << 4) | (ID_LED_DEF1_DEF2);
+
 pub const IGP_ACTIVITY_LED_MASK: ::kernel::sys::raw::c_uint = 4294963455;
 pub const IGP_ACTIVITY_LED_ENABLE: ::kernel::sys::raw::c_uint = 768;
 pub const IGP_LED3_MODE: ::kernel::sys::raw::c_uint = 117440512;
@@ -2431,7 +2430,6 @@ pub const TARC_ERRATA_BIT: ::kernel::sys::raw::c_uint = 67108864;
 pub const DEBUG_INIT: ::kernel::sys::raw::c_uint = 0;
 pub const DEBUG_IOCTL: ::kernel::sys::raw::c_uint = 0;
 pub const DEBUG_HW: ::kernel::sys::raw::c_uint = 0;
-
 
 pub const EM_TIDV: ::kernel::sys::raw::c_uint = 64;
 pub const EM_TADV: ::kernel::sys::raw::c_uint = 64;

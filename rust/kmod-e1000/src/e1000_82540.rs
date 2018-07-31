@@ -1,4 +1,3 @@
-
 use kernel;
 use kernel::ptr::Unique;
 
@@ -19,7 +18,6 @@ use e1000_phy;
 use e1000_nvm;
 
 pub fn init_function_pointers(adapter: &mut Adapter) -> AdResult {
-
     e1000_println!();
 
     adapter.hw.mac.ops.init_params = Some(init_mac_params);
@@ -29,18 +27,15 @@ pub fn init_function_pointers(adapter: &mut Adapter) -> AdResult {
     Ok(())
 }
 
-
 pub fn init_mac_params(adapter: &mut Adapter) -> AdResult {
-
     e1000_println!();
 
     adapter.hw.phy.media_type = match adapter.hw.device_id as u32 {
-        E1000_DEV_ID_82545EM_FIBER |
-        E1000_DEV_ID_82545GM_FIBER |
-        E1000_DEV_ID_82546EB_FIBER |
-        E1000_DEV_ID_82546GB_FIBER => MediaType::Fiber,
-        E1000_DEV_ID_82545GM_SERDES |
-        E1000_DEV_ID_82546GB_SERDES => MediaType::InternalSerdes,
+        E1000_DEV_ID_82545EM_FIBER
+        | E1000_DEV_ID_82545GM_FIBER
+        | E1000_DEV_ID_82546EB_FIBER
+        | E1000_DEV_ID_82546GB_FIBER => MediaType::Fiber,
+        E1000_DEV_ID_82545GM_SERDES | E1000_DEV_ID_82546GB_SERDES => MediaType::InternalSerdes,
         _ => MediaType::Copper,
     };
 
@@ -50,12 +45,10 @@ pub fn init_mac_params(adapter: &mut Adapter) -> AdResult {
     /* Set rar entry count */
     adapter.hw.mac.rar_entry_count = E1000_RAR_ENTRIES as u16;
 
-
     /* Function pointers */
 
     /* bus type/speed/width */
     adapter.hw.mac.ops.get_bus_info = Some(e1000_mac::get_bus_info_pci_generic);
-
 
     /* function id */
     adapter.hw.mac.ops.set_lan_id = Some(e1000_mac::set_lan_id_multi_port_pci);
@@ -82,7 +75,6 @@ pub fn init_mac_params(adapter: &mut Adapter) -> AdResult {
         MediaType::InternalSerdes => Some(e1000_mac::check_for_serdes_link_generic),
         _ => return Err("No function for check_for_link".into()),
     };
-
 
     /* link info */
     adapter.hw.mac.ops.get_link_up_info = match adapter.hw.phy.media_type {
@@ -122,7 +114,6 @@ pub fn init_mac_params(adapter: &mut Adapter) -> AdResult {
     Ok(())
 }
 
-
 pub fn init_phy_params(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
 
@@ -146,19 +137,16 @@ pub fn init_phy_params(adapter: &mut Adapter) -> AdResult {
 
     try!(e1000_phy::get_phy_id(adapter));
 
-
     /* Verify phy id */
     match adapter.hw.mac.mac_type {
-        MacType::Mac_82540 |
-        MacType::Mac_82545 |
-        MacType::Mac_82545_rev_3 |
-        MacType::Mac_82546 |
-        MacType::Mac_82546_rev_3 => {
-            match adapter.hw.phy.id {
-                M88E1011_I_PHY_ID => Ok(()),
-                _ => Err("Could not verify phy id".into()),
-            }
-        }
+        MacType::Mac_82540
+        | MacType::Mac_82545
+        | MacType::Mac_82545_rev_3
+        | MacType::Mac_82546
+        | MacType::Mac_82546_rev_3 => match adapter.hw.phy.id {
+            M88E1011_I_PHY_ID => Ok(()),
+            _ => Err("Could not verify phy id".into()),
+        },
         _ => Err("Could not find mac type for match phy id".into()),
     }
 }
@@ -243,12 +231,16 @@ pub fn init_hw(adapter: &mut Adapter) -> AdResult {
     e1000_println!();
 
     /* Initialize identification LED */
-    incomplete!();
-    // ret_val = mac->ops.id_led_init(hw);
-    // if (ret_val) {
-    //     DEBUGOUT("Error initializing identification LED\n");
-    //     /* This is not fatal and we should not stop init due to this */
-    // }
+    if let Err(e) = adapter
+        .hw
+        .mac
+        .ops
+        .id_led_init
+        .ok_or("No function: id_led_init".to_string())
+    {
+        eprintln!("{:?}", e);
+        eprintln!("Failed to initialize identification LED (IGNORE)");
+    }
 
     /* Disabling VLAN filtering */
     if adapter.hw.mac.mac_type < MacType::Mac_82545_rev_3 {
@@ -312,8 +304,7 @@ pub fn reset_hw(adapter: &mut Adapter) -> AdResult {
     e1000_println!("Issuing a global reset to 82540/82545/82546 MAC");
 
     match adapter.hw.mac.mac_type {
-        MacType::Mac_82545_rev_3 |
-        MacType::Mac_82546 => {
+        MacType::Mac_82545_rev_3 | MacType::Mac_82546 => {
             do_write_register(adapter, E1000_CTRL_DUP, ctrl | E1000_CTRL_RST);
         }
         _ => {

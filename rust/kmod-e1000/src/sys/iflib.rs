@@ -8,6 +8,8 @@ use kernel::sys::raw::*;
 
 use kernel::sys::kernel_sys::caddr_t;
 
+use kernel::sys::bus_sys::bus_teardown_intr;
+
 // Re-export unmodified
 pub use kernel::sys::iflib_sys::bool_;
 pub use kernel::sys::iflib_sys::qidx_t;
@@ -81,6 +83,7 @@ pub struct if_softc_ctx {
     pub isc_tx_tso_size_max: ::kernel::sys::raw::c_int,
     pub isc_tx_tso_segsize_max: ::kernel::sys::raw::c_int,
     pub isc_tx_csum_flags: ::kernel::sys::raw::c_int,
+    pub isc_capabilities: ::kernel::sys::raw::c_int,
     pub isc_capenable: ::kernel::sys::raw::c_int,
     pub isc_rss_table_size: ::kernel::sys::raw::c_int,
     pub isc_rss_table_mask: ::kernel::sys::raw::c_int,
@@ -172,6 +175,21 @@ pub struct IfIrq {
 impl Default for IfIrq {
     fn default() -> Self {
         unsafe { ::core::mem::zeroed() }
+    }
+}
+
+impl Drop for IfIrq {
+    fn drop(&mut self) {
+        // if (irq->ii_tag)
+        //     bus_teardown_intr(ctx->ifc_dev, irq->ii_res, irq->ii_tag);
+        // if (irq->ii_res)
+        //     bus_release_resource(ctx->ifc_dev, SYS_RES_IRQ, irq->ii_rid, irq->ii_res);
+        if !self.ii_tag.is_null() {
+            // unsafe {
+            // Hmm, Resource has its own drop function. How to handle this?
+            // Not use Resource inside IfIrq? Anyways, IfIrq is not used at this time.
+            // }
+        }
     }
 }
 

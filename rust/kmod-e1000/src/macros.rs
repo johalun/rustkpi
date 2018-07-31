@@ -77,21 +77,21 @@ macro_rules! e1000_mac_println {
 #[macro_export]
 macro_rules! eprintln {
     ($str:ident) => (
-        println!("=> ERROR => {}: {}", function_path!(), $str);
+        println!("ERROR => {}: {}", function_path!(), $str);
     );
     ($fmt:expr) => (
-        println!("=> ERROR => {}: {}", function_path!(), format_args!($fmt));
+        println!("ERROR => {}: {}", function_path!(), format_args!($fmt));
     );
     ($fmt:expr, $($arg:tt)*) => (
-        println!("=> ERROR => {}: {}", function_path!(), format_args!($fmt, $($arg)*));
+        println!("ERROR => {}: {}", function_path!(), format_args!($fmt, $($arg)*));
     );
 }
 
 #[macro_export]
 macro_rules! incomplete {
     () => {
-        println!("===> INCOMPLETE FUNCTION => {}", function_path!());
-        println!("===> {}:{}:{}", file!(), line!(), column!());
+        println!("INCOMPLETE FUNCTION => {}", function_path!());
+        println!("=> {}:{}:{}", file!(), line!(), column!());
     }
 }
 
@@ -106,8 +106,8 @@ macro_rules! incomplete_return {
 #[macro_export]
 macro_rules! unsupported {
     () => {
-        println!("==> UNSUPPORTED HARDWARE => {}", function_path!());
-        println!("==> {}:{}:{}", file!(), line!(), column!());
+        println!("UNSUPPORTED HARDWARE => {}", function_path!());
+        println!("=> {}:{}:{}", file!(), line!(), column!());
     }
 }
 
